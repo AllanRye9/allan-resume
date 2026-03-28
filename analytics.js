@@ -1,6 +1,8 @@
 // ===== Portfolio Analytics Tracking =====
 // Collects visit data (IP, country, city, referrer, device) and stores it
 // in localStorage so the /admin dashboard can display it.
+// IP/geo data is fetched from the ipapi.co free API. Ensure your privacy
+// policy discloses this third-party data processing (GDPR / CCPA).
 (function () {
   'use strict';
 
@@ -9,7 +11,7 @@
   var MAX_VISITS = 500;
 
   // Only run on the main portfolio pages, not inside /admin
-  if (window.location.pathname.indexOf('/admin') === 0) return;
+  if (window.location.pathname.startsWith('/admin')) return;
 
   // Deduplicate within a single browser session (reloads don't count twice)
   if (sessionStorage.getItem(SESSION_KEY)) return;

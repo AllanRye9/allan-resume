@@ -14,7 +14,10 @@ var KEYS = {
   SESSION: 'ar_admin_session'
 };
 
-// SHA-256 hash of the default password "admin123"
+// SHA-256 hash of the default password "admin123".
+// NOTE: This is client-side-only authentication suitable for a personal portfolio.
+// Anyone with browser DevTools access can inspect the logic. Change your password
+// after first login and do not store sensitive information in this admin panel.
 var DEFAULT_HASH = '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9';
 
 var PAGE_SIZE = 20;
@@ -449,8 +452,12 @@ document.getElementById('photo-url').addEventListener('input', function () {
 function updateAvatarPreview(url) {
   var el = document.getElementById('avatar-preview');
   if (url) {
-    el.innerHTML = '<img src="' + escHtml(url) + '" alt="Profile photo" ' +
-      'style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+    var img = document.createElement('img');
+    img.src = url;
+    img.alt = 'Profile photo';
+    img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%';
+    el.textContent = '';
+    el.appendChild(img);
   } else {
     el.textContent = 'AR';
   }
@@ -483,8 +490,20 @@ document.getElementById('save-contact').addEventListener('click', function () {
 });
 
 document.getElementById('save-media').addEventListener('click', function () {
+  var rawVideo = document.getElementById('intro-video').value.trim();
+  var videoUrl = '';
+  if (rawVideo) {
+    // Only allow embeds from YouTube and Vimeo to prevent malicious iframe injection
+    var ALLOWED_VIDEO = /^https:\/\/(www\.)?(youtube\.com\/embed\/|player\.vimeo\.com\/video\/)/;
+    if (ALLOWED_VIDEO.test(rawVideo)) {
+      videoUrl = rawVideo;
+    } else {
+      alert('Video URL must be a YouTube embed (https://www.youtube.com/embed/...) or Vimeo embed (https://player.vimeo.com/video/...).');
+      return;
+    }
+  }
   localStorage.setItem(KEYS.MEDIA, JSON.stringify({
-    videoUrl:      document.getElementById('intro-video').value.trim(),
+    videoUrl:      videoUrl,
     showcaseImage: document.getElementById('showcase-image').value.trim()
   }));
   showSaveMsg();

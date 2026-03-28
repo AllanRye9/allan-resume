@@ -91,7 +91,7 @@
     if (videoContainer) {
       var iframe = document.createElement('iframe');
       iframe.src = media.videoUrl;
-      iframe.setAttribute('frameborder', '0');
+      iframe.style.border = 'none';
       iframe.setAttribute('allowfullscreen', '');
       iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
       iframe.setAttribute('title', 'Intro video');
