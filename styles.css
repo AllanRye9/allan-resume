@@ -841,3 +841,32 @@ footer a:hover { color: #fff; }
     size: A4;
   }
 }
+
+/* ===== Admin-managed media containers ===== */
+#hero-video-container {
+  margin-top: 24px;
+  width: 100%;
+}
+
+.hero-video-wrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  height: 0;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.hero-video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+#hero-showcase-image {
+  margin-top: 20px;
+  text-align: center;
+}
