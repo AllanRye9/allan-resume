@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Allan Rye — Senior Software Engineer. Professional online CV showcasing experience in full-stack development, healthcare, finance, and gaming software." />
+  <meta name="author" content="Allan Rye" />
+  <meta property="og:title" content="Allan Rye | Software Engineer CV" />
+  <meta property="og:description" content="Professional online CV — full-stack development, system design, and engineering across multiple industries." />
+  <meta property="og:type" content="website" />
+
+  <title>Allan Rye | Software Engineer CV</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- html2pdf.js for client-side PDF generation (vendored locally) -->
+  <script src="vendor/html2pdf.bundle.min.js"></script>
+</head>
+
+<body>
+  <!-- ===== Navigation ===== -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-container">
+      <a href="#hero" class="nav-logo">Allan<span>.</span>dev</a>
+      <ul class="nav-links" role="list">
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#education">Education</a></li>
+        <li>
+          <a href="#download" class="nav-download" data-action="download-pdf">
+            ⬇ Download CV
+          </a>
+        </li>
+      </ul>
+      <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===== CV Content (used for PDF export) ===== -->
+  <div id="cv-content">
+
+    <!-- ===== Hero / Profile ===== -->
+    <section id="hero" class="hero" aria-label="Profile">
+      <div class="hero-content">
+        <div class="hero-avatar" aria-hidden="true">AR</div>
+        <div class="hero-text">
+          <h1>Allan Rye</h1>
+          <p class="title">Senior Software Engineer &amp; <span>Full-Stack Developer</span></p>
+          <p class="tagline">
+            Designing, developing, testing, and maintaining software applications and systems using
+            engineering principles and programming expertise — delivering solutions that meet user needs
+            across healthcare, finance, and gaming industries.
+          </p>
+          <div class="hero-badges" aria-label="Key skills">
+            <span class="badge">Full-Stack Development</span>
+            <span class="badge">System Design</span>
+            <span class="badge">Cloud Architecture</span>
+            <span class="badge">Agile / Scrum</span>
+            <span class="badge">Open Source</span>
+          </div>
+          <div class="hero-cta">
+            <button class="btn btn-primary" data-action="download-pdf" aria-label="Download CV as PDF">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download CV (PDF)
+            </button>
+            <a href="#projects" class="btn btn-outline">View Projects</a>
+            <a href="#about" class="btn btn-outline">About Me</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Contact Bar ===== -->
+    <div class="contact-bar" aria-label="Contact information">
+      <div class="contact-bar-inner">
+        <span class="contact-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <a href="mailto:allan.rye@email.com">allan.rye@email.com</a>
+        </span>
+        <span class="contact-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.07 1.18 2 2 0 012.04 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z"/></svg>
+          +1 (555) 012-3456
+        </span>
+        <span class="contact-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+          <a href="https://github.com/AllanRye9" target="_blank" rel="noopener noreferrer">github.com/AllanRye9</a>
+        </span>
+        <span class="contact-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          <a href="https://linkedin.com/in/allanrye" target="_blank" rel="noopener noreferrer">linkedin.com/in/allanrye</a>
+        </span>
+        <span class="contact-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Nairobi, Kenya
+        </span>
+      </div>
+    </div>
+
+    <!-- ===== About ===== -->
+    <section id="about" class="section" aria-labelledby="about-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-label">About Me</span>
+          <h2 class="section-title" id="about-title">Who I Am</h2>
+          <div class="section-line" aria-hidden="true"></div>
+        </div>
+        <div class="about-grid">
+          <div class="about-text">
+            <p>
+              I'm a passionate software engineer with over <strong>6 years of professional experience</strong>
+              building reliable, scalable, and user-centred applications. I thrive at the intersection of
+              clean code and practical problem-solving — turning complex requirements into elegant solutions.
+            </p>
+            <p>
+              My work spans <strong>full-stack web development</strong>, <strong>cloud architecture</strong>,
+              and <strong>API design</strong> across diverse sectors including healthcare record management,
+              fintech payment platforms, and real-time gaming systems. I care deeply about software quality,
+              performance, and maintainability.
+            </p>
+            <p>
+              Outside of work I contribute to open-source projects, mentor junior developers, and stay
+              current with emerging technologies through continuous learning and community engagement.
+            </p>
+          </div>
+          <div class="about-stats" aria-label="Career statistics">
+            <div class="stat-card">
+              <div class="stat-number">6+</div>
+              <div class="stat-label">Years Experience</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">30+</div>
+              <div class="stat-label">Projects Delivered</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">3</div>
+              <div class="stat-label">Industries Served</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">99%</div>
+              <div class="stat-label">Client Satisfaction</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Skills ===== -->
+    <section id="skills" class="section" aria-labelledby="skills-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-label">Expertise</span>
+          <h2 class="section-title" id="skills-title">Technical Skills</h2>
+          <p class="section-subtitle">A broad toolbox built through real-world project delivery.</p>
+          <div class="section-line" aria-hidden="true"></div>
+        </div>
+        <div class="skills-grid">
+
+          <div class="skill-category">
+            <div class="skill-category-title">
+              <div class="skill-category-icon" style="background: rgba(26,115,232,.12);" aria-hidden="true">🖥️</div>
+              Frontend Development
+            </div>
+            <div class="skill-tags">
+              <span class="skill-tag">HTML5</span>
+              <span class="skill-tag">CSS3 / SASS</span>
+              <span class="skill-tag">JavaScript (ES2022+)</span>
+              <span class="skill-tag">TypeScript</span>
+              <span class="skill-tag">React.js</span>
+              <span class="skill-tag">Next.js</span>
+              <span class="skill-tag">Vue.js</span>
+              <span class="skill-tag">Tailwind CSS</span>
+            </div>
+          </div>
+
+          <div class="skill-category">
+            <div class="skill-category-title">
+              <div class="skill-category-icon" style="background: rgba(52,168,83,.12);" aria-hidden="true">⚙️</div>
+              Backend Development
+            </div>
+            <div class="skill-tags">
+              <span class="skill-tag">Node.js</span>
+              <span class="skill-tag">Python</span>
+              <span class="skill-tag">Django</span>
+              <span class="skill-tag">FastAPI</span>
+              <span class="skill-tag">Express.js</span>
+              <span class="skill-tag">RESTful APIs</span>
+              <span class="skill-tag">GraphQL</span>
+              <span class="skill-tag">Java / Spring Boot</span>
+            </div>
+          </div>
+
+          <div class="skill-category">
+            <div class="skill-category-title">
+              <div class="skill-category-icon" style="background: rgba(251,188,4,.12);" aria-hidden="true">🗄️</div>
+              Databases &amp; Storage
+            </div>
+            <div class="skill-tags">
+              <span class="skill-tag">PostgreSQL</span>
+              <span class="skill-tag">MySQL</span>
+              <span class="skill-tag">MongoDB</span>
+              <span class="skill-tag">Redis</span>
+              <span class="skill-tag">Elasticsearch</span>
+              <span class="skill-tag">Firebase</span>
+              <span class="skill-tag">Supabase</span>
+            </div>
+          </div>
+
+          <div class="skill-category">
+            <div class="skill-category-title">
+              <div class="skill-category-icon" style="background: rgba(234,67,53,.12);" aria-hidden="true">☁️</div>
+              Cloud &amp; DevOps
+            </div>
+            <div class="skill-tags">
+              <span class="skill-tag">AWS (EC2, S3, Lambda)</span>
+              <span class="skill-tag">Google Cloud</span>
+              <span class="skill-tag">Docker</span>
+              <span class="skill-tag">Kubernetes</span>
+              <span class="skill-tag">GitHub Actions</span>
+              <span class="skill-tag">CI/CD Pipelines</span>
+              <span class="skill-tag">Terraform</span>
+            </div>
+          </div>
+
+          <div class="skill-category">
+            <div class="skill-category-title">
+              <div class="skill-category-icon" style="background: rgba(26,115,232,.12);" aria-hidden="true">🧪</div>
+              Testing &amp; Quality
+            </div>
+            <div class="skill-tags">
+              <span class="skill-tag">Jest</span>
+              <span class="skill-tag">Pytest</span>
+              <span class="skill-tag">Cypress</span>
+              <span class="skill-tag">Playwright</span>
+              <span class="skill-tag">Unit Testing</span>
+              <span class="skill-tag">TDD</span>
+              <span class="skill-tag">Code Review</span>
+            </div>
+          </div>
+
+          <div class="skill-category">
+            <div class="skill-category-title">
+              <div class="skill-category-icon" style="background: rgba(52,168,83,.12);" aria-hidden="true">🛠️</div>
+              Tools &amp; Practices
+            </div>
+            <div class="skill-tags">
+              <span class="skill-tag">Git / GitHub</span>
+              <span class="skill-tag">Agile / Scrum</span>
+              <span class="skill-tag">JIRA</span>
+              <span class="skill-tag">Figma</span>
+              <span class="skill-tag">Linux / Bash</span>
+              <span class="skill-tag">Microservices</span>
+              <span class="skill-tag">System Design</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Experience ===== -->
+    <section id="experience" class="section" aria-labelledby="exp-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-label">Career</span>
+          <h2 class="section-title" id="exp-title">Work Experience</h2>
+          <p class="section-subtitle">Professional journey building impactful software across industries.</p>
+          <div class="section-line" aria-hidden="true"></div>
+        </div>
+        <div class="timeline" role="list">
+
+          <div class="timeline-item" role="listitem">
+            <div class="timeline-dot" aria-hidden="true"></div>
+            <div class="timeline-card">
+              <div class="timeline-header">
+                <span class="timeline-role">Senior Software Engineer</span>
+                <span class="timeline-date">Jan 2023 — Present</span>
+              </div>
+              <div class="timeline-company">HealthBridge Solutions · Nairobi, Kenya</div>
+              <p class="timeline-desc">
+                Leading development of a cloud-native electronic health record (EHR) platform serving
+                120+ clinics across East Africa. Architected a microservices back-end on AWS, reducing
+                average API response time by 40%. Mentoring a team of 4 junior engineers and driving
+                adoption of best practices including TDD and automated CI/CD pipelines.
+              </p>
+              <div class="timeline-tags">
+                <span class="timeline-tag">React</span>
+                <span class="timeline-tag">Node.js</span>
+                <span class="timeline-tag">PostgreSQL</span>
+                <span class="timeline-tag">AWS</span>
+                <span class="timeline-tag">Docker</span>
+                <span class="timeline-tag">FHIR</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="timeline-item" role="listitem">
+            <div class="timeline-dot" aria-hidden="true"></div>
+            <div class="timeline-card">
+              <div class="timeline-header">
+                <span class="timeline-role">Full-Stack Developer</span>
+                <span class="timeline-date">Mar 2021 — Dec 2022</span>
+              </div>
+              <div class="timeline-company">PesaPay Financial Technologies · Nairobi, Kenya</div>
+              <p class="timeline-desc">
+                Built and maintained core payment processing APIs handling KES 50M+ in daily
+                transaction volume. Implemented end-to-end encryption for sensitive financial data,
+                integrated M-Pesa and card payment gateways, and led a team migration from REST to
+                GraphQL which cut data over-fetching by 35%.
+              </p>
+              <div class="timeline-tags">
+                <span class="timeline-tag">Python</span>
+                <span class="timeline-tag">FastAPI</span>
+                <span class="timeline-tag">GraphQL</span>
+                <span class="timeline-tag">Redis</span>
+                <span class="timeline-tag">Vue.js</span>
+                <span class="timeline-tag">Kubernetes</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="timeline-item" role="listitem">
+            <div class="timeline-dot" aria-hidden="true"></div>
+            <div class="timeline-card">
+              <div class="timeline-header">
+                <span class="timeline-role">Software Developer</span>
+                <span class="timeline-date">Jul 2019 — Feb 2021</span>
+              </div>
+              <div class="timeline-company">GameVault Studios · Remote</div>
+              <p class="timeline-desc">
+                Developed back-end services for a real-time multiplayer gaming platform with 200K+
+                active users. Designed and optimised WebSocket event handling, in-game economy logic,
+                and live leaderboard systems. Contributed a plugin framework adopted by 5 partner studios.
+              </p>
+              <div class="timeline-tags">
+                <span class="timeline-tag">Node.js</span>
+                <span class="timeline-tag">WebSockets</span>
+                <span class="timeline-tag">MongoDB</span>
+                <span class="timeline-tag">Redis</span>
+                <span class="timeline-tag">TypeScript</span>
+                <span class="timeline-tag">AWS Lambda</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="timeline-item" role="listitem">
+            <div class="timeline-dot" aria-hidden="true"></div>
+            <div class="timeline-card">
+              <div class="timeline-header">
+                <span class="timeline-role">Junior Web Developer</span>
+                <span class="timeline-date">Jan 2018 — Jun 2019</span>
+              </div>
+              <div class="timeline-company">Techbridge Agency · Nairobi, Kenya</div>
+              <p class="timeline-desc">
+                Developed client websites and e-commerce platforms for 15+ SME clients across
+                various sectors. Introduced automated testing workflows that reduced regression bugs
+                by 60% and improved on-time delivery rates across the development team.
+              </p>
+              <div class="timeline-tags">
+                <span class="timeline-tag">JavaScript</span>
+                <span class="timeline-tag">PHP</span>
+                <span class="timeline-tag">MySQL</span>
+                <span class="timeline-tag">WordPress</span>
+                <span class="timeline-tag">jQuery</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Projects ===== -->
+    <section id="projects" class="section" aria-labelledby="projects-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-label">Portfolio</span>
+          <h2 class="section-title" id="projects-title">Featured Projects</h2>
+          <p class="section-subtitle">A selection of projects I've built — from concept to production.</p>
+          <div class="section-line" aria-hidden="true"></div>
+        </div>
+        <div class="projects-grid">
+
+          <!-- Project 1 -->
+          <article class="project-card">
+            <div class="project-banner" style="background: linear-gradient(90deg, #1a73e8, #34a853);" aria-hidden="true"></div>
+            <div class="project-body">
+              <div class="project-type">Healthcare · Open Source</div>
+              <h3 class="project-title">CareTrack EHR System</h3>
+              <p class="project-desc">
+                A FHIR-compliant electronic health record platform designed for resource-constrained
+                clinics in sub-Saharan Africa, supporting offline-first operation and multi-tenant architecture.
+              </p>
+              <ul class="project-highlights">
+                <li>Serves 120+ clinics with 50K+ patient records</li>
+                <li>HIPAA-aligned data handling and audit trails</li>
+                <li>Offline-first PWA with background sync</li>
+                <li>Reduced patient wait times by 30% through smarter scheduling</li>
+              </ul>
+              <div class="project-tech">
+                <span class="tech-tag">React</span>
+                <span class="tech-tag">Node.js</span>
+                <span class="tech-tag">PostgreSQL</span>
+                <span class="tech-tag">FHIR R4</span>
+                <span class="tech-tag">AWS</span>
+                <span class="tech-tag">Docker</span>
+              </div>
+              <div class="project-links">
+                <a href="https://github.com/AllanRye9" class="project-link" target="_blank" rel="noopener noreferrer">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                  GitHub
+                </a>
+                <a href="#projects" class="project-link">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                  Live Demo
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project 2 -->
+          <article class="project-card">
+            <div class="project-banner" style="background: linear-gradient(90deg, #fbbc04, #ea4335);" aria-hidden="true"></div>
+            <div class="project-body">
+              <div class="project-type">Fintech · API</div>
+              <h3 class="project-title">PesaFlow Payment Gateway</h3>
+              <p class="project-desc">
+                A unified payment orchestration layer supporting M-Pesa, Visa/Mastercard, and bank
+                transfers through a single GraphQL API — built for reliability and PCI-DSS compliance.
+              </p>
+              <ul class="project-highlights">
+                <li>Processes KES 50M+ daily across 3 payment channels</li>
+                <li>99.97% uptime with circuit-breaker failover logic</li>
+                <li>End-to-end AES-256 encryption for sensitive data</li>
+                <li>Real-time fraud detection with ML scoring</li>
+              </ul>
+              <div class="project-tech">
+                <span class="tech-tag">Python</span>
+                <span class="tech-tag">FastAPI</span>
+                <span class="tech-tag">GraphQL</span>
+                <span class="tech-tag">Redis</span>
+                <span class="tech-tag">PostgreSQL</span>
+                <span class="tech-tag">Kubernetes</span>
+              </div>
+              <div class="project-links">
+                <a href="https://github.com/AllanRye9" class="project-link" target="_blank" rel="noopener noreferrer">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                  GitHub
+                </a>
+                <a href="#projects" class="project-link">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                  Case Study
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project 3 -->
+          <article class="project-card">
+            <div class="project-banner" style="background: linear-gradient(90deg, #9c27b0, #1a73e8);" aria-hidden="true"></div>
+            <div class="project-body">
+              <div class="project-type">Gaming · Real-time</div>
+              <h3 class="project-title">ArenaCore Game Engine Services</h3>
+              <p class="project-desc">
+                Scalable back-end services for a real-time multiplayer arena game — covering matchmaking,
+                in-game economy, live leaderboards, and cross-platform WebSocket event streaming.
+              </p>
+              <ul class="project-highlights">
+                <li>Supports 200K+ concurrent users with sub-100ms latency</li>
+                <li>Extensible plugin framework adopted by 5 partner studios</li>
+                <li>Anti-cheat scoring pipeline with behavioural analysis</li>
+                <li>Event-sourced game state with full replay capability</li>
+              </ul>
+              <div class="project-tech">
+                <span class="tech-tag">TypeScript</span>
+                <span class="tech-tag">Node.js</span>
+                <span class="tech-tag">WebSockets</span>
+                <span class="tech-tag">MongoDB</span>
+                <span class="tech-tag">Redis</span>
+                <span class="tech-tag">AWS Lambda</span>
+              </div>
+              <div class="project-links">
+                <a href="https://github.com/AllanRye9" class="project-link" target="_blank" rel="noopener noreferrer">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                  GitHub
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project 4 -->
+          <article class="project-card">
+            <div class="project-banner" style="background: linear-gradient(90deg, #34a853, #00bcd4);" aria-hidden="true"></div>
+            <div class="project-body">
+              <div class="project-type">Developer Tools · Open Source</div>
+              <h3 class="project-title">DevFlow CLI Toolkit</h3>
+              <p class="project-desc">
+                An open-source command-line toolkit that automates repetitive developer workflows —
+                project scaffolding, environment setup, dependency auditing, and release management.
+              </p>
+              <ul class="project-highlights">
+                <li>500+ GitHub stars, 80+ community contributors</li>
+                <li>Cuts new project setup from 2 hours to under 5 minutes</li>
+                <li>Plugin architecture supporting 30+ integrations</li>
+                <li>Published to npm with 10K+ monthly downloads</li>
+              </ul>
+              <div class="project-tech">
+                <span class="tech-tag">Node.js</span>
+                <span class="tech-tag">TypeScript</span>
+                <span class="tech-tag">Commander.js</span>
+                <span class="tech-tag">npm</span>
+                <span class="tech-tag">GitHub Actions</span>
+              </div>
+              <div class="project-links">
+                <a href="https://github.com/AllanRye9" class="project-link" target="_blank" rel="noopener noreferrer">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                  GitHub
+                </a>
+                <a href="#projects" class="project-link">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                  npm
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project 5 -->
+          <article class="project-card">
+            <div class="project-banner" style="background: linear-gradient(90deg, #ea4335, #ff9800);" aria-hidden="true"></div>
+            <div class="project-body">
+              <div class="project-type">E-commerce · Full-Stack</div>
+              <h3 class="project-title">ShopEase Multi-Vendor Platform</h3>
+              <p class="project-desc">
+                A multi-vendor marketplace connecting small businesses with customers across East Africa,
+                featuring real-time inventory management, analytics dashboards, and SMS order notifications.
+              </p>
+              <ul class="project-highlights">
+                <li>Onboarded 200+ vendors in first 3 months</li>
+                <li>Integrated Africa's Talking SMS API for order tracking</li>
+                <li>Real-time analytics dashboard for vendor performance</li>
+                <li>Mobile-first, PWA with 98 Lighthouse performance score</li>
+              </ul>
+              <div class="project-tech">
+                <span class="tech-tag">Next.js</span>
+                <span class="tech-tag">TypeScript</span>
+                <span class="tech-tag">Prisma</span>
+                <span class="tech-tag">PostgreSQL</span>
+                <span class="tech-tag">Stripe</span>
+                <span class="tech-tag">Vercel</span>
+              </div>
+              <div class="project-links">
+                <a href="https://github.com/AllanRye9" class="project-link" target="_blank" rel="noopener noreferrer">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                  GitHub
+                </a>
+                <a href="#projects" class="project-link">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                  Live Site
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project 6 -->
+          <article class="project-card">
+            <div class="project-banner" style="background: linear-gradient(90deg, #00bcd4, #34a853);" aria-hidden="true"></div>
+            <div class="project-body">
+              <div class="project-type">Data Engineering · ML</div>
+              <h3 class="project-title">InsightPulse Analytics Pipeline</h3>
+              <p class="project-desc">
+                An end-to-end data engineering pipeline that ingests, processes, and visualises
+                business intelligence data from multiple sources, with ML-powered anomaly detection
+                and automated reporting.
+              </p>
+              <ul class="project-highlights">
+                <li>Processes 5GB+ of raw data nightly via scheduled ETL jobs</li>
+                <li>ML model detects revenue anomalies with 94% accuracy</li>
+                <li>Interactive dashboards with drill-down filtering</li>
+                <li>Automated weekly PDF reports delivered via email</li>
+              </ul>
+              <div class="project-tech">
+                <span class="tech-tag">Python</span>
+                <span class="tech-tag">Apache Airflow</span>
+                <span class="tech-tag">Pandas</span>
+                <span class="tech-tag">scikit-learn</span>
+                <span class="tech-tag">BigQuery</span>
+                <span class="tech-tag">Looker Studio</span>
+              </div>
+              <div class="project-links">
+                <a href="https://github.com/AllanRye9" class="project-link" target="_blank" rel="noopener noreferrer">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                  GitHub
+                </a>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Education ===== -->
+    <section id="education" class="section" aria-labelledby="edu-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-label">Academic Background</span>
+          <h2 class="section-title" id="edu-title">Education &amp; Certifications</h2>
+          <p class="section-subtitle">Academic foundations and professional certifications.</p>
+          <div class="section-line" aria-hidden="true"></div>
+        </div>
+        <div class="education-grid">
+
+          <div class="edu-card">
+            <div class="edu-icon" aria-hidden="true">🎓</div>
+            <div class="edu-body">
+              <div class="edu-degree">BSc. Computer Science</div>
+              <div class="edu-school">University of Nairobi</div>
+              <div class="edu-date">2014 – 2018</div>
+              <div class="edu-note">First Class Honours · Specialisation in Software Engineering &amp; Distributed Systems</div>
+            </div>
+          </div>
+
+          <div class="edu-card">
+            <div class="edu-icon" aria-hidden="true">☁️</div>
+            <div class="edu-body">
+              <div class="edu-degree">AWS Certified Solutions Architect</div>
+              <div class="edu-school">Amazon Web Services</div>
+              <div class="edu-date">2022 · Associate Level</div>
+              <div class="edu-note">Cloud architecture, high availability design, and cost optimisation strategies on AWS.</div>
+            </div>
+          </div>
+
+          <div class="edu-card">
+            <div class="edu-icon" aria-hidden="true">🐍</div>
+            <div class="edu-body">
+              <div class="edu-degree">Professional Data Engineer</div>
+              <div class="edu-school">Google Cloud</div>
+              <div class="edu-date">2023</div>
+              <div class="edu-note">Designing and building data processing systems on Google Cloud Platform.</div>
+            </div>
+          </div>
+
+          <div class="edu-card">
+            <div class="edu-icon" aria-hidden="true">🔐</div>
+            <div class="edu-body">
+              <div class="edu-degree">Certified Ethical Hacker (CEH)</div>
+              <div class="edu-school">EC-Council</div>
+              <div class="edu-date">2021</div>
+              <div class="edu-note">Penetration testing, vulnerability assessment, and secure coding practices.</div>
+            </div>
+          </div>
+
+          <div class="edu-card">
+            <div class="edu-icon" aria-hidden="true">📜</div>
+            <div class="edu-body">
+              <div class="edu-degree">Full-Stack Web Development</div>
+              <div class="edu-school">freeCodeCamp / Coursera</div>
+              <div class="edu-date">2017 – 2019</div>
+              <div class="edu-note">JavaScript, React, Node.js, databases, and responsive web design certifications.</div>
+            </div>
+          </div>
+
+          <div class="edu-card">
+            <div class="edu-icon" aria-hidden="true">⚡</div>
+            <div class="edu-body">
+              <div class="edu-degree">Professional Scrum Master I (PSM I)</div>
+              <div class="edu-school">Scrum.org</div>
+              <div class="edu-date">2020</div>
+              <div class="edu-note">Agile frameworks, sprint planning, retrospectives, and cross-functional team leadership.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Download CV ===== -->
+    <section id="download" class="download-section" aria-labelledby="download-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-label">Get My CV</span>
+          <h2 class="section-title" id="download-title">Download a Copy</h2>
+          <p class="section-subtitle">
+            Save a formatted PDF of this CV to share with your team or for your records.
+          </p>
+          <div class="section-line" aria-hidden="true"></div>
+        </div>
+        <div class="download-options">
+          <button class="btn btn-primary" data-action="download-pdf" aria-label="Download CV as PDF">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download PDF
+          </button>
+          <button class="btn btn-secondary" onclick="window.print()" aria-label="Print this page">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Print / Save as PDF
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- #cv-content -->
+
+  <!-- ===== Footer ===== -->
+  <footer>
+    <p>
+      &copy; <span id="current-year"></span> Allan Rye ·
+      Built with HTML, CSS &amp; JavaScript ·
+      <a href="https://github.com/AllanRye9" target="_blank" rel="noopener noreferrer">GitHub</a> ·
+      <a href="mailto:allan.rye@email.com">Contact</a>
+    </p>
+  </footer>
+
+  <!-- ===== Back to Top Button ===== -->
+  <button class="back-to-top" aria-label="Back to top">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
+
+  <!-- ===== Script ===== -->
+  <script src="script.js"></script>
+</body>
+</html>
