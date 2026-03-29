@@ -12,8 +12,14 @@
  *   phone?: string,
  *   githubUrl?: string,
  *   linkedinUrl?: string,
+ *   location?: string,
  *   featuredVideo?: string,
- *   heroImages?: string[]
+ *   heroImages?: string[],
+ *   aboutText?: string,
+ *   skills?: object[],
+ *   experience?: object[],
+ *   projects?: object[],
+ *   education?: object[]
  * }
  */
 
@@ -39,9 +45,17 @@ const ALLOWED_KEYS = [
   'phone',
   'githubUrl',
   'linkedinUrl',
+  'location',
   'featuredVideo',
   'heroImages',
+  'aboutText',
+  'skills',
+  'experience',
+  'projects',
+  'education',
 ];
+
+const ARRAY_KEYS = new Set(['heroImages', 'skills', 'experience', 'projects', 'education']);
 
 module.exports = function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -66,12 +80,17 @@ module.exports = function handler(req, res) {
     const body = req.body || {};
     ALLOWED_KEYS.forEach((key) => {
       if (key in body) {
-        if (key === 'heroImages') {
+        if (ARRAY_KEYS.has(key)) {
           if (Array.isArray(body[key])) {
-            store.content[key] = body[key].map((u) => String(u).slice(0, 500));
+            if (key === 'heroImages') {
+              store.content[key] = body[key].map((u) => String(u).slice(0, 500));
+            } else {
+              // skills, experience, projects, education — store as-is (already validated JSON arrays)
+              store.content[key] = body[key];
+            }
           }
         } else {
-          store.content[key] = String(body[key] || '').slice(0, 1000);
+          store.content[key] = String(body[key] || '').slice(0, 5000);
         }
       }
     });

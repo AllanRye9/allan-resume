@@ -23,8 +23,14 @@ const store = {
     phone: '',
     githubUrl: '',
     linkedinUrl: '',
+    location: '',
     featuredVideo: '',
     heroImages: [],
+    aboutText: '',
+    skills: [],
+    experience: [],
+    projects: [],
+    education: [],
   },
 };
 
