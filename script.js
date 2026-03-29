@@ -268,6 +268,12 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
     }
   }
 
+  // Location
+  if (c.location) {
+    const locEl = document.getElementById('contact-location-text');
+    if (locEl) locEl.textContent = c.location;
+  }
+
   // Featured video — inject after the hero section
   if (c.featuredVideo) {
     // Only allow http/https URLs to prevent javascript: XSS
