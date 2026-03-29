@@ -364,7 +364,7 @@
     <div id="page-content" style="display:none;">
       <div class="page-header">
         <h2>Content Editor</h2>
-        <p>Update your resume's profile picture, links, and featured media.</p>
+        <p>Update every section of your resume from here.</p>
       </div>
 
       <div class="card" id="content-loading" style="text-align:center;padding:3rem;color:var(--text2);">
@@ -409,7 +409,7 @@
 
         <!-- Contact section -->
         <div class="card">
-          <h3>📬 Contact & Links</h3>
+          <h3>📬 Contact &amp; Links</h3>
           <div class="form-row">
             <div class="form-group">
               <label for="field-email">Email Address</label>
@@ -434,8 +434,103 @@
             <div class="form-group">
               <label for="field-location">Location</label>
               <input type="text" id="field-location" placeholder="Abu Dhabi, UAE" />
-              <p class="hint">City and country shown in the contact bar (e.g. Abu Dhabi, UAE).</p>
+              <p class="hint">City and country shown in the contact bar.</p>
             </div>
+          </div>
+        </div>
+
+        <!-- About / Who I Am -->
+        <div class="card">
+          <h3>🙋 Who I Am</h3>
+          <div class="form-group">
+            <label for="field-aboutText">About Me (paragraphs separated by a blank line)</label>
+            <textarea id="field-aboutText" rows="8" placeholder="I'm a passionate software engineer with over 6 years…&#10;&#10;My work spans full-stack development…"></textarea>
+            <p class="hint">Use a blank line between paragraphs. Plain text only — no HTML.</p>
+          </div>
+        </div>
+
+        <!-- Technical Skills -->
+        <div class="card">
+          <h3>⚙️ Technical Skills</h3>
+          <div class="form-group">
+            <label for="field-skills">Skills (JSON array)</label>
+            <textarea id="field-skills" rows="12" placeholder='[
+  {
+    "category": "Frontend Development",
+    "icon": "🖥️",
+    "iconBg": "rgba(26,115,232,.12)",
+    "items": ["HTML5", "CSS3", "JavaScript", "TypeScript", "React.js"]
+  },
+  {
+    "category": "Backend Development",
+    "icon": "⚙️",
+    "iconBg": "rgba(52,168,83,.12)",
+    "items": ["Node.js", "Python", "Django", "FastAPI"]
+  }
+]'></textarea>
+            <p class="hint">Each object needs: <code>category</code>, <code>icon</code> (emoji), <code>iconBg</code> (CSS color, e.g. <code>rgba(26,115,232,.12)</code>), <code>items</code> (string array). Must be valid JSON.</p>
+          </div>
+        </div>
+
+        <!-- Work Experience -->
+        <div class="card">
+          <h3>💼 Work Experience</h3>
+          <div class="form-group">
+            <label for="field-experience">Experience (JSON array — newest first)</label>
+            <textarea id="field-experience" rows="16" placeholder='[
+  {
+    "role": "Senior Software Engineer",
+    "date": "Jan 2023 — Present",
+    "company": "HealthBridge Solutions · Nairobi, Kenya",
+    "description": "Led development of a cloud-native EHR platform…",
+    "tags": ["React", "Node.js", "AWS"]
+  }
+]'></textarea>
+            <p class="hint">Each object needs: <code>role</code>, <code>date</code>, <code>company</code>, <code>description</code>, <code>tags</code> (string array). Must be valid JSON.</p>
+          </div>
+        </div>
+
+        <!-- Projects -->
+        <div class="card">
+          <h3>🚀 Projects</h3>
+          <div class="form-group">
+            <label for="field-projects">Projects (JSON array)</label>
+            <textarea id="field-projects" rows="20" placeholder='[
+  {
+    "title": "My Project",
+    "type": "Full-Stack · TypeScript",
+    "description": "A brief description of the project.",
+    "highlights": ["Feature one", "Feature two"],
+    "tech": ["TypeScript", "React", "Node.js"],
+    "github": "https://github.com/username/repo",
+    "bannerStyle": "background: linear-gradient(90deg, #1a73e8, #34a853)"
+  }
+]'></textarea>
+            <p class="hint">Each object: <code>title</code>, <code>type</code>, <code>description</code>, <code>highlights</code> (array), <code>tech</code> (array), <code>github</code> (URL), <code>bannerStyle</code> (CSS). Must be valid JSON.</p>
+          </div>
+        </div>
+
+        <!-- Education -->
+        <div class="card">
+          <h3>🎓 Education &amp; Certifications</h3>
+          <div class="form-group">
+            <label for="field-education">Education (JSON array)</label>
+            <textarea id="field-education" rows="14" placeholder='[
+  {
+    "icon": "🎓",
+    "degree": "BSc. Computer Science",
+    "school": "University of Nairobi",
+    "date": "2014 – 2018",
+    "note": "First Class Honours · Software Engineering"
+  },
+  {
+    "icon": "☁️",
+    "degree": "AWS Certified Solutions Architect",
+    "school": "Amazon Web Services",
+    "date": "2022 · Associate Level"
+  }
+]'></textarea>
+            <p class="hint">Each object: <code>icon</code> (emoji), <code>degree</code>, <code>school</code>, <code>date</code>, and optional <code>note</code>. Must be valid JSON.</p>
           </div>
         </div>
 
@@ -445,12 +540,12 @@
           <div class="form-group">
             <label for="field-featuredVideo">Featured Video URL (YouTube embed or direct link)</label>
             <input type="url" id="field-featuredVideo" placeholder="https://www.youtube.com/embed/VIDEO_ID" />
-            <p class="hint">Paste a YouTube embed URL or direct video URL. This will appear in the hero section when set.</p>
+            <p class="hint">Paste a YouTube embed URL or direct video URL. Appears in the hero section when set.</p>
           </div>
           <div class="form-group">
             <label>Hero Image Gallery URLs (one per line)</label>
             <textarea id="field-heroImages" rows="4" placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg"></textarea>
-            <p class="hint">One image URL per line. These will appear as a gallery in the hero section when set.</p>
+            <p class="hint">One image URL per line. Displayed as a gallery in the hero section when set.</p>
           </div>
         </div>
 
@@ -463,7 +558,7 @@
           <h3 style="color:var(--warn);">⚠️ Note on Persistence</h3>
           <p style="font-size:.88rem;color:var(--text2);line-height:1.6;margin-top:.5rem;">
             Content changes are stored in memory on the server and will reset when the serverless
-            function instance is recycled (cold start).  The resume page also caches the latest values
+            function instance is recycled (cold start).  The resume page caches the latest values
             in <code style="font-family:var(--mono);background:var(--bg3);padding:.1em .35em;border-radius:3px;">localStorage</code>
             so your browser will always show your saved content.<br /><br />
             For <strong>permanent cross-user persistence</strong>, connect
@@ -690,37 +785,47 @@
   // =========================================================
   let currentContent = {};
 
-  const fieldIds = [
+  // Simple text fields
+  const textFieldIds = [
     'profilePic', 'name', 'title', 'tagline',
     'email', 'phone', 'githubUrl', 'linkedinUrl', 'location',
-    'featuredVideo', 'heroImages',
+    'featuredVideo', 'aboutText',
   ];
+  // Fields stored as arrays (heroImages = one per line, others = JSON)
+  const jsonArrayFieldIds = ['skills', 'experience', 'projects', 'education'];
 
   async function loadContent() {
     $('#content-loading').style.display = 'block';
     $('#content-form').style.display    = 'none';
     try {
       const res = await fetch('/api/content');
-      if (!res.ok) throw new Error('Server error');
+      if (!res.ok) throw new Error('Server error ' + res.status);
       currentContent = await res.json();
       populateForm(currentContent);
       $('#content-loading').style.display = 'none';
       $('#content-form').style.display    = 'block';
-    } catch {
+    } catch (err) {
       $('#content-loading').innerHTML =
-        '<p style="color:var(--danger);">Failed to load content. Please refresh.</p>';
+        '<p style="color:var(--danger);">Failed to load content: ' + escHtml(err.message) + '. Please refresh.</p>';
     }
   }
 
   function populateForm(c) {
-    fieldIds.forEach((id) => {
+    textFieldIds.forEach((id) => {
       const el = $('#field-' + id);
       if (!el) return;
-      if (id === 'heroImages') {
-        el.value = Array.isArray(c[id]) ? c[id].join('\n') : '';
-      } else {
-        el.value = c[id] || '';
-      }
+      el.value = c[id] || '';
+    });
+    // heroImages — one URL per line
+    const heroEl = $('#field-heroImages');
+    if (heroEl) heroEl.value = Array.isArray(c.heroImages) ? c.heroImages.join('\n') : '';
+    // JSON array fields — pretty-print for readability
+    jsonArrayFieldIds.forEach((id) => {
+      const el = $('#field-' + id);
+      if (!el) return;
+      el.value = Array.isArray(c[id]) && c[id].length
+        ? JSON.stringify(c[id], null, 2)
+        : '';
     });
     updateAvatarPreview(c.profilePic || '');
   }
@@ -750,16 +855,40 @@
     saveBtn.innerHTML = '<span class="loader"></span> Saving…';
     saveMsg.className = 'save-msg';
 
+    // Build payload from text fields
     const payload = {};
-    fieldIds.forEach((id) => {
+    textFieldIds.forEach((id) => {
       const el = $('#field-' + id);
       if (!el) return;
-      if (id === 'heroImages') {
-        payload[id] = el.value.split('\n').map((s) => s.trim()).filter(Boolean);
-      } else {
-        payload[id] = el.value.trim();
-      }
+      payload[id] = el.value.trim();
     });
+
+    // heroImages — one per line
+    const heroEl = $('#field-heroImages');
+    if (heroEl) {
+      payload.heroImages = heroEl.value.split('\n').map((s) => s.trim()).filter(Boolean);
+    }
+
+    // JSON array fields — parse and validate
+    for (const id of jsonArrayFieldIds) {
+      const el = $('#field-' + id);
+      if (!el || !el.value.trim()) {
+        payload[id] = [];
+        continue;
+      }
+      try {
+        const parsed = JSON.parse(el.value);
+        if (!Array.isArray(parsed)) throw new Error(id + ' must be a JSON array');
+        payload[id] = parsed;
+      } catch (parseErr) {
+        saveMsg.textContent = '✗ Invalid JSON in ' + id + ': ' + parseErr.message;
+        saveMsg.className   = 'save-msg show err';
+        showToast('JSON error in ' + id, 'error');
+        saveBtn.disabled    = false;
+        saveBtn.textContent = 'Save Changes';
+        return;
+      }
+    }
 
     try {
       const res = await fetch('/api/content?token=' + encodeURIComponent(authToken), {
@@ -774,7 +903,7 @@
       const data = await res.json();
       currentContent = data.content;
 
-      // Also persist to localStorage so the main page can pick it up
+      // Persist to localStorage so the resume page picks it up immediately
       localStorage.setItem('cv_content_override', JSON.stringify(currentContent));
 
       saveMsg.textContent = '✓ Saved successfully';
