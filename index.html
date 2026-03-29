@@ -3,13 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Allan Rye — Senior Software Engineer. Professional online CV showcasing experience in full-stack development, healthcare, finance, and gaming software." />
+  <meta name="description" content="Allan Rye — Senior Software Engineer based in Abu Dhabi, UAE. Professional online CV showcasing experience in full-stack development, system design, and software engineering." />
   <meta name="author" content="Allan Rye" />
-  <meta property="og:title" content="Allan Rye | Software Engineer CV" />
-  <meta property="og:description" content="Professional online CV — full-stack development, system design, and engineering across multiple industries." />
+  <meta property="og:title" content="Allan Rye | Senior Software Engineer CV" />
+  <meta property="og:description" content="Senior Software Engineer based in Abu Dhabi, UAE — full-stack development, system design, and engineering across multiple industries." />
   <meta property="og:type" content="website" />
 
-  <title>Allan Rye | Software Engineer CV</title>
+  <title>Allan Rye | Senior Software Engineer CV</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231a73e8'/><text y='.9em' font-size='65' x='50%' text-anchor='middle' fill='white'>💻</text></svg>" />
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -55,18 +58,16 @@
         <div id="hero-avatar" class="hero-avatar" aria-hidden="true">AR</div>
         <div class="hero-text">
           <h1 id="hero-name">Allan Rye</h1>
-          <p id="hero-title" class="title">Senior Software Engineer &amp; <span>Full-Stack Developer</span></p>
+          <p id="hero-title" class="title"><span>Senior Software Engineer</span> &amp; Full-Stack Developer</p>
           <p class="tagline">
-            Designing, developing, testing, and maintaining software applications and systems using
-            engineering principles and programming expertise — delivering solutions that meet user needs
-            across healthcare, finance, and gaming industries.
+            Senior Software Engineer with 6+ years building scalable full-stack applications across healthcare, finance, and the gaming industry. Based in Abu Dhabi, UAE.
           </p>
           <div class="hero-badges" aria-label="Key skills">
             <span class="badge">Full-Stack Development</span>
             <span class="badge">System Design</span>
             <span class="badge">Cloud Architecture</span>
             <span class="badge">Agile / Scrum</span>
-            <span class="badge">Open Source</span>
+            <span class="badge">Abu Dhabi, UAE 📍</span>
           </div>
           <div class="hero-cta">
             <button class="btn btn-primary" data-action="download-pdf" aria-label="Download CV as PDF">
@@ -104,7 +105,7 @@
         </span>
         <span class="contact-item">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <span id="contact-location-text">Nairobi, Kenya</span>
+          <span id="contact-location-text">Abu Dhabi, UAE</span>
         </span>
       </div>
     </div>
@@ -393,213 +394,181 @@
         </div>
         <div class="projects-grid">
 
-          <!-- Project 1 -->
+          <!-- Project 1: 3R-Elite -->
           <article class="project-card">
             <div class="project-banner" style="background: linear-gradient(90deg, #1a73e8, #34a853);" aria-hidden="true"></div>
             <div class="project-body">
-              <div class="project-type">Healthcare · Open Source</div>
-              <h3 class="project-title">CareTrack EHR System</h3>
+              <div class="project-type">Marketplace · E-Commerce · TypeScript</div>
+              <h3 class="project-title">3R-Elite</h3>
               <p class="project-desc">
-                A FHIR-compliant electronic health record platform designed for resource-constrained
-                clinics in sub-Saharan Africa, supporting offline-first operation and multi-tenant architecture.
+                Marketplace web application for buying and selling goods and services. Connects local and
+                global communities enabling users to post listings, negotiate prices, track orders, and leave reviews.
               </p>
               <ul class="project-highlights">
-                <li>Serves 120+ clinics with 50K+ patient records</li>
-                <li>HIPAA-aligned data handling and audit trails</li>
-                <li>Offline-first PWA with background sync</li>
-                <li>Reduced patient wait times by 30% through smarter scheduling</li>
+                <li>Full listing management with price negotiation flow</li>
+                <li>Order tracking and buyer/seller review system</li>
+                <li>Trust and transparency focused platform design</li>
               </ul>
               <div class="project-tech">
+                <span class="tech-tag">TypeScript</span>
                 <span class="tech-tag">React</span>
                 <span class="tech-tag">Node.js</span>
                 <span class="tech-tag">PostgreSQL</span>
-                <span class="tech-tag">FHIR R4</span>
-                <span class="tech-tag">AWS</span>
-                <span class="tech-tag">Docker</span>
               </div>
               <div class="project-links">
-                <a href="https://github.com/AllanRye9" class="project-link" target="_blank" rel="noopener noreferrer">
+                <a href="https://github.com/AllanRye9/3R-Elite" class="project-link" target="_blank" rel="noopener noreferrer">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
                   GitHub
-                </a>
-                <a href="#projects" class="project-link">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                  Live Demo
                 </a>
               </div>
             </div>
           </article>
 
-          <!-- Project 2 -->
+          <!-- Project 2: CreditPulse -->
           <article class="project-card">
             <div class="project-banner" style="background: linear-gradient(90deg, #fbbc04, #ea4335);" aria-hidden="true"></div>
             <div class="project-body">
-              <div class="project-type">Fintech · API</div>
-              <h3 class="project-title">PesaFlow Payment Gateway</h3>
+              <div class="project-type">Fintech · AI · Python</div>
+              <h3 class="project-title">CreditPulse</h3>
               <p class="project-desc">
-                A unified payment orchestration layer supporting M-Pesa, Visa/Mastercard, and bank
-                transfers through a single GraphQL API — built for reliability and PCI-DSS compliance.
+                AI-powered financial assistant that automatically analyzes credit card statements and
+                payment reminders, transforming email/SMS financial data into actionable insights.
               </p>
               <ul class="project-highlights">
-                <li>Processes KES 50M+ daily across 3 payment channels</li>
-                <li>99.97% uptime with circuit-breaker failover logic</li>
-                <li>End-to-end AES-256 encryption for sensitive data</li>
-                <li>Real-time fraud detection with ML scoring</li>
+                <li>Automated parsing of email/SMS financial statements</li>
+                <li>AI-driven spending analysis and anomaly detection</li>
+                <li>Actionable financial insights and recommendations</li>
               </ul>
               <div class="project-tech">
                 <span class="tech-tag">Python</span>
+                <span class="tech-tag">AI/ML</span>
+                <span class="tech-tag">NLP</span>
                 <span class="tech-tag">FastAPI</span>
-                <span class="tech-tag">GraphQL</span>
-                <span class="tech-tag">Redis</span>
-                <span class="tech-tag">PostgreSQL</span>
-                <span class="tech-tag">Kubernetes</span>
               </div>
               <div class="project-links">
-                <a href="https://github.com/AllanRye9" class="project-link" target="_blank" rel="noopener noreferrer">
+                <a href="https://github.com/AllanRye9/CreditPulse" class="project-link" target="_blank" rel="noopener noreferrer">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
                   GitHub
-                </a>
-                <a href="#projects" class="project-link">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                  Case Study
                 </a>
               </div>
             </div>
           </article>
 
-          <!-- Project 3 -->
+          <!-- Project 3: Yot-Presentation -->
           <article class="project-card">
             <div class="project-banner" style="background: linear-gradient(90deg, #9c27b0, #1a73e8);" aria-hidden="true"></div>
             <div class="project-body">
-              <div class="project-type">Gaming · Real-time</div>
-              <h3 class="project-title">ArenaCore Game Engine Services</h3>
+              <div class="project-type">AI · Voice Control · Python</div>
+              <h3 class="project-title">Yot Presentation</h3>
               <p class="project-desc">
-                Scalable back-end services for a real-time multiplayer arena game — covering matchmaking,
-                in-game economy, live leaderboards, and cross-platform WebSocket event streaming.
+                Intelligent voice control system for navigating presentations using natural language
+                commands — supporting 8 different languages for a hands-free presentation experience.
               </p>
               <ul class="project-highlights">
-                <li>Supports 200K+ concurrent users with sub-100ms latency</li>
-                <li>Extensible plugin framework adopted by 5 partner studios</li>
-                <li>Anti-cheat scoring pipeline with behavioural analysis</li>
-                <li>Event-sourced game state with full replay capability</li>
-              </ul>
-              <div class="project-tech">
-                <span class="tech-tag">TypeScript</span>
-                <span class="tech-tag">Node.js</span>
-                <span class="tech-tag">WebSockets</span>
-                <span class="tech-tag">MongoDB</span>
-                <span class="tech-tag">Redis</span>
-                <span class="tech-tag">AWS Lambda</span>
-              </div>
-              <div class="project-links">
-                <a href="https://github.com/AllanRye9" class="project-link" target="_blank" rel="noopener noreferrer">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-                  GitHub
-                </a>
-              </div>
-            </div>
-          </article>
-
-          <!-- Project 4 -->
-          <article class="project-card">
-            <div class="project-banner" style="background: linear-gradient(90deg, #34a853, #00bcd4);" aria-hidden="true"></div>
-            <div class="project-body">
-              <div class="project-type">Developer Tools · Open Source</div>
-              <h3 class="project-title">DevFlow CLI Toolkit</h3>
-              <p class="project-desc">
-                An open-source command-line toolkit that automates repetitive developer workflows —
-                project scaffolding, environment setup, dependency auditing, and release management.
-              </p>
-              <ul class="project-highlights">
-                <li>500+ GitHub stars, 80+ community contributors</li>
-                <li>Cuts new project setup from 2 hours to under 5 minutes</li>
-                <li>Plugin architecture supporting 30+ integrations</li>
-                <li>Published to npm with 10K+ monthly downloads</li>
-              </ul>
-              <div class="project-tech">
-                <span class="tech-tag">Node.js</span>
-                <span class="tech-tag">TypeScript</span>
-                <span class="tech-tag">Commander.js</span>
-                <span class="tech-tag">npm</span>
-                <span class="tech-tag">GitHub Actions</span>
-              </div>
-              <div class="project-links">
-                <a href="https://github.com/AllanRye9" class="project-link" target="_blank" rel="noopener noreferrer">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-                  GitHub
-                </a>
-                <a href="#projects" class="project-link">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                  npm
-                </a>
-              </div>
-            </div>
-          </article>
-
-          <!-- Project 5 -->
-          <article class="project-card">
-            <div class="project-banner" style="background: linear-gradient(90deg, #ea4335, #ff9800);" aria-hidden="true"></div>
-            <div class="project-body">
-              <div class="project-type">E-commerce · Full-Stack</div>
-              <h3 class="project-title">ShopEase Multi-Vendor Platform</h3>
-              <p class="project-desc">
-                A multi-vendor marketplace connecting small businesses with customers across East Africa,
-                featuring real-time inventory management, analytics dashboards, and SMS order notifications.
-              </p>
-              <ul class="project-highlights">
-                <li>Onboarded 200+ vendors in first 3 months</li>
-                <li>Integrated Africa's Talking SMS API for order tracking</li>
-                <li>Real-time analytics dashboard for vendor performance</li>
-                <li>Mobile-first, PWA with 98 Lighthouse performance score</li>
-              </ul>
-              <div class="project-tech">
-                <span class="tech-tag">Next.js</span>
-                <span class="tech-tag">TypeScript</span>
-                <span class="tech-tag">Prisma</span>
-                <span class="tech-tag">PostgreSQL</span>
-                <span class="tech-tag">Stripe</span>
-                <span class="tech-tag">Vercel</span>
-              </div>
-              <div class="project-links">
-                <a href="https://github.com/AllanRye9" class="project-link" target="_blank" rel="noopener noreferrer">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-                  GitHub
-                </a>
-                <a href="#projects" class="project-link">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                  Live Site
-                </a>
-              </div>
-            </div>
-          </article>
-
-          <!-- Project 6 -->
-          <article class="project-card">
-            <div class="project-banner" style="background: linear-gradient(90deg, #00bcd4, #34a853);" aria-hidden="true"></div>
-            <div class="project-body">
-              <div class="project-type">Data Engineering · ML</div>
-              <h3 class="project-title">InsightPulse Analytics Pipeline</h3>
-              <p class="project-desc">
-                An end-to-end data engineering pipeline that ingests, processes, and visualises
-                business intelligence data from multiple sources, with ML-powered anomaly detection
-                and automated reporting.
-              </p>
-              <ul class="project-highlights">
-                <li>Processes 5GB+ of raw data nightly via scheduled ETL jobs</li>
-                <li>ML model detects revenue anomalies with 94% accuracy</li>
-                <li>Interactive dashboards with drill-down filtering</li>
-                <li>Automated weekly PDF reports delivered via email</li>
+                <li>Natural language presentation control in 8 languages</li>
+                <li>Two deployment flavors: local and cloud-based</li>
+                <li>Hands-free presenter workflow integration</li>
               </ul>
               <div class="project-tech">
                 <span class="tech-tag">Python</span>
-                <span class="tech-tag">Apache Airflow</span>
-                <span class="tech-tag">Pandas</span>
-                <span class="tech-tag">scikit-learn</span>
-                <span class="tech-tag">BigQuery</span>
-                <span class="tech-tag">Looker Studio</span>
+                <span class="tech-tag">Speech Recognition</span>
+                <span class="tech-tag">NLP</span>
+                <span class="tech-tag">Multilingual</span>
               </div>
               <div class="project-links">
-                <a href="https://github.com/AllanRye9" class="project-link" target="_blank" rel="noopener noreferrer">
+                <a href="https://github.com/AllanRye9/Yot-Presentation" class="project-link" target="_blank" rel="noopener noreferrer">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                  GitHub
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project 4: Ort Real Estate -->
+          <article class="project-card">
+            <div class="project-banner" style="background: linear-gradient(90deg, #34a853, #00bcd4);" aria-hidden="true"></div>
+            <div class="project-body">
+              <div class="project-type">Real Estate · Full-Stack · Python</div>
+              <h3 class="project-title">Ort Real Estate Platform</h3>
+              <p class="project-desc">
+                Advanced real estate software solutions designed to streamline property transactions,
+                enabling individuals, entrepreneurs, and investors to buy and rent properties through
+                a unified digital platform.
+              </p>
+              <ul class="project-highlights">
+                <li>Unified buy and rent property transaction flows</li>
+                <li>Investor-grade analytics and property insights</li>
+                <li>Secure multi-party transaction management</li>
+              </ul>
+              <div class="project-tech">
+                <span class="tech-tag">Python</span>
+                <span class="tech-tag">Django</span>
+                <span class="tech-tag">PostgreSQL</span>
+                <span class="tech-tag">React</span>
+              </div>
+              <div class="project-links">
+                <a href="https://github.com/AllanRye9/Ort" class="project-link" target="_blank" rel="noopener noreferrer">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                  GitHub
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project 5: yot-developer -->
+          <article class="project-card">
+            <div class="project-banner" style="background: linear-gradient(90deg, #ea4335, #ff9800);" aria-hidden="true"></div>
+            <div class="project-body">
+              <div class="project-type">Developer Tools · TypeScript</div>
+              <h3 class="project-title">Yot Developer</h3>
+              <p class="project-desc">
+                A software solution that allows developers to learn, experiment, and explore Browser
+                DevTools functions, objects, and properties interactively.
+              </p>
+              <ul class="project-highlights">
+                <li>Interactive DevTools function explorer</li>
+                <li>Live experimentation with browser APIs</li>
+                <li>Educational reference for JavaScript and TypeScript</li>
+              </ul>
+              <div class="project-tech">
+                <span class="tech-tag">TypeScript</span>
+                <span class="tech-tag">JavaScript</span>
+                <span class="tech-tag">Browser APIs</span>
+                <span class="tech-tag">DevTools</span>
+              </div>
+              <div class="project-links">
+                <a href="https://github.com/AllanRye9/yot-developer" class="project-link" target="_blank" rel="noopener noreferrer">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                  GitHub
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project 6: Inception -->
+          <article class="project-card">
+            <div class="project-banner" style="background: linear-gradient(90deg, #00bcd4, #34a853);" aria-hidden="true"></div>
+            <div class="project-body">
+              <div class="project-type">DevOps · Containerization · Docker</div>
+              <h3 class="project-title">Inception</h3>
+              <p class="project-desc">
+                A containerized deployment of Nginx, WordPress, and MariaDB using Docker Compose,
+                demonstrating modern container orchestration and infrastructure-as-code techniques.
+              </p>
+              <ul class="project-highlights">
+                <li>Full-stack containerized deployment with Docker Compose</li>
+                <li>Nginx reverse proxy with SSL termination</li>
+                <li>WordPress + MariaDB production-ready setup</li>
+              </ul>
+              <div class="project-tech">
+                <span class="tech-tag">Docker</span>
+                <span class="tech-tag">Docker Compose</span>
+                <span class="tech-tag">Nginx</span>
+                <span class="tech-tag">WordPress</span>
+                <span class="tech-tag">MariaDB</span>
+              </div>
+              <div class="project-links">
+                <a href="https://github.com/AllanRye9/Inception" class="project-link" target="_blank" rel="noopener noreferrer">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
                   GitHub
                 </a>

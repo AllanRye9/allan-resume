@@ -131,12 +131,12 @@ img { max-width: 100%; display: block; }
 
 /* ===== Hero / Profile ===== */
 .hero {
-  min-height: 100vh;
+  min-height: auto;
   background: linear-gradient(135deg, var(--bg-dark) 0%, #2c3e50 50%, #1a73e8 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 80px 24px 40px;
+  padding: 100px 24px 56px;
   position: relative;
   overflow: hidden;
 }
@@ -159,14 +159,14 @@ img { max-width: 100%; display: block; }
 }
 
 .hero-avatar {
-  width: 180px;
-  height: 180px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 4.5rem;
+  font-size: 3.5rem;
   font-weight: 700;
   color: white;
   border: 4px solid rgba(255,255,255,.2);
@@ -175,18 +175,18 @@ img { max-width: 100%; display: block; }
 }
 
 .hero-text h1 {
-  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-size: clamp(1.75rem, 4vw, 2.8rem);
   font-weight: 800;
   color: #fff;
   line-height: 1.15;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .hero-text .title {
-  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  font-size: clamp(.95rem, 2vw, 1.2rem);
   color: rgba(255,255,255,.8);
   font-weight: 400;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
 }
 
 .hero-text .title span {
@@ -195,18 +195,18 @@ img { max-width: 100%; display: block; }
 }
 
 .hero-text .tagline {
-  font-size: .95rem;
+  font-size: .9rem;
   color: rgba(255,255,255,.65);
   max-width: 520px;
-  margin-bottom: 28px;
-  line-height: 1.7;
+  margin-bottom: 20px;
+  line-height: 1.6;
 }
 
 .hero-badges {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 28px;
+  gap: 6px;
+  margin-bottom: 20px;
 }
 
 .badge {
@@ -296,7 +296,7 @@ img { max-width: 100%; display: block; }
 
 /* ===== Section Layout ===== */
 .section {
-  padding: 80px 24px;
+  padding: 60px 24px;
 }
 .section:nth-child(even) { background: var(--bg-secondary); }
 
@@ -307,7 +307,7 @@ img { max-width: 100%; display: block; }
 
 .section-header {
   text-align: center;
-  margin-bottom: 56px;
+  margin-bottom: 40px;
 }
 .section-label {
   display: inline-block;
@@ -776,13 +776,13 @@ footer a:hover { color: #fff; }
     text-align: center;
     gap: 28px;
   }
-  .hero-avatar { margin: 0 auto; width: 140px; height: 140px; font-size: 3.5rem; }
+  .hero-avatar { margin: 0 auto; width: 120px; height: 120px; font-size: 3rem; }
   .hero-badges { justify-content: center; }
   .hero-cta { justify-content: center; }
   .hero-text .tagline { margin-left: auto; margin-right: auto; }
 
   .about-grid { grid-template-columns: 1fr; }
-  .section { padding: 60px 20px; }
+  .section { padding: 48px 20px; }
 }
 
 @media (max-width: 480px) {
