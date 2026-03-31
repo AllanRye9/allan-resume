@@ -1097,7 +1097,14 @@ document.getElementById('change-password-form').addEventListener('submit', funct
 
   sha256(current).then(function (currentHash) {
     var storedHash = getStoredHash();
-    if (!storedHash || currentHash !== storedHash) {
+    if (!storedHash) {
+      errEl.textContent = authToken
+        ? 'Password is managed server-side via the ADMIN_PASSWORD environment variable.'
+        : 'No local password set. Please log out and use the setup screen.';
+      errEl.hidden = false;
+      return;
+    }
+    if (currentHash !== storedHash) {
       errEl.textContent = 'Current password is incorrect.';
       errEl.hidden = false;
       return;
@@ -1159,7 +1166,10 @@ function escHtml(str) {
 if (authToken) {
   showDashboard();
 } else if (!isSetupDone()) {
-  // First time ever — check server before showing setup
+  // First time ever — probe the server to check if ADMIN_PASSWORD is configured.
+  // An empty password always returns 401 (wrong password) when configured, or
+  // 503 (not configured) otherwise. This is the only way to detect server config
+  // without a dedicated status endpoint.
   fetch('/api/auth', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
