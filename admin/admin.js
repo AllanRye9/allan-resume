@@ -7,24 +7,24 @@
 // ── Storage Keys ─────────────────────────────────────────────────
 var KEYS = {
   VISITS:  'ar_visits',
-  PROFILE: 'ar_profile',
-  CONTACT: 'ar_contact',
-  MEDIA:   'ar_media',
   PWD:     'ar_admin_hash',
-  SESSION: 'ar_admin_session'
+  TOKEN:   'ar_admin_token',
+  CONTENT: 'cv_content_override'
 };
 
 // SHA-256 hash of the default password "admin123".
-// NOTE: This is client-side-only authentication suitable for a personal portfolio.
-// Anyone with browser DevTools access can inspect the logic. Change your password
-// after first login and do not store sensitive information in this admin panel.
+// Used as a client-side fallback when the server /api/auth endpoint is
+// unavailable (e.g. local development without ADMIN_PASSWORD configured).
 var DEFAULT_HASH = '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9';
 
-var PAGE_SIZE = 20;
-var currentPage = 1;
+var PAGE_SIZE      = 20;
+var currentPage    = 1;
 var filteredVisits = [];
 
-// ── Utility: SHA-256 via Web Crypto API ──────────────────────────
+// Auth token from the server (stored in localStorage between sessions)
+var authToken = localStorage.getItem(KEYS.TOKEN) || '';
+
+// ── SHA-256 via Web Crypto API ──────────────────────────────────
 async function sha256(msg) {
   var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
   return Array.from(new Uint8Array(buf)).map(function (b) {
@@ -32,7 +32,7 @@ async function sha256(msg) {
   }).join('');
 }
 
-// ── Utility: safe JSON parse ─────────────────────────────────────
+// ── Safe JSON parse ─────────────────────────────────────────────
 function getJSON(key, fallback) {
   try {
     return JSON.parse(localStorage.getItem(key) || 'null') || fallback;
@@ -41,9 +41,19 @@ function getJSON(key, fallback) {
   }
 }
 
-// ── Utility: stored password hash ───────────────────────────────
+// ── Stored local-mode password hash ─────────────────────────────
 function getStoredHash() {
   return localStorage.getItem(KEYS.PWD) || DEFAULT_HASH;
+}
+
+// ── Save / clear auth token ──────────────────────────────────────
+function saveToken(token) {
+  authToken = token || '';
+  if (authToken) {
+    localStorage.setItem(KEYS.TOKEN, authToken);
+  } else {
+    localStorage.removeItem(KEYS.TOKEN);
+  }
 }
 
 // ── Polyfill: CanvasRenderingContext2D.roundRect ─────────────────
@@ -68,73 +78,129 @@ function getStoredHash() {
   }
 }());
 
-// ── Auth ─────────────────────────────────────────────────────────
-function isAuthenticated() {
-  return sessionStorage.getItem(KEYS.SESSION) === '1';
-}
-
-function setAuthenticated(val) {
-  if (val) {
-    sessionStorage.setItem(KEYS.SESSION, '1');
-  } else {
-    sessionStorage.removeItem(KEYS.SESSION);
-  }
-}
-
 // ── DOM references ───────────────────────────────────────────────
-var loginScreen = document.getElementById('login-screen');
-var dashboard   = document.getElementById('dashboard');
-var sidebar     = document.getElementById('sidebar');
+var loginScreen     = document.getElementById('login-screen');
+var dashboard       = document.getElementById('dashboard');
+var sidebar         = document.getElementById('sidebar');
+var sidebarOverlay  = document.getElementById('sidebar-overlay');
 
+// ── Show / hide dashboard ────────────────────────────────────────
 function showDashboard() {
   loginScreen.hidden = true;
-  dashboard.hidden = false;
+  dashboard.hidden   = false;
   document.body.classList.remove('login-page');
   switchTab('overview');
 }
 
 function showLogin() {
   loginScreen.hidden = false;
-  dashboard.hidden = true;
+  dashboard.hidden   = true;
   document.body.classList.add('login-page');
 }
 
 // ── Login form ───────────────────────────────────────────────────
 document.getElementById('login-form').addEventListener('submit', function (e) {
   e.preventDefault();
-  var pwd = document.getElementById('password').value;
-  var errEl = document.getElementById('login-error');
+  var pwd      = document.getElementById('password').value;
+  var errEl    = document.getElementById('login-error');
+  var loginBtn = document.getElementById('login-btn');
 
-  sha256(pwd).then(function (hash) {
-    if (hash === getStoredHash()) {
-      setAuthenticated(true);
+  errEl.hidden     = true;
+  loginBtn.disabled = true;
+  loginBtn.textContent = 'Signing in…';
+
+  // Try server-side auth first
+  fetch('/api/auth', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: pwd })
+  })
+  .then(function (res) { return res.json(); })
+  .then(function (data) {
+    if (data.ok && data.token) {
+      saveToken(data.token);
       showDashboard();
     } else {
+      // Server auth failed (wrong password or not configured) – fall back to SHA-256
+      clientSideAuth(pwd, errEl);
+    }
+  })
+  .catch(function () {
+    // Network error – fall back to client-side SHA-256
+    clientSideAuth(pwd, errEl);
+  })
+  .finally(function () {
+    loginBtn.disabled    = false;
+    loginBtn.textContent = 'Sign In';
+  });
+});
+
+function clientSideAuth(pwd, errEl) {
+  // NOTE: Client-side fallback is used when the server /api/auth endpoint is
+  // unavailable (e.g. local dev without ADMIN_PASSWORD configured).
+  // This mode is inherently less secure — use it only for local testing.
+  console.warn('[admin] Using client-side SHA-256 fallback auth. Deploy with ADMIN_PASSWORD for server-side security.');
+  return sha256(pwd).then(function (hash) {
+    if (hash === getStoredHash()) {
+      saveToken(''); // no server token in fallback mode
+      showDashboard();
+    } else {
+      errEl.textContent = 'Incorrect password.';
       errEl.hidden = false;
       setTimeout(function () { errEl.hidden = true; }, 4000);
     }
   });
-});
+}
 
 // ── Logout ───────────────────────────────────────────────────────
 document.getElementById('logout-btn').addEventListener('click', function () {
-  setAuthenticated(false);
+  saveToken('');
   showLogin();
 });
 
 // ── Sidebar toggle (mobile) ──────────────────────────────────────
+function openSidebar() {
+  sidebar.classList.add('open');
+  if (sidebarOverlay) {
+    sidebarOverlay.classList.add('show');
+    sidebarOverlay.setAttribute('aria-hidden', 'false');
+  }
+}
+function closeSidebar() {
+  sidebar.classList.remove('open');
+  if (sidebarOverlay) {
+    sidebarOverlay.classList.remove('show');
+    sidebarOverlay.setAttribute('aria-hidden', 'true');
+  }
+}
+
 document.getElementById('sidebar-toggle').addEventListener('click', function () {
-  sidebar.classList.toggle('open');
+  if (sidebar.classList.contains('open')) {
+    closeSidebar();
+  } else {
+    openSidebar();
+  }
 });
 
-// Close sidebar when clicking a nav link on mobile
+if (sidebarOverlay) {
+  sidebarOverlay.addEventListener('click', closeSidebar);
+}
+
+// Close sidebar when clicking a nav item on mobile
 sidebar.querySelectorAll('.nav-item').forEach(function (item) {
   item.addEventListener('click', function () {
-    if (window.innerWidth <= 768) sidebar.classList.remove('open');
+    if (window.innerWidth <= 768) closeSidebar();
   });
 });
 
 // ── Tab navigation ───────────────────────────────────────────────
+var TAB_META = {
+  overview: ['Overview',            'Welcome to your admin dashboard'],
+  visitors: ['Visitor Log',         'Detailed visitor tracking data'],
+  content:  ['Content Management',  'Update every section of your portfolio'],
+  settings: ['Settings',            'Configure your admin panel']
+};
+
 document.querySelectorAll('.nav-item[data-tab]').forEach(function (item) {
   item.addEventListener('click', function (e) {
     e.preventDefault();
@@ -142,30 +208,19 @@ document.querySelectorAll('.nav-item[data-tab]').forEach(function (item) {
   });
 });
 
-var TAB_META = {
-  overview: ['Overview',           'Welcome to your admin dashboard'],
-  visitors: ['Visitor Log',        'Detailed visitor tracking data'],
-  content:  ['Content Management', 'Update your portfolio content'],
-  settings: ['Settings',           'Configure your admin panel']
-};
-
 function switchTab(tabName) {
-  // Highlight active nav item
   document.querySelectorAll('.nav-item[data-tab]').forEach(function (item) {
     item.classList.toggle('active', item.dataset.tab === tabName);
   });
 
-  // Show/hide sections
   document.querySelectorAll('.tab-content').forEach(function (section) {
     section.hidden = section.dataset.tabSection !== tabName;
   });
 
-  // Update header
   var meta = TAB_META[tabName] || [tabName, ''];
   document.getElementById('page-title').textContent    = meta[0];
   document.getElementById('page-subtitle').textContent = meta[1];
 
-  // Load data for each tab
   if (tabName === 'overview')  renderOverview();
   if (tabName === 'visitors')  renderVisitorsTable();
   if (tabName === 'content')   loadContentForms();
@@ -190,12 +245,35 @@ function getVisits() {
   }
 }
 
-// ── Overview: stats + charts ─────────────────────────────────────
+// ── Overview: try API first, fall back to localStorage ────────────
 function renderOverview() {
-  var visits = getVisits();
+  if (authToken) {
+    fetch('/api/analytics?token=' + encodeURIComponent(authToken))
+      .then(function (res) {
+        if (!res.ok) throw new Error('api error');
+        return res.json();
+      })
+      .then(function (d) {
+        document.getElementById('total-visits').textContent      = d.stats.total.toLocaleString();
+        document.getElementById('unique-ips').textContent        = d.stats.unique.toLocaleString();
+        document.getElementById('unique-countries').textContent  = d.countries.length.toLocaleString();
+        var today = new Date().toISOString().slice(0, 10);
+        var todayEntry = d.dailyVisits.find(function (dv) { return dv.date === today; });
+        document.getElementById('today-visits').textContent = todayEntry ? todayEntry.count : 0;
+        renderCountriesChartFromData(d.countries);
+        drawVisitsChartFromDailyData(d.dailyVisits);
+      })
+      .catch(function () {
+        renderOverviewFromLocalStorage();
+      });
+  } else {
+    renderOverviewFromLocalStorage();
+  }
+}
 
-  document.getElementById('total-visits').textContent =
-    visits.length.toLocaleString();
+function renderOverviewFromLocalStorage() {
+  var visits = getVisits();
+  document.getElementById('total-visits').textContent = visits.length.toLocaleString();
 
   var countries = new Set(visits.map(function (v) { return v.country; }).filter(Boolean));
   document.getElementById('unique-countries').textContent = countries.size;
@@ -205,7 +283,7 @@ function renderOverview() {
 
   var today = new Date().toDateString();
   var todayCount = visits.filter(function (v) {
-    return new Date(v.timestamp).toDateString() === today;
+    return v.timestamp && new Date(v.timestamp).toDateString() === today;
   }).length;
   document.getElementById('today-visits').textContent = todayCount;
 
@@ -213,14 +291,9 @@ function renderOverview() {
   renderCountriesChart(visits);
 }
 
-// ── Visits bar chart (Canvas) ─────────────────────────────────────
+// ── Visits bar chart ─────────────────────────────────────────────
 function drawVisitsChart(visits) {
-  var canvas = document.getElementById('visits-chart');
-  var emptyMsg = document.getElementById('visits-chart-empty');
-  if (!canvas) return;
-
-  // Build last-14-days bucket
-  var days = {};
+  var days   = {};
   var labels = [];
   for (var i = 13; i >= 0; i--) {
     var d = new Date();
@@ -229,15 +302,32 @@ function drawVisitsChart(visits) {
     days[key] = 0;
     labels.push(key);
   }
-
   visits.forEach(function (v) {
-    var key = new Date(v.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    if (Object.prototype.hasOwnProperty.call(days, key)) {
-      days[key]++;
-    }
+    var key = v.timestamp
+      ? new Date(v.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+      : null;
+    if (key && Object.prototype.hasOwnProperty.call(days, key)) days[key]++;
   });
+  drawBars(labels, labels.map(function (l) { return days[l]; }));
+}
 
-  var values = labels.map(function (l) { return days[l]; });
+function drawVisitsChartFromDailyData(dailyVisits) {
+  var slice = dailyVisits.slice(-14);
+  var labels = [];
+  var values = [];
+  slice.forEach(function (dv) {
+    var d = new Date(dv.date + 'T00:00:00');
+    labels.push(d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+    values.push(dv.count);
+  });
+  drawBars(labels, values);
+}
+
+function drawBars(labels, values) {
+  var canvas   = document.getElementById('visits-chart');
+  var emptyMsg = document.getElementById('visits-chart-empty');
+  if (!canvas) return;
+
   var maxVal  = Math.max.apply(null, values.concat([1]));
   var hasData = values.some(function (v) { return v > 0; });
 
@@ -266,7 +356,7 @@ function drawVisitsChart(visits) {
   var ch  = height - pad.top  - pad.bottom;
   var bw  = cw / labels.length;
 
-  // Subtle grid lines
+  // Grid lines
   ctx.strokeStyle = 'rgba(51,65,85,.5)';
   ctx.lineWidth   = 1;
   [0.25, 0.5, 0.75, 1].forEach(function (ratio) {
@@ -283,11 +373,11 @@ function drawVisitsChart(visits) {
 
   // Bars
   labels.forEach(function (label, i) {
-    var val       = values[i];
-    var barH      = (val / maxVal) * ch;
-    var x         = pad.left + i * bw + bw * 0.15;
-    var y         = pad.top + ch - barH;
-    var w         = bw * 0.7;
+    var val  = values[i];
+    var barH = (val / maxVal) * ch;
+    var x    = pad.left + i * bw + bw * 0.15;
+    var y    = pad.top + ch - barH;
+    var w    = bw * 0.7;
 
     if (val > 0) {
       var grad = ctx.createLinearGradient(x, y, x, y + barH);
@@ -297,14 +387,12 @@ function drawVisitsChart(visits) {
       ctx.roundRect(x, y, w, barH, 3);
       ctx.fill();
 
-      // Value label
       ctx.fillStyle = '#e2e8f0';
       ctx.font = '9px Inter, sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText(val, x + w / 2, y - 5);
     }
 
-    // X-axis label (every other for readability)
     if (i % 2 === 0 || labels.length <= 7) {
       ctx.fillStyle = '#64748b';
       ctx.font = '9px Inter, sans-serif';
@@ -322,37 +410,36 @@ function drawVisitsChart(visits) {
   ctx.stroke();
 }
 
-// ── Countries horizontal bar chart ───────────────────────────────
+// ── Countries bar chart ──────────────────────────────────────────
 function renderCountriesChart(visits) {
-  var container = document.getElementById('countries-chart');
-  if (!container) return;
-
   var countMap = {};
   visits.forEach(function (v) {
-    if (v.country) {
-      countMap[v.country] = (countMap[v.country] || 0) + 1;
-    }
+    if (v.country) countMap[v.country] = (countMap[v.country] || 0) + 1;
   });
+  var sorted = Object.entries(countMap)
+    .sort(function (a, b) { return b[1] - a[1]; })
+    .slice(0, 8)
+    .map(function (e) { return { country: e[0], count: e[1] }; });
+  renderCountriesChartFromData(sorted);
+}
 
-  var sorted = Object.entries(countMap).sort(function (a, b) { return b[1] - a[1]; }).slice(0, 8);
-
-  if (sorted.length === 0) {
+function renderCountriesChartFromData(countries) {
+  var container = document.getElementById('countries-chart');
+  if (!container) return;
+  if (!countries || countries.length === 0) {
     container.innerHTML = '<p class="chart-empty">No country data yet.</p>';
     return;
   }
-
-  var maxCount = sorted[0][1];
-  container.innerHTML = sorted.map(function (entry) {
-    var country = entry[0];
-    var count   = entry[1];
-    var pct     = ((count / maxCount) * 100).toFixed(1);
+  var maxCount = countries[0].count;
+  container.innerHTML = countries.slice(0, 8).map(function (entry) {
+    var pct = ((entry.count / maxCount) * 100).toFixed(1);
     return [
       '<div class="country-bar-row">',
-      '  <span class="country-name" title="' + country + '">' + country + '</span>',
+      '  <span class="country-name" title="' + escHtml(entry.country) + '">' + escHtml(entry.country) + '</span>',
       '  <div class="country-bar-track">',
       '    <div class="country-bar-fill" style="width:' + pct + '%"></div>',
       '  </div>',
-      '  <span class="country-count">' + count + '</span>',
+      '  <span class="country-count">' + entry.count + '</span>',
       '</div>'
     ].join('');
   }).join('');
@@ -361,7 +448,7 @@ function renderCountriesChart(visits) {
 // ── Visitors table ────────────────────────────────────────────────
 function renderVisitorsTable(search) {
   search = (search || '').toLowerCase();
-  var visits = getVisits().slice().reverse(); // newest first
+  var visits = getVisits().slice().reverse();
 
   filteredVisits = search
     ? visits.filter(function (v) {
@@ -425,24 +512,63 @@ document.getElementById('next-page').addEventListener('click', function () {
 
 // ── Content management ────────────────────────────────────────────
 function loadContentForms() {
-  var profile = getJSON(KEYS.PROFILE, {});
-  var contact = getJSON(KEYS.CONTACT, {});
-  var media   = getJSON(KEYS.MEDIA,   {});
+  var loadingEl = document.getElementById('content-loading');
+  var formEl    = document.getElementById('content-form');
+  loadingEl.hidden = false;
+  formEl.hidden    = true;
 
-  document.getElementById('photo-url').value      = profile.photoUrl || '';
-  document.getElementById('profile-name').value   = profile.name    || '';
-  document.getElementById('profile-title').value  = profile.title   || '';
+  fetch('/api/content')
+    .then(function (res) {
+      if (!res.ok) throw new Error('Server error ' + res.status);
+      return res.json();
+    })
+    .then(function (c) {
+      populateContentForms(c);
+      try { localStorage.setItem(KEYS.CONTENT, JSON.stringify(c)); } catch (_) {}
+      loadingEl.hidden = true;
+      formEl.hidden    = false;
+    })
+    .catch(function () {
+      var cached = getJSON(KEYS.CONTENT, null);
+      if (cached) populateContentForms(cached);
+      loadingEl.hidden = true;
+      formEl.hidden    = false;
+    });
+}
 
-  document.getElementById('contact-email').value    = contact.email    || '';
-  document.getElementById('contact-phone').value    = contact.phone    || '';
-  document.getElementById('contact-github').value   = contact.github   || '';
-  document.getElementById('contact-linkedin').value = contact.linkedin || '';
-  document.getElementById('contact-location').value = contact.location || '';
+function populateContentForms(c) {
+  if (!c) return;
 
-  document.getElementById('intro-video').value    = media.videoUrl      || '';
-  document.getElementById('showcase-image').value = media.showcaseImage || '';
+  document.getElementById('photo-url').value       = c.profilePic   || '';
+  document.getElementById('profile-name').value    = c.name         || '';
+  document.getElementById('profile-title').value   = c.title        || '';
+  document.getElementById('profile-tagline').value = c.tagline      || '';
 
-  updateAvatarPreview(profile.photoUrl);
+  document.getElementById('contact-email').value    = c.email       || '';
+  document.getElementById('contact-phone').value    = c.phone       || '';
+  document.getElementById('contact-github').value   = c.githubUrl   || '';
+  document.getElementById('contact-linkedin').value = c.linkedinUrl || '';
+  document.getElementById('contact-location').value = c.location    || '';
+
+  document.getElementById('about-text').value = c.aboutText || '';
+
+  document.getElementById('skills-json').value     = prettyJSON(c.skills);
+  document.getElementById('experience-json').value = prettyJSON(c.experience);
+  document.getElementById('projects-json').value   = prettyJSON(c.projects);
+  document.getElementById('education-json').value  = prettyJSON(c.education);
+
+  document.getElementById('intro-video').value    = c.featuredVideo || '';
+  document.getElementById('showcase-image').value = Array.isArray(c.heroImages)
+    ? c.heroImages.join('\n') : '';
+
+  updateAvatarPreview(c.profilePic || '');
+}
+
+function prettyJSON(val) {
+  if (Array.isArray(val) && val.length) {
+    try { return JSON.stringify(val, null, 2); } catch (_) {}
+  }
+  return '';
 }
 
 document.getElementById('photo-url').addEventListener('input', function () {
@@ -456,6 +582,7 @@ function updateAvatarPreview(url) {
     img.src = url;
     img.alt = 'Profile photo';
     img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%';
+    img.onerror = function () { el.textContent = 'AR'; };
     el.textContent = '';
     el.appendChild(img);
   } else {
@@ -463,32 +590,121 @@ function updateAvatarPreview(url) {
   }
 }
 
-function showSaveMsg() {
-  var msg = document.getElementById('content-save-msg');
-  msg.hidden = false;
-  setTimeout(function () { msg.hidden = true; }, 5000);
+// ── Shared: parse a JSON array field ─────────────────────────────
+function parseJSONArray(fieldId) {
+  var el = document.getElementById(fieldId);
+  if (!el || !el.value.trim()) return { ok: true, value: [] };
+  try {
+    var parsed = JSON.parse(el.value);
+    if (!Array.isArray(parsed)) throw new Error('Must be a JSON array');
+    return { ok: true, value: parsed };
+  } catch (err) {
+    return { ok: false, error: err.message };
+  }
 }
 
+// ── Shared: show save status message ─────────────────────────────
+function showSaveStatus(msgId, ok, msg) {
+  var el = document.getElementById(msgId);
+  if (!el) return;
+  el.textContent = ok ? '✓ Saved' : ('✗ ' + (msg || 'Error'));
+  el.className   = ok ? 'save-status' : 'save-status err';
+  el.hidden = false;
+  setTimeout(function () { el.hidden = true; }, 4000);
+}
+
+// ── Shared: POST payload to /api/content ─────────────────────────
+function saveToAPI(payload, msgId) {
+  var url = authToken
+    ? '/api/content?token=' + encodeURIComponent(authToken)
+    : '/api/content';
+
+  fetch(url, {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify(payload)
+  })
+  .then(function (res) {
+    if (res.status === 401) throw new Error('Session expired. Please sign in again.');
+    if (!res.ok) throw new Error('Server error ' + res.status);
+    return res.json();
+  })
+  .then(function (data) {
+    // Update local cache so overrides.js picks up changes immediately
+    try { localStorage.setItem(KEYS.CONTENT, JSON.stringify(data.content)); } catch (_) {}
+    showSaveStatus(msgId, true);
+  })
+  .catch(function (err) {
+    // In fallback mode (no server token) just write to local cache
+    if (!authToken) {
+      var cached = getJSON(KEYS.CONTENT, {});
+      Object.assign(cached, payload);
+      try { localStorage.setItem(KEYS.CONTENT, JSON.stringify(cached)); } catch (_) {}
+      showSaveStatus(msgId, true);
+    } else {
+      showSaveStatus(msgId, false, err.message);
+    }
+  });
+}
+
+// ── Profile save ──────────────────────────────────────────────────
 document.getElementById('save-profile').addEventListener('click', function () {
-  localStorage.setItem(KEYS.PROFILE, JSON.stringify({
-    photoUrl: document.getElementById('photo-url').value.trim(),
-    name:     document.getElementById('profile-name').value.trim(),
-    title:    document.getElementById('profile-title').value.trim()
-  }));
-  showSaveMsg();
+  saveToAPI({
+    profilePic: document.getElementById('photo-url').value.trim(),
+    name:       document.getElementById('profile-name').value.trim(),
+    title:      document.getElementById('profile-title').value.trim(),
+    tagline:    document.getElementById('profile-tagline').value.trim()
+  }, 'profile-save-msg');
 });
 
+// ── Contact save ──────────────────────────────────────────────────
 document.getElementById('save-contact').addEventListener('click', function () {
-  localStorage.setItem(KEYS.CONTACT, JSON.stringify({
-    email:    document.getElementById('contact-email').value.trim(),
-    phone:    document.getElementById('contact-phone').value.trim(),
-    github:   document.getElementById('contact-github').value.trim(),
-    linkedin: document.getElementById('contact-linkedin').value.trim(),
-    location: document.getElementById('contact-location').value.trim()
-  }));
-  showSaveMsg();
+  saveToAPI({
+    email:       document.getElementById('contact-email').value.trim(),
+    phone:       document.getElementById('contact-phone').value.trim(),
+    githubUrl:   document.getElementById('contact-github').value.trim(),
+    linkedinUrl: document.getElementById('contact-linkedin').value.trim(),
+    location:    document.getElementById('contact-location').value.trim()
+  }, 'contact-save-msg');
 });
 
+// ── About save ────────────────────────────────────────────────────
+document.getElementById('save-about').addEventListener('click', function () {
+  saveToAPI(
+    { aboutText: document.getElementById('about-text').value.trim() },
+    'about-save-msg'
+  );
+});
+
+// ── Skills save ───────────────────────────────────────────────────
+document.getElementById('save-skills').addEventListener('click', function () {
+  var result = parseJSONArray('skills-json');
+  if (!result.ok) { showSaveStatus('skills-save-msg', false, 'Invalid JSON: ' + result.error); return; }
+  saveToAPI({ skills: result.value }, 'skills-save-msg');
+});
+
+// ── Experience save ───────────────────────────────────────────────
+document.getElementById('save-experience').addEventListener('click', function () {
+  var result = parseJSONArray('experience-json');
+  if (!result.ok) { showSaveStatus('experience-save-msg', false, 'Invalid JSON: ' + result.error); return; }
+  saveToAPI({ experience: result.value }, 'experience-save-msg');
+});
+
+// ── Projects save ─────────────────────────────────────────────────
+document.getElementById('save-projects').addEventListener('click', function () {
+  var result = parseJSONArray('projects-json');
+  if (!result.ok) { showSaveStatus('projects-save-msg', false, 'Invalid JSON: ' + result.error); return; }
+  saveToAPI({ projects: result.value }, 'projects-save-msg');
+});
+
+// ── Education save ────────────────────────────────────────────────
+document.getElementById('save-education').addEventListener('click', function () {
+  var result = parseJSONArray('education-json');
+  if (!result.ok) { showSaveStatus('education-save-msg', false, 'Invalid JSON: ' + result.error); return; }
+  saveToAPI({ education: result.value }, 'education-save-msg');
+});
+
+// ── Media save ────────────────────────────────────────────────────
 document.getElementById('save-media').addEventListener('click', function () {
   var rawVideo = document.getElementById('intro-video').value.trim();
   var videoUrl = '';
@@ -498,29 +714,46 @@ document.getElementById('save-media').addEventListener('click', function () {
     if (ALLOWED_VIDEO.test(rawVideo)) {
       videoUrl = rawVideo;
     } else {
-      alert('Video URL must be a YouTube embed (https://www.youtube.com/embed/...) or Vimeo embed (https://player.vimeo.com/video/...).');
+      showSaveStatus('media-save-msg', false, 'Use a YouTube embed (…/embed/…) or Vimeo embed URL.');
       return;
     }
   }
-  localStorage.setItem(KEYS.MEDIA, JSON.stringify({
-    videoUrl:      videoUrl,
-    showcaseImage: document.getElementById('showcase-image').value.trim()
-  }));
-  showSaveMsg();
+  var heroImages = document.getElementById('showcase-image').value
+    .split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+  saveToAPI({ featuredVideo: videoUrl, heroImages: heroImages }, 'media-save-msg');
 });
 
 // ── Settings ──────────────────────────────────────────────────────
 function loadSettings() {
   var visits = getVisits();
-  var info = document.getElementById('data-info');
+  var info   = document.getElementById('data-info');
   try {
     var bytes = new TextEncoder().encode(JSON.stringify(visits)).length;
-    info.textContent = 'Stored visits: ' + visits.length + ' / 500 · ' +
-      'Data: ~' + Math.round(bytes / 1024) + ' KB';
+    info.textContent = 'Stored visits: ' + visits.length + ' / 500  ·  ~' +
+      Math.round(bytes / 1024) + ' KB';
   } catch (_) {
-    info.textContent = 'Stored visits: ' + visits.length + ' / 500';
+    info.textContent = 'Stored visits: ' + visits.length;
   }
 }
+
+document.getElementById('clear-analytics').addEventListener('click', function () {
+  if (confirm('Clear all analytics data? This cannot be undone.')) {
+    localStorage.removeItem(KEYS.VISITS);
+    loadSettings();
+    renderOverview();
+  }
+});
+
+document.getElementById('export-data').addEventListener('click', function () {
+  var visits = getVisits();
+  var blob = new Blob([JSON.stringify(visits, null, 2)], { type: 'application/json' });
+  var url  = URL.createObjectURL(blob);
+  var a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'allan-portfolio-analytics.json';
+  a.click();
+  URL.revokeObjectURL(url);
+});
 
 document.getElementById('change-password-form').addEventListener('submit', function (e) {
   e.preventDefault();
@@ -555,25 +788,6 @@ document.getElementById('change-password-form').addEventListener('submit', funct
       document.getElementById('change-password-form').reset();
     });
   });
-});
-
-document.getElementById('clear-analytics').addEventListener('click', function () {
-  if (confirm('Clear all analytics data? This cannot be undone.')) {
-    localStorage.removeItem(KEYS.VISITS);
-    loadSettings();
-    renderOverview();
-  }
-});
-
-document.getElementById('export-data').addEventListener('click', function () {
-  var visits = getVisits();
-  var blob = new Blob([JSON.stringify(visits, null, 2)], { type: 'application/json' });
-  var url  = URL.createObjectURL(blob);
-  var a    = document.createElement('a');
-  a.href     = url;
-  a.download = 'allan-portfolio-analytics.json';
-  a.click();
-  URL.revokeObjectURL(url);
 });
 
 // ── Helpers ───────────────────────────────────────────────────────
@@ -612,7 +826,7 @@ function escHtml(str) {
 }
 
 // ── Bootstrap ─────────────────────────────────────────────────────
-if (isAuthenticated()) {
+if (authToken) {
   showDashboard();
 } else {
   showLogin();
