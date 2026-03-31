@@ -1,8 +1,8 @@
 /**
- * GET /api/analytics?token=<token>
+ * GET /api/analytics
  * Return visit analytics for the admin dashboard.
  *
- * The token must match the one returned by /api/auth.
+ * Requires: Authorization: Bearer <token>
  */
 
 const { createHash } = require('crypto');
@@ -25,9 +25,7 @@ module.exports = function handler(req, res) {
 
   if (req.method === 'OPTIONS') return res.status(204).end();
 
-  const token =
-    req.query?.token ||
-    (req.headers.authorization || '').replace('Bearer ', '');
+  const token = (req.headers.authorization || '').replace('Bearer ', '').trim();
 
   if (!validToken(token)) {
     return res.status(401).json({ error: 'Unauthorized' });

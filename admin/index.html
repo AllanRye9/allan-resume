@@ -65,6 +65,61 @@
   </div>
 </div>
 
+<!-- ===== First-run Setup Screen ===== -->
+<div id="setup-screen" hidden>
+  <div class="login-bg" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-shield" aria-hidden="true">
+        <svg viewBox="0 0 48 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M24 2L4 10v18c0 12.7 8.6 24.5 20 28 11.4-3.5 20-15.3 20-28V10L24 2z" fill="url(#sg2)" stroke="rgba(16,185,129,.4)" stroke-width="1.5"/>
+          <path d="M16 24h16M24 16v16" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+          <defs>
+            <linearGradient id="sg2" x1="4" y1="2" x2="44" y2="56" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#10b981"/>
+              <stop offset="1" stop-color="#059669" stop-opacity=".8"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="login-logo">
+        <span class="logo-text">Allan<span class="logo-dot">.</span>dev</span>
+        <span class="logo-badge">setup</span>
+      </div>
+      <h1>Create Admin Account</h1>
+      <p class="login-sub">Set up the one and only admin password for this portfolio.</p>
+      <form id="setup-form" novalidate>
+        <div class="form-group">
+          <label for="setup-password">Admin Password</label>
+          <div class="input-icon-wrap">
+            <span class="input-icon" aria-hidden="true">
+              <svg viewBox="0 0 20 20" fill="none"><rect x="3" y="8" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M7 8V6a3 3 0 0 1 6 0v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </span>
+            <input type="password" id="setup-password" placeholder="Minimum 8 characters" autocomplete="new-password" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="setup-confirm">Confirm Password</label>
+          <div class="input-icon-wrap">
+            <span class="input-icon" aria-hidden="true">
+              <svg viewBox="0 0 20 20" fill="none"><rect x="3" y="8" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M7 8V6a3 3 0 0 1 6 0v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </span>
+            <input type="password" id="setup-confirm" placeholder="Repeat your password" autocomplete="new-password" />
+          </div>
+        </div>
+        <div id="setup-error" class="error-msg" hidden></div>
+        <button type="submit" class="btn-primary btn-full">Create Admin Account</button>
+      </form>
+      <p class="login-hint">This password will be stored securely. You are the only admin.</p>
+      <a href="/" class="back-link">← Back to resume</a>
+    </div>
+  </div>
+</div>
+
 <!-- ===== Dashboard ===== -->
 <div id="dashboard" hidden class="dashboard">
 
@@ -390,8 +445,8 @@
             <h3>🚀 Projects</h3>
             <div class="form-group">
               <label for="projects-json">Projects (JSON array)</label>
-              <textarea id="projects-json" rows="20" placeholder='[&#10;  {&#10;    "title": "My Project",&#10;    "type": "Full-Stack · TypeScript",&#10;    "description": "A brief description.",&#10;    "highlights": ["Feature one", "Feature two"],&#10;    "tech": ["TypeScript", "React", "Node.js"],&#10;    "github": "https://github.com/username/repo",&#10;    "bannerStyle": "background: linear-gradient(90deg, #1a73e8, #34a853)"&#10;  }&#10;]'></textarea>
-              <small>Each object: <code>title</code>, <code>type</code>, <code>description</code>, <code>highlights</code>, <code>tech</code>, <code>github</code>, <code>bannerStyle</code>. Must be valid JSON.</small>
+              <textarea id="projects-json" rows="20" placeholder='[&#10;  {&#10;    "title": "My Project",&#10;    "type": "Full-Stack · TypeScript",&#10;    "description": "A brief description.",&#10;    "highlights": ["Feature one", "Feature two"],&#10;    "tech": ["TypeScript", "React", "Node.js"],&#10;    "github": "https://github.com/username/repo",&#10;    "url": "https://myproject.example.com",&#10;    "bannerStyle": "background: linear-gradient(90deg, #1a73e8, #34a853)"&#10;  }&#10;]'></textarea>
+              <small>Each object: <code>title</code>, <code>type</code>, <code>description</code>, <code>highlights</code>, <code>tech</code>, optional <code>github</code> (GitHub URL), optional <code>url</code> (live demo URL), <code>bannerStyle</code>. Must be valid JSON.</small>
             </div>
             <div class="save-bar">
               <button type="button" id="save-projects" class="btn-primary">Save Projects</button>
