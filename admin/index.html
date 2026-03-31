@@ -6,927 +6,379 @@
   <title>Admin — Allan Rye CV</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
-  <style>
-    /* ===== Reset & Variables ===== */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg:        #0f1117;
-      --bg2:       #1a1d27;
-      --bg3:       #242736;
-      --border:    #2e3148;
-      --primary:   #4f8ef7;
-      --primary-d: #3a72d9;
-      --success:   #34d399;
-      --warn:      #fbbf24;
-      --danger:    #f87171;
-      --text:      #e2e8f0;
-      --text2:     #94a3b8;
-      --radius:    10px;
-      --shadow:    0 4px 20px rgba(0,0,0,.4);
-      --font:      'Inter', system-ui, sans-serif;
-      --mono:      'Fira Code', monospace;
-      --transition: .2s ease;
-    }
-
-    html, body { height: 100%; font-family: var(--font); background: var(--bg); color: var(--text); }
-
-    /* ===== Login Screen ===== */
-    #login-screen {
-      display: flex; align-items: center; justify-content: center;
-      min-height: 100vh; padding: 1rem;
-    }
-    .login-card {
-      background: var(--bg2); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 2.5rem; width: 100%; max-width: 400px;
-      box-shadow: var(--shadow);
-    }
-    .login-card h1 { font-size: 1.5rem; margin-bottom: .25rem; }
-    .login-card p  { color: var(--text2); font-size: .9rem; margin-bottom: 1.75rem; }
-    .login-card label { display: block; font-size: .85rem; color: var(--text2); margin-bottom: .4rem; }
-    .login-card input[type="password"] {
-      width: 100%; padding: .7rem 1rem; background: var(--bg3);
-      border: 1px solid var(--border); border-radius: 6px; color: var(--text);
-      font-family: var(--font); font-size: 1rem; outline: none;
-      transition: border-color var(--transition);
-    }
-    .login-card input[type="password"]:focus { border-color: var(--primary); }
-    .login-error { color: var(--danger); font-size: .85rem; margin-top: .5rem; min-height: 1.2em; }
-    .btn { display: inline-flex; align-items: center; gap: .4rem; padding: .65rem 1.2rem;
-           border: none; border-radius: 6px; font-family: var(--font); font-size: .9rem;
-           font-weight: 600; cursor: pointer; transition: background var(--transition); }
-    .btn-primary { background: var(--primary); color: #fff; }
-    .btn-primary:hover { background: var(--primary-d); }
-    .btn-danger  { background: #ef4444; color: #fff; }
-    .btn-danger:hover { background: #dc2626; }
-    .btn-ghost   { background: var(--bg3); color: var(--text); border: 1px solid var(--border); }
-    .btn-ghost:hover { background: var(--border); }
-    .btn-sm { padding: .4rem .85rem; font-size: .82rem; }
-    .btn-block { width: 100%; justify-content: center; margin-top: 1rem; }
-
-    /* ===== Layout ===== */
-    #app { display: none; min-height: 100vh; }
-
-    .sidebar {
-      position: fixed; top: 0; left: 0; bottom: 0; width: 220px;
-      background: var(--bg2); border-right: 1px solid var(--border);
-      display: flex; flex-direction: column; padding: 1.5rem 0;
-      z-index: 100;
-    }
-    .sidebar-logo {
-      font-size: 1.15rem; font-weight: 700; padding: 0 1.5rem 1.5rem;
-      border-bottom: 1px solid var(--border); letter-spacing: -.02em;
-    }
-    .sidebar-logo span { color: var(--primary); }
-    .sidebar-nav { flex: 1; padding-top: 1rem; }
-    .nav-item {
-      display: flex; align-items: center; gap: .7rem;
-      padding: .65rem 1.5rem; font-size: .9rem; color: var(--text2);
-      cursor: pointer; border: none; background: none; width: 100%;
-      text-align: left; border-left: 3px solid transparent;
-      transition: all var(--transition);
-    }
-    .nav-item:hover { color: var(--text); background: var(--bg3); }
-    .nav-item.active { color: var(--primary); background: rgba(79,142,247,.1); border-left-color: var(--primary); }
-    .nav-item svg { flex-shrink: 0; }
-    .sidebar-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); }
-
-    .main { margin-left: 220px; padding: 2rem; min-height: 100vh; }
-    .page-header { margin-bottom: 2rem; }
-    .page-header h2 { font-size: 1.5rem; font-weight: 700; }
-    .page-header p  { color: var(--text2); font-size: .9rem; margin-top: .25rem; }
-
-    /* ===== Stats Cards ===== */
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
-    .stat-card {
-      background: var(--bg2); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1.25rem;
-    }
-    .stat-card .label { font-size: .8rem; color: var(--text2); text-transform: uppercase; letter-spacing: .05em; margin-bottom: .5rem; }
-    .stat-card .value { font-size: 2rem; font-weight: 700; line-height: 1; }
-    .stat-card .sub   { font-size: .8rem; color: var(--text2); margin-top: .3rem; }
-    .stat-card.accent-blue  .value { color: var(--primary); }
-    .stat-card.accent-green .value { color: var(--success); }
-    .stat-card.accent-yellow .value { color: var(--warn); }
-    .stat-card.accent-red   .value { color: var(--danger); }
-
-    /* ===== Cards / Panels ===== */
-    .card {
-      background: var(--bg2); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.5rem;
-    }
-    .card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 1.25rem; }
-    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-    @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
-
-    /* ===== Bar Chart ===== */
-    .bar-list { display: flex; flex-direction: column; gap: .6rem; }
-    .bar-row  { display: flex; align-items: center; gap: .75rem; font-size: .85rem; }
-    .bar-label { width: 130px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text2); }
-    .bar-track { flex: 1; height: 8px; background: var(--bg3); border-radius: 4px; overflow: hidden; }
-    .bar-fill  { height: 100%; background: var(--primary); border-radius: 4px; transition: width .4s ease; }
-    .bar-count { width: 40px; text-align: right; font-variant-numeric: tabular-nums; }
-
-    /* ===== Daily Sparkline ===== */
-    .sparkline-wrap { overflow-x: auto; }
-    .sparkline { display: flex; align-items: flex-end; gap: 4px; height: 80px; }
-    .spark-bar {
-      flex: 1; min-width: 6px; background: var(--primary);
-      opacity: .7; border-radius: 3px 3px 0 0;
-      transition: opacity var(--transition); cursor: default;
-    }
-    .spark-bar:hover { opacity: 1; }
-    .spark-labels { display: flex; justify-content: space-between; color: var(--text2); font-size: .7rem; margin-top: .4rem; }
-
-    /* ===== Table ===== */
-    .table-wrap { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-size: .84rem; }
-    thead tr { border-bottom: 2px solid var(--border); }
-    tbody tr { border-bottom: 1px solid var(--border); }
-    tbody tr:last-child { border-bottom: none; }
-    th { padding: .6rem .75rem; text-align: left; color: var(--text2); font-weight: 600; font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; white-space: nowrap; }
-    td { padding: .65rem .75rem; color: var(--text); }
-    td.mono { font-family: var(--mono); font-size: .8rem; }
-    .badge-country {
-      display: inline-block; background: rgba(79,142,247,.15); color: var(--primary);
-      border-radius: 4px; padding: .15rem .5rem; font-size: .78rem; white-space: nowrap;
-    }
-    .empty-state { text-align: center; color: var(--text2); padding: 3rem 1rem; }
-
-    /* ===== Content Editor ===== */
-    .form-group { margin-bottom: 1.25rem; }
-    .form-group label { display: block; font-size: .85rem; color: var(--text2); margin-bottom: .4rem; font-weight: 500; }
-    .form-group input[type="text"],
-    .form-group input[type="url"],
-    .form-group textarea {
-      width: 100%; padding: .65rem 1rem; background: var(--bg3);
-      border: 1px solid var(--border); border-radius: 6px;
-      color: var(--text); font-family: var(--font); font-size: .9rem; outline: none;
-      transition: border-color var(--transition);
-    }
-    .form-group input:focus,
-    .form-group textarea:focus { border-color: var(--primary); }
-    .form-group textarea { resize: vertical; min-height: 80px; }
-    .form-group .hint { font-size: .77rem; color: var(--text2); margin-top: .3rem; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
-    .avatar-preview {
-      width: 72px; height: 72px; border-radius: 50%;
-      object-fit: cover; border: 2px solid var(--border);
-      background: var(--bg3); display: none;
-    }
-    .avatar-initials {
-      width: 72px; height: 72px; border-radius: 50%;
-      background: var(--primary); color: #fff; font-size: 1.4rem; font-weight: 700;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .avatar-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
-    .save-bar { display: flex; align-items: center; gap: 1rem; margin-top: 1.5rem; }
-    .save-msg { font-size: .85rem; color: var(--success); opacity: 0; transition: opacity .3s; }
-    .save-msg.show { opacity: 1; }
-    .save-msg.err { color: var(--danger); }
-
-    /* ===== Toast ===== */
-    #toast {
-      position: fixed; bottom: 1.5rem; right: 1.5rem;
-      background: var(--bg3); border: 1px solid var(--border);
-      border-radius: 8px; padding: .75rem 1.25rem; font-size: .88rem;
-      box-shadow: var(--shadow); z-index: 1000;
-      opacity: 0; transform: translateY(8px);
-      transition: opacity .25s, transform .25s; pointer-events: none;
-    }
-    #toast.show { opacity: 1; transform: translateY(0); }
-    #toast.success { border-color: var(--success); color: var(--success); }
-    #toast.error   { border-color: var(--danger);  color: var(--danger); }
-
-    /* ===== Loader ===== */
-    .loader { display: inline-block; width: 16px; height: 16px; border: 2px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin .6s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ===== Mobile sidebar toggle ===== */
-    .menu-toggle {
-      display: none; position: fixed; top: 1rem; left: 1rem; z-index: 200;
-      background: var(--bg2); border: 1px solid var(--border); border-radius: 6px;
-      padding: .4rem .6rem; cursor: pointer; color: var(--text);
-    }
-    @media (max-width: 768px) {
-      .menu-toggle { display: flex; }
-      .sidebar { transform: translateX(-100%); transition: transform .25s ease; }
-      .sidebar.open { transform: translateX(0); }
-      .main { margin-left: 0; }
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="admin.css" />
 </head>
-<body>
+<body class="login-page">
 
 <!-- ===== Login Screen ===== -->
 <div id="login-screen">
-  <div class="login-card">
-    <h1>🔐 Admin Login</h1>
-    <p>Enter the admin password to access the dashboard.</p>
-    <label for="pwd-input">Password</label>
-    <input type="password" id="pwd-input" placeholder="••••••••" autocomplete="current-password" />
-    <div class="login-error" id="login-error" aria-live="polite"></div>
-    <button class="btn btn-primary btn-block" id="login-btn">
-      Sign In
-    </button>
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-logo">
+        <span class="logo-text">Allan<span class="logo-dot">.</span>dev</span>
+        <span class="logo-badge">admin</span>
+      </div>
+      <h1>Welcome back</h1>
+      <p class="login-sub">Sign in to manage your portfolio.</p>
+      <form id="login-form" novalidate>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" />
+        </div>
+        <div id="login-error" class="error-msg" hidden></div>
+        <button type="submit" class="btn-primary btn-full" id="login-btn">Sign In</button>
+      </form>
+      <p class="login-hint">Contact the site owner if you've forgotten your password.</p>
+      <a href="/" class="back-link">← Back to resume</a>
+    </div>
   </div>
 </div>
 
-<!-- ===== App Shell ===== -->
-<button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-</button>
+<!-- ===== Dashboard ===== -->
+<div id="dashboard" hidden class="dashboard">
 
-<div id="app">
+  <!-- Sidebar overlay (mobile) -->
+  <div id="sidebar-overlay" class="sidebar-overlay" aria-hidden="true"></div>
+
   <!-- Sidebar -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-logo">Allan<span>.</span>dev <span style="color:var(--text2);font-size:.75rem;font-weight:400">admin</span></div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-text">Allan<span class="logo-dot">.</span>dev</span>
+      <span class="logo-badge">admin</span>
+    </div>
     <nav class="sidebar-nav">
-      <button class="nav-item active" data-page="analytics">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-        Analytics
+      <button class="nav-item active" data-tab="overview">
+        <span class="nav-icon">📊</span> Overview
       </button>
-      <button class="nav-item" data-page="content">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        Content Editor
+      <button class="nav-item" data-tab="visitors">
+        <span class="nav-icon">👥</span> Visitor Log
       </button>
-      <a class="nav-item" href="/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        View Resume
+      <button class="nav-item" data-tab="content">
+        <span class="nav-icon">✏️</span> Content
+      </button>
+      <button class="nav-item" data-tab="settings">
+        <span class="nav-icon">⚙️</span> Settings
+      </button>
+      <a class="nav-item" href="/" target="_blank" rel="noopener noreferrer">
+        <span class="nav-icon">🔗</span> View Resume
       </a>
     </nav>
     <div class="sidebar-footer">
-      <button class="btn btn-ghost btn-sm" id="logout-btn" style="width:100%;justify-content:center;">
-        Sign Out
+      <button id="logout-btn" class="nav-item btn-logout">
+        <span class="nav-icon">🚪</span> Sign Out
       </button>
     </div>
   </aside>
 
   <!-- Main content -->
-  <main class="main">
-
-    <!-- ===== Analytics Page ===== -->
-    <div id="page-analytics">
-      <div class="page-header">
-        <h2>Analytics Dashboard</h2>
-        <p>Real-time visitor statistics for your resume.</p>
+  <div class="main-content">
+    <header class="dash-header">
+      <div class="dash-header-left">
+        <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle navigation">
+          <span></span><span></span><span></span>
+        </button>
+        <div>
+          <h2 id="page-title">Overview</h2>
+          <p id="page-subtitle" class="page-subtitle">Welcome to your admin dashboard</p>
+        </div>
       </div>
+      <button id="clear-data-btn" class="btn-icon-danger" title="Clear all analytics data">🗑 Clear Data</button>
+    </header>
 
-      <div id="analytics-loading" style="text-align:center;padding:4rem;color:var(--text2);">
-        <div class="loader" style="width:32px;height:32px;border-width:3px;"></div>
-        <p style="margin-top:1rem;">Loading analytics…</p>
-      </div>
-
-      <div id="analytics-data" style="display:none;">
-        <!-- Stat cards -->
-        <div class="stats-grid">
-          <div class="stat-card accent-blue">
-            <div class="label">Total Visits</div>
-            <div class="value" id="stat-total">0</div>
-            <div class="sub">All-time page loads</div>
-          </div>
-          <div class="stat-card accent-green">
-            <div class="label">Unique Visitors</div>
-            <div class="value" id="stat-unique">0</div>
-            <div class="sub">Distinct IP addresses</div>
-          </div>
-          <div class="stat-card accent-yellow">
-            <div class="label">Countries</div>
-            <div class="value" id="stat-countries">0</div>
-            <div class="sub">Geographic reach</div>
-          </div>
-          <div class="stat-card accent-red">
-            <div class="label">Avg. Time on Page</div>
-            <div class="value" id="stat-avg-time">—</div>
-            <div class="sub">Seconds (timed sessions)</div>
+    <!-- ===== Overview Tab ===== -->
+    <div class="tab-content" data-tab-section="overview">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-icon">👁</span>
+          <div>
+            <span class="stat-value" id="total-visits">—</span>
+            <span class="stat-label">Total Visits</span>
           </div>
         </div>
-
-        <!-- Daily sparkline -->
-        <div class="card">
-          <h3>Visits — last 30 days</h3>
-          <div class="sparkline-wrap">
-            <div class="sparkline" id="sparkline" role="img" aria-label="Daily visit chart for the last 30 days"></div>
-          </div>
-          <div class="spark-labels" id="spark-labels"></div>
-        </div>
-
-        <!-- Country + IP charts -->
-        <div class="two-col">
-          <div class="card">
-            <h3>Visitors by Country</h3>
-            <div class="bar-list" id="country-bars">
-              <p class="empty-state">No data yet.</p>
-            </div>
-          </div>
-          <div class="card">
-            <h3>Top IP Addresses</h3>
-            <div class="bar-list" id="ip-bars">
-              <p class="empty-state">No data yet.</p>
-            </div>
+        <div class="stat-card">
+          <span class="stat-icon">🌍</span>
+          <div>
+            <span class="stat-value" id="unique-countries">—</span>
+            <span class="stat-label">Countries</span>
           </div>
         </div>
-
-        <!-- Recent visits table -->
-        <div class="card">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
-            <h3 style="margin-bottom:0;">Recent Visits</h3>
-            <button class="btn btn-ghost btn-sm" id="refresh-btn">↻ Refresh</button>
+        <div class="stat-card">
+          <span class="stat-icon">🖥</span>
+          <div>
+            <span class="stat-value" id="unique-ips">—</span>
+            <span class="stat-label">Unique IPs</span>
           </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Time</th>
-                  <th>IP</th>
-                  <th>Country / City</th>
-                  <th>Page</th>
-                  <th>Duration</th>
-                  <th>Referrer</th>
-                </tr>
-              </thead>
-              <tbody id="visits-tbody">
-                <tr><td colspan="6" class="empty-state">No visits recorded yet.</td></tr>
-              </tbody>
-            </table>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">📅</span>
+          <div>
+            <span class="stat-value" id="today-visits">—</span>
+            <span class="stat-label">Today</span>
           </div>
         </div>
       </div>
-
-      <div id="analytics-error" style="display:none;" class="card">
-        <p style="color:var(--danger);" id="analytics-error-msg">Failed to load analytics.</p>
+      <div class="charts-row">
+        <div class="chart-card">
+          <h3>Visits — Last 14 Days</h3>
+          <div class="chart-canvas-wrap">
+            <canvas id="visits-chart"></canvas>
+            <p id="visits-chart-empty" class="chart-empty" hidden>No visit data yet. Visits to your portfolio will appear here.</p>
+          </div>
+        </div>
+        <div class="chart-card">
+          <h3>Top Countries</h3>
+          <div id="countries-chart" class="countries-chart">
+            <p class="chart-empty">No country data yet.</p>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- ===== Content Editor Page ===== -->
-    <div id="page-content" style="display:none;">
-      <div class="page-header">
-        <h2>Content Editor</h2>
-        <p>Update every section of your resume from here.</p>
+    <!-- ===== Visitors Tab ===== -->
+    <div class="tab-content" data-tab-section="visitors" hidden>
+      <div class="table-card">
+        <div class="table-toolbar">
+          <h3>Visitor Log</h3>
+          <input type="search" id="visitor-search" class="search-input" placeholder="Search IP, country, city, referrer…" />
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Time</th>
+                <th>IP Address</th>
+                <th>Country</th>
+                <th>City</th>
+                <th>Referrer</th>
+                <th>Device</th>
+              </tr>
+            </thead>
+            <tbody id="visitors-tbody">
+              <tr><td colspan="7" class="empty-row">No visitor data yet. Visits to your portfolio will appear here.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-pagination">
+          <span id="page-info">Page 1 of 1 (0 total)</span>
+          <div class="pagination-btns">
+            <button id="prev-page" class="btn-secondary" disabled>← Prev</button>
+            <button id="next-page" class="btn-secondary" disabled>Next →</button>
+          </div>
+        </div>
       </div>
+    </div>
 
-      <div class="card" id="content-loading" style="text-align:center;padding:3rem;color:var(--text2);">
-        <div class="loader" style="width:32px;height:32px;border-width:3px;"></div>
-        <p style="margin-top:1rem;">Loading current content…</p>
+    <!-- ===== Content Tab ===== -->
+    <div class="tab-content" data-tab-section="content" hidden>
+      <div id="content-loading" class="content-card" style="text-align:center;padding:3rem;">
+        <p style="color:var(--text-muted);">Loading current content…</p>
       </div>
+      <div id="content-form" hidden>
+        <div class="content-grid">
 
-      <form id="content-form" style="display:none;" novalidate>
-
-        <!-- Profile section -->
-        <div class="card">
-          <h3>👤 Profile</h3>
-
-          <div class="form-group">
-            <label>Profile Picture</label>
-            <div class="avatar-row">
-              <div class="avatar-initials" id="avatar-initials">AR</div>
-              <img id="avatar-preview" class="avatar-preview" src="" alt="Profile preview" />
-              <div style="flex:1;">
-                <input type="url" id="field-profilePic" placeholder="https://example.com/photo.jpg" />
-                <p class="hint">Paste a direct image URL. Leave blank to use the initials fallback.</p>
+          <!-- Profile -->
+          <div class="content-card">
+            <h3>👤 Profile</h3>
+            <div class="form-group">
+              <label>Profile Picture URL</label>
+              <div class="avatar-preview-wrap">
+                <div id="avatar-preview" class="avatar-circle">AR</div>
               </div>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="field-name">Full Name</label>
-              <input type="text" id="field-name" placeholder="Allan Rye" />
+              <input type="url" id="photo-url" placeholder="https://example.com/photo.jpg" />
+              <small>Direct image URL. Leave blank to use the initials fallback.</small>
             </div>
             <div class="form-group">
-              <label for="field-title">Professional Title</label>
-              <input type="text" id="field-title" placeholder="Senior Software Engineer" />
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="field-tagline">Tagline / Summary</label>
-            <textarea id="field-tagline" rows="3" placeholder="A short professional summary…"></textarea>
-          </div>
-        </div>
-
-        <!-- Contact section -->
-        <div class="card">
-          <h3>📬 Contact &amp; Links</h3>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="field-email">Email Address</label>
-              <input type="text" id="field-email" placeholder="you@example.com" />
+              <label for="profile-name">Full Name</label>
+              <input type="text" id="profile-name" placeholder="Allan Rye" />
             </div>
             <div class="form-group">
-              <label for="field-phone">Phone Number</label>
-              <input type="text" id="field-phone" placeholder="+1 (555) 012-3456" />
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="field-githubUrl">GitHub URL</label>
-              <input type="url" id="field-githubUrl" placeholder="https://github.com/username" />
+              <label for="profile-title">Professional Title</label>
+              <input type="text" id="profile-title" placeholder="Senior Software Engineer" />
             </div>
             <div class="form-group">
-              <label for="field-linkedinUrl">LinkedIn URL</label>
-              <input type="url" id="field-linkedinUrl" placeholder="https://linkedin.com/in/username" />
+              <label for="profile-tagline">Tagline / Summary</label>
+              <textarea id="profile-tagline" rows="3" placeholder="Senior Software Engineer with 6+ years…"></textarea>
+            </div>
+            <div class="save-bar">
+              <button type="button" id="save-profile" class="btn-primary">Save Profile</button>
+              <span id="profile-save-msg" class="save-status" hidden>✓ Saved</span>
             </div>
           </div>
-          <div class="form-row">
+
+          <!-- Contact & Links -->
+          <div class="content-card">
+            <h3>📬 Contact &amp; Links</h3>
             <div class="form-group">
-              <label for="field-location">Location</label>
-              <input type="text" id="field-location" placeholder="Abu Dhabi, UAE" />
-              <p class="hint">City and country shown in the contact bar.</p>
+              <label for="contact-email">Email Address</label>
+              <input type="text" id="contact-email" placeholder="you@example.com" />
+            </div>
+            <div class="form-group">
+              <label for="contact-phone">Phone Number</label>
+              <input type="text" id="contact-phone" placeholder="+1 (555) 012-3456" />
+            </div>
+            <div class="form-group">
+              <label for="contact-github">GitHub URL</label>
+              <input type="url" id="contact-github" placeholder="https://github.com/username" />
+            </div>
+            <div class="form-group">
+              <label for="contact-linkedin">LinkedIn URL</label>
+              <input type="url" id="contact-linkedin" placeholder="https://linkedin.com/in/username" />
+            </div>
+            <div class="form-group">
+              <label for="contact-location">Location</label>
+              <input type="text" id="contact-location" placeholder="Abu Dhabi, UAE" />
+            </div>
+            <div class="save-bar">
+              <button type="button" id="save-contact" class="btn-primary">Save Contact</button>
+              <span id="contact-save-msg" class="save-status" hidden>✓ Saved</span>
             </div>
           </div>
-        </div>
 
-        <!-- About / Who I Am -->
-        <div class="card">
-          <h3>🙋 Who I Am</h3>
-          <div class="form-group">
-            <label for="field-aboutText">About Me (paragraphs separated by a blank line)</label>
-            <textarea id="field-aboutText" rows="8" placeholder="I'm a passionate software engineer with over 6 years…&#10;&#10;My work spans full-stack development…"></textarea>
-            <p class="hint">Use a blank line between paragraphs. Plain text only — no HTML.</p>
+          <!-- About Me -->
+          <div class="content-card content-card-full">
+            <h3>🙋 About Me</h3>
+            <div class="form-group">
+              <label for="about-text">About Text</label>
+              <textarea id="about-text" rows="6" placeholder="I'm a passionate software engineer with over 6 years…&#10;&#10;My work spans full-stack development…"></textarea>
+              <small>Use a blank line between paragraphs. Plain text only — no HTML.</small>
+            </div>
+            <div class="save-bar">
+              <button type="button" id="save-about" class="btn-primary">Save About</button>
+              <span id="about-save-msg" class="save-status" hidden>✓ Saved</span>
+            </div>
           </div>
-        </div>
 
-        <!-- Technical Skills -->
-        <div class="card">
-          <h3>⚙️ Technical Skills</h3>
-          <div class="form-group">
-            <label for="field-skills">Skills (JSON array)</label>
-            <textarea id="field-skills" rows="12" placeholder='[
-  {
-    "category": "Frontend Development",
-    "icon": "🖥️",
-    "iconBg": "rgba(26,115,232,.12)",
-    "items": ["HTML5", "CSS3", "JavaScript", "TypeScript", "React.js"]
-  },
-  {
-    "category": "Backend Development",
-    "icon": "⚙️",
-    "iconBg": "rgba(52,168,83,.12)",
-    "items": ["Node.js", "Python", "Django", "FastAPI"]
-  }
-]'></textarea>
-            <p class="hint">Each object needs: <code>category</code>, <code>icon</code> (emoji), <code>iconBg</code> (CSS color, e.g. <code>rgba(26,115,232,.12)</code>), <code>items</code> (string array). Must be valid JSON.</p>
+          <!-- Technical Skills -->
+          <div class="content-card content-card-full">
+            <h3>⚙️ Technical Skills</h3>
+            <div class="form-group">
+              <label for="skills-json">Skills (JSON array)</label>
+              <textarea id="skills-json" rows="12" placeholder='[&#10;  {&#10;    "category": "Frontend Development",&#10;    "icon": "🖥️",&#10;    "iconBg": "rgba(26,115,232,.12)",&#10;    "items": ["HTML5", "CSS3", "JavaScript", "React.js"]&#10;  }&#10;]'></textarea>
+              <small>Each object: <code>category</code>, <code>icon</code> (emoji), <code>iconBg</code> (CSS color), <code>items</code> (string array). Must be valid JSON.</small>
+            </div>
+            <div class="save-bar">
+              <button type="button" id="save-skills" class="btn-primary">Save Skills</button>
+              <span id="skills-save-msg" class="save-status" hidden>✓ Saved</span>
+            </div>
           </div>
-        </div>
 
-        <!-- Work Experience -->
-        <div class="card">
-          <h3>💼 Work Experience</h3>
-          <div class="form-group">
-            <label for="field-experience">Experience (JSON array — newest first)</label>
-            <textarea id="field-experience" rows="16" placeholder='[
-  {
-    "role": "Senior Software Engineer",
-    "date": "Jan 2023 — Present",
-    "company": "HealthBridge Solutions · Nairobi, Kenya",
-    "description": "Led development of a cloud-native EHR platform…",
-    "tags": ["React", "Node.js", "AWS"]
-  }
-]'></textarea>
-            <p class="hint">Each object needs: <code>role</code>, <code>date</code>, <code>company</code>, <code>description</code>, <code>tags</code> (string array). Must be valid JSON.</p>
+          <!-- Work Experience -->
+          <div class="content-card content-card-full">
+            <h3>💼 Work Experience</h3>
+            <div class="form-group">
+              <label for="experience-json">Experience (JSON array, newest first)</label>
+              <textarea id="experience-json" rows="16" placeholder='[&#10;  {&#10;    "role": "Senior Software Engineer",&#10;    "date": "Jan 2023 — Present",&#10;    "company": "Company Name · Location",&#10;    "description": "Led development of…",&#10;    "tags": ["React", "Node.js", "AWS"]&#10;  }&#10;]'></textarea>
+              <small>Each object: <code>role</code>, <code>date</code>, <code>company</code>, <code>description</code>, <code>tags</code> (string array). Must be valid JSON.</small>
+            </div>
+            <div class="save-bar">
+              <button type="button" id="save-experience" class="btn-primary">Save Experience</button>
+              <span id="experience-save-msg" class="save-status" hidden>✓ Saved</span>
+            </div>
           </div>
-        </div>
 
-        <!-- Projects -->
-        <div class="card">
-          <h3>🚀 Projects</h3>
-          <div class="form-group">
-            <label for="field-projects">Projects (JSON array)</label>
-            <textarea id="field-projects" rows="20" placeholder='[
-  {
-    "title": "My Project",
-    "type": "Full-Stack · TypeScript",
-    "description": "A brief description of the project.",
-    "highlights": ["Feature one", "Feature two"],
-    "tech": ["TypeScript", "React", "Node.js"],
-    "github": "https://github.com/username/repo",
-    "bannerStyle": "background: linear-gradient(90deg, #1a73e8, #34a853)"
-  }
-]'></textarea>
-            <p class="hint">Each object: <code>title</code>, <code>type</code>, <code>description</code>, <code>highlights</code> (array), <code>tech</code> (array), <code>github</code> (URL), <code>bannerStyle</code> (CSS). Must be valid JSON.</p>
+          <!-- Projects -->
+          <div class="content-card content-card-full">
+            <h3>🚀 Projects</h3>
+            <div class="form-group">
+              <label for="projects-json">Projects (JSON array)</label>
+              <textarea id="projects-json" rows="20" placeholder='[&#10;  {&#10;    "title": "My Project",&#10;    "type": "Full-Stack · TypeScript",&#10;    "description": "A brief description.",&#10;    "highlights": ["Feature one", "Feature two"],&#10;    "tech": ["TypeScript", "React", "Node.js"],&#10;    "github": "https://github.com/username/repo",&#10;    "bannerStyle": "background: linear-gradient(90deg, #1a73e8, #34a853)"&#10;  }&#10;]'></textarea>
+              <small>Each object: <code>title</code>, <code>type</code>, <code>description</code>, <code>highlights</code>, <code>tech</code>, <code>github</code>, <code>bannerStyle</code>. Must be valid JSON.</small>
+            </div>
+            <div class="save-bar">
+              <button type="button" id="save-projects" class="btn-primary">Save Projects</button>
+              <span id="projects-save-msg" class="save-status" hidden>✓ Saved</span>
+            </div>
           </div>
-        </div>
 
-        <!-- Education -->
-        <div class="card">
-          <h3>🎓 Education &amp; Certifications</h3>
-          <div class="form-group">
-            <label for="field-education">Education (JSON array)</label>
-            <textarea id="field-education" rows="14" placeholder='[
-  {
-    "icon": "🎓",
-    "degree": "BSc. Computer Science",
-    "school": "University of Nairobi",
-    "date": "2014 – 2018",
-    "note": "First Class Honours · Software Engineering"
-  },
-  {
-    "icon": "☁️",
-    "degree": "AWS Certified Solutions Architect",
-    "school": "Amazon Web Services",
-    "date": "2022 · Associate Level"
-  }
-]'></textarea>
-            <p class="hint">Each object: <code>icon</code> (emoji), <code>degree</code>, <code>school</code>, <code>date</code>, and optional <code>note</code>. Must be valid JSON.</p>
+          <!-- Education & Certifications -->
+          <div class="content-card content-card-full">
+            <h3>🎓 Education &amp; Certifications</h3>
+            <div class="form-group">
+              <label for="education-json">Education (JSON array)</label>
+              <textarea id="education-json" rows="14" placeholder='[&#10;  {&#10;    "icon": "🎓",&#10;    "degree": "BSc. Computer Science",&#10;    "school": "University of Nairobi",&#10;    "date": "2014 – 2018",&#10;    "note": "First Class Honours · Software Engineering"&#10;  }&#10;]'></textarea>
+              <small>Each object: <code>icon</code>, <code>degree</code>, <code>school</code>, <code>date</code>, optional <code>note</code>. Must be valid JSON.</small>
+            </div>
+            <div class="save-bar">
+              <button type="button" id="save-education" class="btn-primary">Save Education</button>
+              <span id="education-save-msg" class="save-status" hidden>✓ Saved</span>
+            </div>
           </div>
-        </div>
 
-        <!-- Media section -->
-        <div class="card">
-          <h3>🎬 Featured Media</h3>
+          <!-- Featured Media -->
+          <div class="content-card content-card-full">
+            <h3>🎬 Featured Media</h3>
+            <div class="form-group">
+              <label for="intro-video">Featured Video URL</label>
+              <input type="url" id="intro-video" placeholder="https://www.youtube.com/embed/VIDEO_ID" />
+              <small>YouTube embed or Vimeo embed URL. Appears in the hero section when set.</small>
+            </div>
+            <div class="form-group">
+              <label for="showcase-image">Hero Image Gallery URLs (one per line)</label>
+              <textarea id="showcase-image" rows="4" placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg"></textarea>
+              <small>One image URL per line. Displayed as a gallery in the hero section.</small>
+            </div>
+            <div class="save-bar">
+              <button type="button" id="save-media" class="btn-primary">Save Media</button>
+              <span id="media-save-msg" class="save-status" hidden>✓ Saved</span>
+            </div>
+          </div>
+
+        </div><!-- end .content-grid -->
+      </div><!-- end #content-form -->
+    </div><!-- end content tab -->
+
+    <!-- ===== Settings Tab ===== -->
+    <div class="tab-content" data-tab-section="settings" hidden>
+
+      <div class="settings-card">
+        <h3>Analytics Data</h3>
+        <p>Visitor data is stored in your browser's <code>localStorage</code>.</p>
+        <p id="data-info" class="data-info">Loading…</p>
+        <div class="settings-actions">
+          <button id="clear-analytics" class="btn-danger">Clear Analytics</button>
+          <button id="export-data" class="btn-secondary">Export JSON</button>
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <h3>Change Password</h3>
+        <p>Update the admin dashboard password. The new password is stored as a hash in <code>localStorage</code>.</p>
+        <form id="change-password-form" novalidate>
           <div class="form-group">
-            <label for="field-featuredVideo">Featured Video URL (YouTube embed or direct link)</label>
-            <input type="url" id="field-featuredVideo" placeholder="https://www.youtube.com/embed/VIDEO_ID" />
-            <p class="hint">Paste a YouTube embed URL or direct video URL. Appears in the hero section when set.</p>
+            <label for="current-password">Current Password</label>
+            <input type="password" id="current-password" placeholder="Current password" autocomplete="current-password" />
           </div>
           <div class="form-group">
-            <label>Hero Image Gallery URLs (one per line)</label>
-            <textarea id="field-heroImages" rows="4" placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg"></textarea>
-            <p class="hint">One image URL per line. Displayed as a gallery in the hero section when set.</p>
+            <label for="new-password">New Password</label>
+            <input type="password" id="new-password" placeholder="Minimum 6 characters" autocomplete="new-password" />
           </div>
-        </div>
+          <div class="form-group">
+            <label for="confirm-password">Confirm New Password</label>
+            <input type="password" id="confirm-password" placeholder="Repeat new password" autocomplete="new-password" />
+          </div>
+          <div id="pwd-error" class="error-msg" hidden></div>
+          <div id="pwd-success" class="success-msg" hidden>✓ Password updated successfully</div>
+          <button type="submit" class="btn-primary">Update Password</button>
+        </form>
+      </div>
 
-        <div class="save-bar">
-          <button type="submit" class="btn btn-primary" id="save-btn">Save Changes</button>
-          <div class="save-msg" id="save-msg"></div>
-        </div>
+      <div class="settings-card">
+        <h3>System Info</h3>
+        <ul class="info-list">
+          <li>Analytics data is stored in browser <code>localStorage</code> under <code>ar_visits</code>.</li>
+          <li>Content overrides are saved server-side and cached in <code>cv_content_override</code>.</li>
+          <li>Auth token is kept in <code>localStorage</code> for the current browser session.</li>
+          <li>View your live resume: <a href="/" target="_blank" rel="noopener noreferrer">Allan Rye — Portfolio</a></li>
+        </ul>
+      </div>
 
-        <div class="card" style="margin-top:1.5rem;background:rgba(251,191,36,.05);border-color:rgba(251,191,36,.3);">
-          <h3 style="color:var(--warn);">⚠️ Note on Persistence</h3>
-          <p style="font-size:.88rem;color:var(--text2);line-height:1.6;margin-top:.5rem;">
-            Content changes are stored in memory on the server and will reset when the serverless
-            function instance is recycled (cold start).  The resume page caches the latest values
-            in <code style="font-family:var(--mono);background:var(--bg3);padding:.1em .35em;border-radius:3px;">localStorage</code>
-            so your browser will always show your saved content.<br /><br />
-            For <strong>permanent cross-user persistence</strong>, connect
-            <a href="https://vercel.com/docs/storage/vercel-kv" target="_blank" rel="noopener noreferrer" style="color:var(--primary);">Vercel KV</a>
-            and update <code style="font-family:var(--mono);background:var(--bg3);padding:.1em .35em;border-radius:3px;">api/_store.js</code>
-            to read/write from KV.
-          </p>
-        </div>
-      </form>
-    </div>
+    </div><!-- end settings tab -->
 
-  </main>
-</div>
+  </div><!-- end .main-content -->
+</div><!-- end #dashboard -->
 
-<div id="toast" role="status" aria-live="polite"></div>
-
-<script>
-(function () {
-  'use strict';
-
-  // =========================================================
-  // Helpers
-  // =========================================================
-  const $ = (sel, ctx) => (ctx || document).querySelector(sel);
-  const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
-
-  let authToken = null;
-
-  let toastTimerId = null;
-
-  function showToast(msg, type = 'success') {
-    const t = $('#toast');
-    t.textContent = msg;
-    t.className = 'show ' + type;
-    clearTimeout(toastTimerId);
-    toastTimerId = setTimeout(() => { t.className = ''; }, 3000);
-  }
-
-  function formatTime(ts) {
-    const d = new Date(ts);
-    return d.toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' });
-  }
-  function formatDuration(sec) {
-    if (sec === null || sec === undefined) return '—';
-    if (sec < 60) return sec + 's';
-    return Math.floor(sec / 60) + 'm ' + (sec % 60) + 's';
-  }
-  function escHtml(s) {
-    return String(s)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
-
-  // =========================================================
-  // Auth
-  // =========================================================
-  const loginScreen = $('#login-screen');
-  const app         = $('#app');
-  const pwdInput    = $('#pwd-input');
-  const loginBtn    = $('#login-btn');
-  const loginError  = $('#login-error');
-
-  function restoreSession() {
-    const saved = localStorage.getItem('admin_token');
-    if (saved) {
-      authToken = saved;
-      showApp();
-      return true;
-    }
-    return false;
-  }
-
-  async function doLogin() {
-    loginError.textContent = '';
-    loginBtn.disabled = true;
-    loginBtn.innerHTML = '<span class="loader"></span> Signing in…';
-    try {
-      const res = await fetch('/api/auth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: pwdInput.value }),
-      });
-      const data = await res.json();
-      if (!data.ok) throw new Error(data.error || 'Invalid password');
-      authToken = data.token;
-      localStorage.setItem('admin_token', authToken);
-      showApp();
-    } catch (err) {
-      loginError.textContent = err.message || 'Sign-in failed.';
-    } finally {
-      loginBtn.disabled = false;
-      loginBtn.textContent = 'Sign In';
-    }
-  }
-
-  loginBtn.addEventListener('click', doLogin);
-  pwdInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') doLogin(); });
-
-  $('#logout-btn').addEventListener('click', () => {
-    localStorage.removeItem('admin_token');
-    authToken = null;
-    app.style.display = 'none';
-    loginScreen.style.display = 'flex';
-    pwdInput.value = '';
-  });
-
-  function showApp() {
-    loginScreen.style.display = 'none';
-    app.style.display = 'block';
-    loadAnalytics();
-    loadContent();
-  }
-
-  // =========================================================
-  // Navigation
-  // =========================================================
-  const pages = { analytics: $('#page-analytics'), content: $('#page-content') };
-
-  $$('.nav-item[data-page]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      $$('.nav-item').forEach((b) => b.classList.remove('active'));
-      btn.classList.add('active');
-      const target = btn.dataset.page;
-      Object.keys(pages).forEach((k) => {
-        pages[k].style.display = k === target ? 'block' : 'none';
-      });
-      if (window.innerWidth <= 768) $('#sidebar').classList.remove('open');
-    });
-  });
-
-  // Mobile sidebar toggle
-  $('#menu-toggle').addEventListener('click', () => {
-    $('#sidebar').classList.toggle('open');
-  });
-
-  // =========================================================
-  // Analytics
-  // =========================================================
-  async function loadAnalytics() {
-    $('#analytics-loading').style.display = 'block';
-    $('#analytics-data').style.display   = 'none';
-    $('#analytics-error').style.display  = 'none';
-    try {
-      const res = await fetch('/api/analytics?token=' + encodeURIComponent(authToken));
-      if (res.status === 401) throw new Error('Session expired. Please sign in again.');
-      if (!res.ok)            throw new Error('Server error ' + res.status);
-      const d = await res.json();
-      renderAnalytics(d);
-      $('#analytics-loading').style.display = 'none';
-      $('#analytics-data').style.display    = 'block';
-    } catch (err) {
-      $('#analytics-loading').style.display    = 'none';
-      $('#analytics-error').style.display      = 'block';
-      $('#analytics-error-msg').textContent    = err.message;
-    }
-  }
-
-  $('#refresh-btn').addEventListener('click', loadAnalytics);
-
-  function renderAnalytics(d) {
-    // Stats
-    $('#stat-total').textContent    = d.stats.total.toLocaleString();
-    $('#stat-unique').textContent   = d.stats.unique.toLocaleString();
-    $('#stat-countries').textContent = d.countries.length.toLocaleString();
-    $('#stat-avg-time').textContent  = d.stats.avgDuration ? d.stats.avgDuration + 's' : '—';
-
-    // Sparkline
-    const sparkEl = $('#sparkline');
-    sparkEl.innerHTML = '';
-    const max = Math.max(...d.dailyVisits.map((v) => v.count), 1);
-    d.dailyVisits.forEach(({ date, count }) => {
-      const bar = document.createElement('div');
-      bar.className = 'spark-bar';
-      bar.style.height = Math.max((count / max) * 100, 2) + '%';
-      const label = `${date}: ${count} visit${count !== 1 ? 's' : ''}`;
-      bar.title = label;
-      bar.setAttribute('aria-label', label);
-      sparkEl.appendChild(bar);
-    });
-    const labelsEl = $('#spark-labels');
-    const first = d.dailyVisits[0]?.date || '';
-    const last  = d.dailyVisits[d.dailyVisits.length - 1]?.date || '';
-    labelsEl.innerHTML = '<span>' + escHtml(first) + '</span><span>' + escHtml(last) + '</span>';
-
-    // Country bars
-    renderBars('#country-bars', d.countries, 'country', d.stats.total);
-
-    // IP bars
-    renderBars('#ip-bars', d.topIPs, 'ip', d.stats.total);
-
-    // Recent visits table
-    const tbody = $('#visits-tbody');
-    if (!d.recent.length) {
-      tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No visits recorded yet. Visit the resume to generate data.</td></tr>';
-      return;
-    }
-    tbody.innerHTML = d.recent.map((v) => `
-      <tr>
-        <td class="mono" style="white-space:nowrap;">${escHtml(formatTime(v.timestamp))}</td>
-        <td class="mono">${escHtml(v.ip)}</td>
-        <td><span class="badge-country">${escHtml(v.country)}</span> <span style="color:var(--text2);font-size:.8rem;">${escHtml(v.city || '')}</span></td>
-        <td class="mono" style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escHtml(v.page)}</td>
-        <td>${escHtml(formatDuration(v.duration))}</td>
-        <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text2);font-size:.8rem;">${escHtml(v.referrer || '—')}</td>
-      </tr>`).join('');
-  }
-
-  function renderBars(selector, items, labelKey, total) {
-    const el = $(selector);
-    if (!items.length) { el.innerHTML = '<p class="empty-state">No data yet.</p>'; return; }
-    const max = items[0].count;
-    el.innerHTML = items.map(({ [labelKey]: label, count }) => `
-      <div class="bar-row">
-        <span class="bar-label" title="${escHtml(label)}">${escHtml(label)}</span>
-        <div class="bar-track"><div class="bar-fill" style="width:${Math.round((count / max) * 100)}%"></div></div>
-        <span class="bar-count">${count}</span>
-      </div>`).join('');
-  }
-
-  // =========================================================
-  // Content Editor
-  // =========================================================
-  let currentContent = {};
-
-  // Simple text fields
-  const textFieldIds = [
-    'profilePic', 'name', 'title', 'tagline',
-    'email', 'phone', 'githubUrl', 'linkedinUrl', 'location',
-    'featuredVideo', 'aboutText',
-  ];
-  // Fields stored as arrays (heroImages = one per line, others = JSON)
-  const jsonArrayFieldIds = ['skills', 'experience', 'projects', 'education'];
-
-  async function loadContent() {
-    $('#content-loading').style.display = 'block';
-    $('#content-form').style.display    = 'none';
-    try {
-      const res = await fetch('/api/content');
-      if (!res.ok) throw new Error('Server error ' + res.status);
-      currentContent = await res.json();
-      populateForm(currentContent);
-      $('#content-loading').style.display = 'none';
-      $('#content-form').style.display    = 'block';
-    } catch (err) {
-      $('#content-loading').innerHTML =
-        '<p style="color:var(--danger);">Failed to load content: ' + escHtml(err.message) + '. Please refresh.</p>';
-    }
-  }
-
-  function populateForm(c) {
-    textFieldIds.forEach((id) => {
-      const el = $('#field-' + id);
-      if (!el) return;
-      el.value = c[id] || '';
-    });
-    // heroImages — one URL per line
-    const heroEl = $('#field-heroImages');
-    if (heroEl) heroEl.value = Array.isArray(c.heroImages) ? c.heroImages.join('\n') : '';
-    // JSON array fields — pretty-print for readability
-    jsonArrayFieldIds.forEach((id) => {
-      const el = $('#field-' + id);
-      if (!el) return;
-      el.value = Array.isArray(c[id]) && c[id].length
-        ? JSON.stringify(c[id], null, 2)
-        : '';
-    });
-    updateAvatarPreview(c.profilePic || '');
-  }
-
-  $('#field-profilePic').addEventListener('input', function () {
-    updateAvatarPreview(this.value);
-  });
-
-  function updateAvatarPreview(url) {
-    const initials = $('#avatar-initials');
-    const preview  = $('#avatar-preview');
-    if (url) {
-      preview.src     = url;
-      preview.style.display  = 'block';
-      initials.style.display = 'none';
-    } else {
-      preview.style.display  = 'none';
-      initials.style.display = 'flex';
-    }
-  }
-
-  $('#content-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const saveBtn = $('#save-btn');
-    const saveMsg = $('#save-msg');
-    saveBtn.disabled = true;
-    saveBtn.innerHTML = '<span class="loader"></span> Saving…';
-    saveMsg.className = 'save-msg';
-
-    // Build payload from text fields
-    const payload = {};
-    textFieldIds.forEach((id) => {
-      const el = $('#field-' + id);
-      if (!el) return;
-      payload[id] = el.value.trim();
-    });
-
-    // heroImages — one per line
-    const heroEl = $('#field-heroImages');
-    if (heroEl) {
-      payload.heroImages = heroEl.value.split('\n').map((s) => s.trim()).filter(Boolean);
-    }
-
-    // JSON array fields — parse and validate
-    for (const id of jsonArrayFieldIds) {
-      const el = $('#field-' + id);
-      if (!el || !el.value.trim()) {
-        payload[id] = [];
-        continue;
-      }
-      try {
-        const parsed = JSON.parse(el.value);
-        if (!Array.isArray(parsed)) throw new Error(id + ' must be a JSON array');
-        payload[id] = parsed;
-      } catch (parseErr) {
-        saveMsg.textContent = '✗ Invalid JSON in ' + id + ': ' + parseErr.message;
-        saveMsg.className   = 'save-msg show err';
-        showToast('JSON error in ' + id, 'error');
-        saveBtn.disabled    = false;
-        saveBtn.textContent = 'Save Changes';
-        return;
-      }
-    }
-
-    try {
-      const res = await fetch('/api/content?token=' + encodeURIComponent(authToken), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) {
-        if (res.status === 401) throw new Error('Session expired. Please sign in again.');
-        throw new Error('Server error ' + res.status);
-      }
-      const data = await res.json();
-      currentContent = data.content;
-
-      // Persist to localStorage so the resume page picks it up immediately
-      localStorage.setItem('cv_content_override', JSON.stringify(currentContent));
-
-      saveMsg.textContent = '✓ Saved successfully';
-      saveMsg.className   = 'save-msg show';
-      showToast('Content saved!', 'success');
-      setTimeout(() => { saveMsg.className = 'save-msg'; }, 4000);
-    } catch (err) {
-      saveMsg.textContent = '✗ ' + err.message;
-      saveMsg.className   = 'save-msg show err';
-      showToast(err.message, 'error');
-    } finally {
-      saveBtn.disabled    = false;
-      saveBtn.textContent = 'Save Changes';
-    }
-  });
-
-  // =========================================================
-  // Init
-  // =========================================================
-  if (!restoreSession()) {
-    loginScreen.style.display = 'flex';
-  }
-}());
-</script>
+<script src="admin.js" defer></script>
 </body>
 </html>
