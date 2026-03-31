@@ -15,13 +15,21 @@ const { randomUUID } = require('crypto');
 /** Very small in-process cache so we don't hammer ipapi.co for the same IP. */
 const geoCache = new Map();
 
+/** Strict allow-list for IP characters (IPv4 digits/dots, IPv6 hex/colons). */
+const SAFE_IP_RE = /^[0-9a-fA-F.:]+$/;
+
 async function getGeo(ip) {
   if (!ip || ip === '::1' || ip === '127.0.0.1') {
     return { country: 'Local', city: 'Local' };
   }
+  // Reject anything that isn't a valid IP character set to prevent URL injection.
+  if (!SAFE_IP_RE.test(ip)) {
+    return { country: 'Unknown', city: 'Unknown' };
+  }
   if (geoCache.has(ip)) return geoCache.get(ip);
   try {
-    const res = await fetch(`https://ipapi.co/${ip}/json/`);
+    const url = new URL(`https://ipapi.co/${ip}/json/`);
+    const res = await fetch(url.href);
     if (!res.ok) throw new Error('geo lookup failed');
     const data = await res.json();
     const geo = {

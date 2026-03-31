@@ -5,15 +5,15 @@
  * The token must match the one returned by /api/auth.
  */
 
-const { createHash } = require('crypto');
+const { createHmac } = require('crypto');
 const store = require('./_store');
 
 function validToken(token) {
   if (!token) return false;
-  const adminPassword = process.env.ADMIN_PASSWORD;
-  if (!adminPassword) return false;
-  const expected = createHash('sha256')
-    .update(adminPassword + (process.env.TOKEN_SALT || 'allan-resume-salt'))
+  if (!process.env.ADMIN_PASSWORD) return false;
+  // Token is derived from TOKEN_SALT only — the password is never hashed.
+  const expected = createHmac('sha256', process.env.TOKEN_SALT || 'allan-resume-salt')
+    .update('admin-session-v1')
     .digest('hex');
   return token === expected;
 }

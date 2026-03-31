@@ -13,9 +13,13 @@ const express = require('express');
 const app = express();
 
 // ── Body parsing ──────────────────────────────────────────────────
-app.use(express.json());
+// Limit payload size to guard against memory exhaustion attacks.
+app.use(express.json({ limit: '100kb' }));
 
 // ── API routes ────────────────────────────────────────────────────
+// app.all() is used intentionally: each handler validates its own method
+// internally and returns 405 for unsupported methods, keeping the logic
+// self-contained and consistent with the original Vercel serverless style.
 app.all('/api/auth',      require('./api/auth'));
 app.all('/api/analytics', require('./api/analytics'));
 app.all('/api/content',   require('./api/content'));

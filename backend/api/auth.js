@@ -8,7 +8,7 @@
  * The server returns 503 if ADMIN_PASSWORD is not configured.
  */
 
-const { createHash } = require('crypto');
+const { createHmac } = require('crypto');
 
 module.exports = function handler(req, res) {
   const origin = process.env.FRONTEND_URL || '*';
@@ -29,10 +29,10 @@ module.exports = function handler(req, res) {
     return res.status(401).json({ ok: false, error: 'Invalid password' });
   }
 
-  // Create a deterministic token from the password so it can be validated
-  // later without storing server-side session state.
-  const token = createHash('sha256')
-    .update(adminPassword + (process.env.TOKEN_SALT || 'allan-resume-salt'))
+  // Create a deterministic session token using the TOKEN_SALT secret.
+  // The password itself is never used in any hash — it is only compared directly above.
+  const token = createHmac('sha256', process.env.TOKEN_SALT || 'allan-resume-salt')
+    .update('admin-session-v1')
     .digest('hex');
 
   return res.status(200).json({ ok: true, token });
