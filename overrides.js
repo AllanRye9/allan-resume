@@ -277,8 +277,10 @@
   }
 
   // ── Fetch from API, fall back to localStorage cache ───────────────────────
+  var API_BASE = typeof window.__API_BASE__ === 'string' ? window.__API_BASE__ : '';
+
   function loadAndApply() {
-    fetch('/api/content')
+    fetch(API_BASE + '/api/content')
       .then(function (res) {
         if (!res.ok) throw new Error('fetch failed');
         return res.json();

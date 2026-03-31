@@ -1,0 +1,21 @@
+# Render deployment configuration for the allan-resume backend.
+# Docs: https://render.com/docs/render-yaml-spec
+
+services:
+  - type: web
+    name: allan-resume-backend
+    env: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Set these secrets in the Render dashboard (do not commit real values):
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: TOKEN_SALT
+        sync: false
+      # Your Vercel frontend URL — restricts CORS to your own site:
+      - key: FRONTEND_URL
+        sync: false

@@ -1,0 +1,16 @@
+{
+  "name": "allan-resume-backend",
+  "version": "1.0.0",
+  "description": "Backend API server for allan-resume, deployed on Render.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -24,6 +24,9 @@ var filteredVisits = [];
 // Auth token from the server (stored in localStorage between sessions)
 var authToken = localStorage.getItem(KEYS.TOKEN) || '';
 
+// Backend base URL (set by /api/config, pointing to the Render backend)
+var API_BASE = typeof window.__API_BASE__ === 'string' ? window.__API_BASE__ : '';
+
 // ── SHA-256 via Web Crypto API ──────────────────────────────────
 async function sha256(msg) {
   var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
@@ -128,7 +131,7 @@ document.getElementById('login-form').addEventListener('submit', function (e) {
   if (btnSpinner) btnSpinner.hidden = false;
 
   // Try server-side auth first
-  fetch('/api/auth', {
+  fetch(API_BASE + '/api/auth', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ password: pwd })
@@ -269,7 +272,7 @@ function getVisits() {
 // ── Overview: try API first, fall back to localStorage ────────────
 function renderOverview() {
   if (authToken) {
-    fetch('/api/analytics?token=' + encodeURIComponent(authToken))
+    fetch(API_BASE + '/api/analytics?token=' + encodeURIComponent(authToken))
       .then(function (res) {
         if (!res.ok) throw new Error('api error');
         return res.json();
@@ -790,7 +793,7 @@ function loadContentForms() {
   loadingEl.hidden = false;
   formEl.hidden    = true;
 
-  fetch('/api/content')
+  fetch(API_BASE + '/api/content')
     .then(function (res) {
       if (!res.ok) throw new Error('Server error ' + res.status);
       return res.json();
@@ -888,9 +891,9 @@ function showSaveStatus(msgId, ok, msg) {
 
 // ── Shared: POST payload to /api/content ─────────────────────────
 function saveToAPI(payload, msgId) {
-  var url = authToken
+  var url = API_BASE + (authToken
     ? '/api/content?token=' + encodeURIComponent(authToken)
-    : '/api/content';
+    : '/api/content');
 
   fetch(url, {
     method:  'POST',

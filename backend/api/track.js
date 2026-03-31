@@ -37,7 +37,8 @@ async function getGeo(ip) {
 
 module.exports = async function handler(req, res) {
   // Allow the browser to fire a fire-and-forget beacon
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  const origin = process.env.FRONTEND_URL || '*';
+  res.setHeader('Access-Control-Allow-Origin', origin);
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 

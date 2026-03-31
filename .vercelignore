@@ -1,0 +1,3 @@
+# Exclude the backend directory from Vercel deploys.
+# The backend is deployed separately on Render.
+backend/

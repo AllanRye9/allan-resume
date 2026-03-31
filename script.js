@@ -128,11 +128,13 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
     if (typeof duration === 'number') payload.duration = duration;
 
     // Use sendBeacon when available (non-blocking, survives page unload)
+    const apiBase = (typeof window.__API_BASE__ === 'string' ? window.__API_BASE__ : '');
+    const trackUrl = apiBase + '/api/track';
     const body = JSON.stringify(payload);
     if (navigator.sendBeacon) {
-      navigator.sendBeacon('/api/track', new Blob([body], { type: 'application/json' }));
+      navigator.sendBeacon(trackUrl, new Blob([body], { type: 'application/json' }));
     } else {
-      fetch('/api/track', {
+      fetch(trackUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body,

@@ -58,7 +58,8 @@ const ALLOWED_KEYS = [
 const ARRAY_KEYS = new Set(['heroImages', 'skills', 'experience', 'projects', 'education']);
 
 module.exports = function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  const origin = process.env.FRONTEND_URL || '*';
+  res.setHeader('Access-Control-Allow-Origin', origin);
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 

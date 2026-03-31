@@ -1,12 +1,11 @@
 /**
  * In-memory data store.
  *
- * NOTE: This store is module-level, so it persists for the lifetime of a
- * serverless function instance.  On a cold start the data resets.
+ * NOTE: This store is module-level, so it persists for the lifetime of the
+ * Express server process.  On a restart the data resets.
  *
- * For production-grade persistence, integrate Vercel KV:
- *   https://vercel.com/docs/storage/vercel-kv
- * and replace the arrays / object below with KV reads/writes.
+ * For production-grade persistence, replace the arrays / object below with
+ * database reads/writes (e.g. PostgreSQL via Render's managed databases).
  */
 
 const store = {
