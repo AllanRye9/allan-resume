@@ -16,6 +16,12 @@ var KEYS = {
 var PAGE_SIZE      = 20;
 var currentPage    = 1;
 var filteredVisits = [];
+var currentRange   = 30;  // days; 0 = all time
+
+// Real-time polling
+var pollTimer       = null;
+var liveTickTimer   = null;
+var lastRefreshTime = 0;
 
 // Auth token from the server (stored in localStorage between sessions)
 var authToken = localStorage.getItem(KEYS.TOKEN) || '';
@@ -60,6 +66,72 @@ function saveToken(token) {
   }
 }
 
+// ── Date range filter ─────────────────────────────────────────────
+function applyDateRange(visits) {
+  if (currentRange === 0) return visits;
+  var cutoff = Date.now() - currentRange * 86400000;
+  return visits.filter(function (v) {
+    if (!v.timestamp) return false;
+    var t = typeof v.timestamp === 'number' ? v.timestamp : new Date(v.timestamp).getTime();
+    return t >= cutoff;
+  });
+}
+
+function filterDailyVisits(dailyVisits, rangeDays) {
+  if (rangeDays === 0) return dailyVisits;
+  var cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - rangeDays);
+  var cutoffStr = cutoff.toISOString().slice(0, 10);
+  return dailyVisits.filter(function (dv) { return dv.date >= cutoffStr; });
+}
+
+// ── Format a duration in seconds to a human-readable string ──────
+function formatDuration(secs) {
+  if (!secs || secs <= 0) return '—';
+  secs = Math.round(secs);
+  if (secs < 60) return secs + 's';
+  var mins = Math.floor(secs / 60);
+  var rem  = secs % 60;
+  return rem > 0 ? mins + 'm ' + rem + 's' : mins + 'm';
+}
+
+// ── Real-time LIVE indicator ──────────────────────────────────────
+function updateLiveText() {
+  var el = document.getElementById('live-updated');
+  if (!el || !lastRefreshTime) return;
+  var secs = Math.round((Date.now() - lastRefreshTime) / 1000);
+  if (secs < 5)        el.textContent = 'just now';
+  else if (secs < 60)  el.textContent = secs + 's ago';
+  else                 el.textContent = Math.round(secs / 60) + 'm ago';
+}
+
+function markLiveRefresh() {
+  lastRefreshTime = Date.now();
+  var badge = document.getElementById('live-badge');
+  if (badge) {
+    badge.classList.add('refreshed');
+    setTimeout(function () { badge.classList.remove('refreshed'); }, 1200);
+  }
+  updateLiveText();
+}
+
+// ── Auto-refresh polling ──────────────────────────────────────────
+var POLL_INTERVAL = 30000; // 30 seconds
+
+function startPolling() {
+  stopPolling();
+  pollTimer     = setInterval(function () {
+    var overviewEl = document.querySelector('.tab-content[data-tab-section="overview"]');
+    if (overviewEl && !overviewEl.hidden) renderOverview();
+  }, POLL_INTERVAL);
+  liveTickTimer = setInterval(updateLiveText, 5000);
+}
+
+function stopPolling() {
+  if (pollTimer)     { clearInterval(pollTimer);     pollTimer     = null; }
+  if (liveTickTimer) { clearInterval(liveTickTimer); liveTickTimer = null; }
+}
+
 // ── Polyfill: CanvasRenderingContext2D.roundRect ─────────────────
 (function () {
   if (typeof CanvasRenderingContext2D !== 'undefined' &&
@@ -96,6 +168,7 @@ function showDashboard() {
   dashboard.hidden   = false;
   document.body.classList.remove('login-page');
   switchTab('overview');
+  startPolling();
 }
 
 function showLogin() {
@@ -103,6 +176,7 @@ function showLogin() {
   if (setupScreen) setupScreen.hidden = true;
   dashboard.hidden   = true;
   document.body.classList.add('login-page');
+  stopPolling();
 }
 
 function showSetup() {
@@ -313,6 +387,22 @@ document.getElementById('clear-data-btn').addEventListener('click', function () 
   }
 });
 
+// ── Manual refresh button ─────────────────────────────────────────
+document.getElementById('refresh-btn').addEventListener('click', function () {
+  renderOverview();
+});
+
+// ── Date range filter ─────────────────────────────────────────────
+document.querySelectorAll('.filter-btn[data-range]').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    currentRange = parseInt(this.dataset.range, 10);
+    document.querySelectorAll('.filter-btn[data-range]').forEach(function (b) {
+      b.classList.toggle('active', b.dataset.range === String(currentRange));
+    });
+    renderOverview();
+  });
+});
+
 // ── Analytics helpers ────────────────────────────────────────────
 function getVisits() {
   try {
@@ -338,10 +428,32 @@ function renderOverview() {
         var today = new Date().toISOString().slice(0, 10);
         var todayEntry = d.dailyVisits.find(function (dv) { return dv.date === today; });
         document.getElementById('today-visits').textContent = todayEntry ? todayEntry.count : 0;
+
+        // Active Now
+        var activeNowEl = document.getElementById('active-now');
+        if (activeNowEl) {
+          var an = d.stats.activeNow || 0;
+          activeNowEl.textContent = an.toLocaleString();
+          var dot = document.getElementById('active-dot');
+          if (dot) dot.hidden = (an === 0);
+        }
+
+        // Avg Duration
+        var avgDurEl = document.getElementById('avg-duration');
+        if (avgDurEl) avgDurEl.textContent = formatDuration(d.stats.avgDuration || 0);
+
+        // Charts — filter daily visits by selected range
+        var dailySlice = filterDailyVisits(d.dailyVisits, currentRange);
+        drawVisitsChartFromDailyData(dailySlice);
         renderCountriesChartFromData(d.countries);
-        drawVisitsChartFromDailyData(d.dailyVisits);
-        // Advanced stats from localStorage (server may not expose all fields)
-        renderAdvancedStats(getVisits());
+
+        // Top Pages from server
+        if (d.topPages) renderTopPagesChart(d.topPages, null);
+
+        // Advanced stats + remaining charts from localStorage (filtered by range)
+        renderAdvancedStats(applyDateRange(getVisits()));
+
+        markLiveRefresh();
       })
       .catch(function () {
         renderOverviewFromLocalStorage();
@@ -352,7 +464,9 @@ function renderOverview() {
 }
 
 function renderOverviewFromLocalStorage() {
-  var visits = getVisits();
+  var allVisits = getVisits();
+  var visits    = applyDateRange(allVisits);
+
   document.getElementById('total-visits').textContent = visits.length.toLocaleString();
 
   var countries = new Set(visits.map(function (v) { return v.country; }).filter(Boolean));
@@ -367,9 +481,35 @@ function renderOverviewFromLocalStorage() {
   }).length;
   document.getElementById('today-visits').textContent = todayCount;
 
+  // Active Now (last 5 minutes, always from all visits regardless of range)
+  var fiveMinAgo = Date.now() - 5 * 60 * 1000;
+  var activeNow  = allVisits.filter(function (v) {
+    if (!v.timestamp) return false;
+    var t = typeof v.timestamp === 'number' ? v.timestamp : new Date(v.timestamp).getTime();
+    return t >= fiveMinAgo;
+  }).length;
+  var activeNowEl = document.getElementById('active-now');
+  if (activeNowEl) {
+    activeNowEl.textContent = activeNow.toLocaleString();
+    var dot = document.getElementById('active-dot');
+    if (dot) dot.hidden = (activeNow === 0);
+  }
+
+  // Avg Duration
+  var avgDurEl = document.getElementById('avg-duration');
+  if (avgDurEl) {
+    var timed = visits.filter(function (v) { return typeof v.duration === 'number' && v.duration > 0; });
+    var avgDur = timed.length
+      ? Math.round(timed.reduce(function (s, v) { return s + v.duration; }, 0) / timed.length)
+      : 0;
+    avgDurEl.textContent = formatDuration(avgDur);
+  }
+
   renderAdvancedStats(visits);
   drawVisitsChart(visits);
   renderCountriesChart(visits);
+  renderTopPagesChart(null, visits);
+  markLiveRefresh();
 }
 
 // ── Advanced statistics ─────────────────────────────────────────
@@ -775,6 +915,44 @@ function renderCountriesChartFromData(countries) {
   }).join('');
 }
 
+// ── Top Pages bar chart ──────────────────────────────────────────
+function renderTopPagesChart(apiData, localVisits) {
+  var container = document.getElementById('top-pages-chart');
+  if (!container) return;
+
+  var pages;
+  if (apiData && apiData.length > 0) {
+    pages = apiData;
+  } else if (localVisits && localVisits.length > 0) {
+    var countMap = {};
+    localVisits.forEach(function (v) {
+      var page = (v.page || '/');
+      countMap[page] = (countMap[page] || 0) + 1;
+    });
+    pages = Object.entries(countMap)
+      .sort(function (a, b) { return b[1] - a[1]; })
+      .slice(0, 10)
+      .map(function (e) { return { page: e[0], count: e[1] }; });
+  } else {
+    pages = [];
+  }
+
+  if (!pages.length) {
+    container.innerHTML = '<p class="chart-empty">No page data yet.</p>';
+    return;
+  }
+
+  var maxCount = pages[0].count;
+  container.innerHTML = pages.map(function (entry) {
+    var pct = ((entry.count / maxCount) * 100).toFixed(1);
+    return '<div class="referrer-row">' +
+      '<span class="referrer-name" title="' + escHtml(entry.page) + '">' + escHtml(entry.page) + '</span>' +
+      '<span class="referrer-count">' + entry.count + '</span>' +
+      '<div class="referrer-bar-track"><div class="referrer-bar-fill top-page-bar" style="width:' + pct + '%"></div></div>' +
+      '</div>';
+  }).join('');
+}
+
 // ── Visitors table ────────────────────────────────────────────────
 function renderVisitorsTable(search) {
   search = (search || '').toLowerCase();
@@ -1080,6 +1258,32 @@ document.getElementById('export-data').addEventListener('click', function () {
   var a    = document.createElement('a');
   a.href     = url;
   a.download = 'allan-portfolio-analytics.json';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+document.getElementById('export-csv').addEventListener('click', function () {
+  var visits = getVisits();
+  if (!visits.length) {
+    alert('No visit data to export.');
+    return;
+  }
+  var headers = ['timestamp', 'ip', 'country', 'city', 'page', 'referrer', 'userAgent', 'duration'];
+  var rows = visits.map(function (v) {
+    return headers.map(function (h) {
+      var val = (v[h] !== undefined && v[h] !== null) ? String(v[h]) : '';
+      if (val.indexOf(',') !== -1 || val.indexOf('"') !== -1 || val.indexOf('\n') !== -1 || val.indexOf('\r') !== -1) {
+        val = '"' + val.replace(/"/g, '""') + '"';
+      }
+      return val;
+    }).join(',');
+  });
+  var csv  = [headers.join(',')].concat(rows).join('\n');
+  var blob = new Blob([csv], { type: 'text/csv' });
+  var url  = URL.createObjectURL(blob);
+  var a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'allan-portfolio-analytics.csv';
   a.click();
   URL.revokeObjectURL(url);
 });

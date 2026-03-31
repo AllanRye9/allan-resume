@@ -168,7 +168,15 @@
           <p id="page-subtitle" class="page-subtitle">Welcome to your admin dashboard</p>
         </div>
       </div>
-      <button id="clear-data-btn" class="btn-icon-danger" title="Clear all analytics data">🗑 Clear Data</button>
+      <div class="dash-header-right">
+        <div class="live-badge" id="live-badge" title="Auto-refreshes every 30 seconds">
+          <span class="live-pulse"></span>
+          <span class="live-text">LIVE</span>
+          <span id="live-updated" class="live-updated">—</span>
+        </div>
+        <button id="refresh-btn" class="btn-secondary btn-sm" title="Refresh data now">↺ Refresh</button>
+        <button id="clear-data-btn" class="btn-icon-danger" title="Clear all analytics data">🗑 Clear Data</button>
+      </div>
     </header>
 
     <!-- ===== Overview Tab ===== -->
@@ -253,6 +261,36 @@
             <span class="stat-label">Mobile</span>
           </div>
         </div>
+        <div class="stat-card stat-card-sm">
+          <div class="stat-icon-wrap stat-icon-green">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="active-now-wrap">
+            <span class="stat-value stat-value-sm" id="active-now">0</span>
+            <span class="stat-label">Active Now</span>
+          </div>
+          <span class="active-dot" id="active-dot" hidden></span>
+        </div>
+        <div class="stat-card stat-card-sm">
+          <div class="stat-icon-wrap stat-icon-teal">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v4l2.5 2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div>
+            <span class="stat-value stat-value-sm" id="avg-duration">—</span>
+            <span class="stat-label">Avg Duration</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Date range filter -->
+      <div class="date-filter-bar">
+        <span class="filter-label">Range:</span>
+        <div class="filter-btns">
+          <button class="filter-btn" data-range="1">Today</button>
+          <button class="filter-btn" data-range="7">7 Days</button>
+          <button class="filter-btn active" data-range="30">30 Days</button>
+          <button class="filter-btn" data-range="0">All Time</button>
+        </div>
       </div>
 
       <!-- Main charts row -->
@@ -292,6 +330,16 @@
           <div class="chart-canvas-wrap" style="min-height:120px;">
             <canvas id="hourly-chart"></canvas>
             <p id="hourly-chart-empty" class="chart-empty" hidden>No activity data yet.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Pages row -->
+      <div class="charts-row charts-row-full">
+        <div class="chart-card">
+          <h3>Top Pages</h3>
+          <div id="top-pages-chart" class="referrers-list">
+            <p class="chart-empty">No page data yet.</p>
           </div>
         </div>
       </div>
@@ -501,6 +549,7 @@
         <div class="settings-actions">
           <button id="clear-analytics" class="btn-danger">Clear Analytics</button>
           <button id="export-data" class="btn-secondary">Export JSON</button>
+          <button id="export-csv" class="btn-secondary">Export CSV</button>
         </div>
       </div>
 

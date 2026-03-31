@@ -63,8 +63,35 @@ module.exports = function handler(req, res) {
     ? Math.round(timed.reduce((s, v) => s + v.duration, 0) / timed.length)
     : 0;
 
-  // Daily visit counts (last 30 days)
   const now = Date.now();
+
+  // Active visitors in the last 5 minutes
+  const fiveMinAgo = now - 5 * 60 * 1000;
+  const activeNow = visits.filter((v) => v.timestamp >= fiveMinAgo).length;
+
+  // Bounce rate: sessions (by IP) with only a single tracked visit
+  const sessionPageCount = {};
+  visits.forEach((v) => {
+    if (v.ip) sessionPageCount[v.ip] = (sessionPageCount[v.ip] || 0) + 1;
+  });
+  const totalSessions = Object.keys(sessionPageCount).length;
+  const bounceSessions = Object.values(sessionPageCount).filter((c) => c === 1).length;
+  const bounceRate = totalSessions > 0
+    ? Math.round((bounceSessions / totalSessions) * 100)
+    : 0;
+
+  // Top pages by visit count
+  const pageCounts = {};
+  visits.forEach((v) => {
+    const page = (v.page || '/').slice(0, 200);
+    pageCounts[page] = (pageCounts[page] || 0) + 1;
+  });
+  const topPages = Object.entries(pageCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10)
+    .map(([page, count]) => ({ page, count }));
+
+  // Daily visit counts (last 30 days)
   const dailyCounts = {};
   for (let i = 0; i < 30; i++) {
     const d = new Date(now - i * 86400000);
@@ -100,10 +127,13 @@ module.exports = function handler(req, res) {
       total,
       unique: uniqueIPs.size,
       avgDuration,
+      activeNow,
+      bounceRate,
     },
     countries,
     topIPs,
     dailyVisits,
+    topPages,
     recent,
   });
 };
