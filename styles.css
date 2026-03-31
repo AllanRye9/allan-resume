@@ -28,6 +28,24 @@
   --font-mono: 'Fira Code', 'Cascadia Code', monospace;
 }
 
+/* ===== Dark Theme ===== */
+[data-theme="dark"] {
+  --primary: #4f8ef7;
+  --primary-dark: #3a72d4;
+  --secondary: #34a853;
+  --accent: #fbbc04;
+  --text-primary: #e8eaed;
+  --text-secondary: #9aa0a6;
+  --text-light: #ffffff;
+  --bg-primary: #0f1117;
+  --bg-secondary: #1a1d27;
+  --bg-dark: #0a0d14;
+  --border: #2d3142;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.4);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.5);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,.6);
+}
+
 /* ===== Base ===== */
 html {
   scroll-behavior: smooth;
@@ -127,6 +145,54 @@ img { max-width: 100%; display: block; }
   background: var(--text-primary);
   border-radius: 2px;
   transition: var(--transition);
+}
+
+/* ===== Theme Toggle ===== */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+  flex-shrink: 0;
+}
+.theme-toggle:hover {
+  background: var(--bg-secondary);
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* Dark mode overrides for sections with explicit light backgrounds */
+[data-theme="dark"] .navbar {
+  background: rgba(15,17,23,.95);
+}
+[data-theme="dark"] .section {
+  background: var(--bg-primary);
+}
+[data-theme="dark"] .section:nth-child(even),
+[data-theme="dark"] #about,
+[data-theme="dark"] #education {
+  background: var(--bg-secondary);
+}
+[data-theme="dark"] .stat-card,
+[data-theme="dark"] .skill-category,
+[data-theme="dark"] .timeline-card,
+[data-theme="dark"] .project-card,
+[data-theme="dark"] .edu-card {
+  background: var(--bg-secondary);
+  border-color: var(--border);
+}
+[data-theme="dark"] .contact-bar {
+  background: var(--bg-dark);
+}
+[data-theme="dark"] .footer {
+  background: var(--bg-dark);
 }
 
 /* ===== Hero / Profile ===== */
@@ -636,6 +702,14 @@ img { max-width: 100%; display: block; }
   background: var(--primary);
   color: #fff;
 }
+.project-link-live {
+  color: var(--secondary);
+  border-color: var(--secondary);
+}
+.project-link-live:hover {
+  background: var(--secondary);
+  color: #fff;
+}
 
 /* ===== Education ===== */
 .education-grid {
@@ -800,7 +874,8 @@ footer a:hover { color: #fff; }
   footer,
   .contact-bar,
   .project-links,
-  .hamburger { display: none !important; }
+  .hamburger,
+  .theme-toggle { display: none !important; }
 
   * { box-shadow: none !important; }
 

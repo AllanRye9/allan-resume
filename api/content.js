@@ -1,6 +1,7 @@
 /**
  * GET  /api/content          – Return current content (public, no auth needed).
- * POST /api/content?token=…  – Update content (admin only).
+ * POST /api/content          – Update content (admin only).
+ *                              Requires: Authorization: Bearer <token>
  *
  * Body for POST (JSON) – all fields optional:
  * {
@@ -69,9 +70,7 @@ module.exports = function handler(req, res) {
   }
 
   if (req.method === 'POST') {
-    const token =
-      req.query?.token ||
-      (req.headers.authorization || '').replace('Bearer ', '');
+    const token = (req.headers.authorization || '').replace('Bearer ', '').trim();
 
     if (!validToken(token)) {
       return res.status(401).json({ error: 'Unauthorized' });

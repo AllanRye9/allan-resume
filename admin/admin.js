@@ -9,13 +9,9 @@ var KEYS = {
   VISITS:  'ar_visits',
   PWD:     'ar_admin_hash',
   TOKEN:   'ar_admin_token',
-  CONTENT: 'cv_content_override'
+  CONTENT: 'cv_content_override',
+  SETUP:   'ar_admin_setup_done'
 };
-
-// SHA-256 hash of the default password "admin123".
-// Used as a client-side fallback when the server /api/auth endpoint is
-// unavailable (e.g. local development without ADMIN_PASSWORD configured).
-var DEFAULT_HASH = '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9';
 
 var PAGE_SIZE      = 20;
 var currentPage    = 1;
@@ -43,7 +39,15 @@ function getJSON(key, fallback) {
 
 // ── Stored local-mode password hash ─────────────────────────────
 function getStoredHash() {
-  return localStorage.getItem(KEYS.PWD) || DEFAULT_HASH;
+  return localStorage.getItem(KEYS.PWD) || null;
+}
+
+// ── Check if first-run setup has been completed ──────────────────
+function isSetupDone() {
+  // Setup is done if either a server ADMIN_PASSWORD is configured
+  // (we can only know this after a successful login attempt) or a local
+  // password hash exists in localStorage.
+  return !!localStorage.getItem(KEYS.SETUP) || !!localStorage.getItem(KEYS.PWD);
 }
 
 // ── Save / clear auth token ──────────────────────────────────────
@@ -80,6 +84,7 @@ function saveToken(token) {
 
 // ── DOM references ───────────────────────────────────────────────
 var loginScreen     = document.getElementById('login-screen');
+var setupScreen     = document.getElementById('setup-screen');
 var dashboard       = document.getElementById('dashboard');
 var sidebar         = document.getElementById('sidebar');
 var sidebarOverlay  = document.getElementById('sidebar-overlay');
@@ -87,6 +92,7 @@ var sidebarOverlay  = document.getElementById('sidebar-overlay');
 // ── Show / hide dashboard ────────────────────────────────────────
 function showDashboard() {
   loginScreen.hidden = true;
+  if (setupScreen) setupScreen.hidden = true;
   dashboard.hidden   = false;
   document.body.classList.remove('login-page');
   switchTab('overview');
@@ -94,6 +100,14 @@ function showDashboard() {
 
 function showLogin() {
   loginScreen.hidden = false;
+  if (setupScreen) setupScreen.hidden = true;
+  dashboard.hidden   = true;
+  document.body.classList.add('login-page');
+}
+
+function showSetup() {
+  loginScreen.hidden = true;
+  if (setupScreen) setupScreen.hidden = false;
   dashboard.hidden   = true;
   document.body.classList.add('login-page');
 }
@@ -133,14 +147,21 @@ document.getElementById('login-form').addEventListener('submit', function (e) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ password: pwd })
   })
-  .then(function (res) { return res.json(); })
-  .then(function (data) {
-    if (data.ok && data.token) {
-      saveToken(data.token);
+  .then(function (res) { return res.json().then(function (d) { return { status: res.status, data: d }; }); })
+  .then(function (r) {
+    if (r.data.ok && r.data.token) {
+      saveToken(r.data.token);
+      // Mark setup as done (server password is configured)
+      localStorage.setItem(KEYS.SETUP, '1');
       showDashboard();
-    } else {
-      // Server auth failed (wrong password or not configured) – fall back to SHA-256
+    } else if (r.status === 503) {
+      // Server has no ADMIN_PASSWORD configured — use local fallback
       clientSideAuth(pwd, errEl);
+    } else {
+      // Wrong password on the server
+      errEl.textContent = 'Incorrect password.';
+      errEl.hidden = false;
+      setTimeout(function () { errEl.hidden = true; }, 4000);
     }
   })
   .catch(function () {
@@ -160,9 +181,15 @@ function clientSideAuth(pwd, errEl) {
   // NOTE: Client-side fallback is used when the server /api/auth endpoint is
   // unavailable (e.g. local dev without ADMIN_PASSWORD configured).
   // This mode is inherently less secure — use it only for local testing.
+  var storedHash = getStoredHash();
+  if (!storedHash) {
+    // No password has been set — redirect to setup
+    showSetup();
+    return Promise.resolve();
+  }
   console.warn('[admin] Using client-side SHA-256 fallback auth. Deploy with ADMIN_PASSWORD for server-side security.');
   return sha256(pwd).then(function (hash) {
-    if (hash === getStoredHash()) {
+    if (hash === storedHash) {
       saveToken(''); // no server token in fallback mode
       showDashboard();
     } else {
@@ -178,6 +205,36 @@ document.getElementById('logout-btn').addEventListener('click', function () {
   saveToken('');
   showLogin();
 });
+
+// ── First-run setup form ─────────────────────────────────────────
+(function () {
+  var setupForm = document.getElementById('setup-form');
+  if (!setupForm) return;
+  setupForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var newPwd  = document.getElementById('setup-password').value;
+    var confirm = document.getElementById('setup-confirm').value;
+    var errEl   = document.getElementById('setup-error');
+    errEl.hidden = true;
+
+    if (newPwd.length < 8) {
+      errEl.textContent = 'Password must be at least 8 characters.';
+      errEl.hidden = false;
+      return;
+    }
+    if (newPwd !== confirm) {
+      errEl.textContent = 'Passwords do not match.';
+      errEl.hidden = false;
+      return;
+    }
+    sha256(newPwd).then(function (hash) {
+      localStorage.setItem(KEYS.PWD, hash);
+      localStorage.setItem(KEYS.SETUP, '1');
+      saveToken('');
+      showDashboard();
+    });
+  });
+}());
 
 // ── Sidebar toggle (mobile) ──────────────────────────────────────
 function openSidebar() {
@@ -269,7 +326,7 @@ function getVisits() {
 // ── Overview: try API first, fall back to localStorage ────────────
 function renderOverview() {
   if (authToken) {
-    fetch('/api/analytics?token=' + encodeURIComponent(authToken))
+    fetch('/api/analytics', { headers: { 'Authorization': 'Bearer ' + authToken } })
       .then(function (res) {
         if (!res.ok) throw new Error('api error');
         return res.json();
@@ -888,13 +945,12 @@ function showSaveStatus(msgId, ok, msg) {
 
 // ── Shared: POST payload to /api/content ─────────────────────────
 function saveToAPI(payload, msgId) {
-  var url = authToken
-    ? '/api/content?token=' + encodeURIComponent(authToken)
-    : '/api/content';
+  var headers = { 'Content-Type': 'application/json' };
+  if (authToken) headers['Authorization'] = 'Bearer ' + authToken;
 
-  fetch(url, {
+  fetch('/api/content', {
     method:  'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: headers,
     body:    JSON.stringify(payload)
   })
   .then(function (res) {
@@ -1040,7 +1096,8 @@ document.getElementById('change-password-form').addEventListener('submit', funct
   okEl.hidden  = true;
 
   sha256(current).then(function (currentHash) {
-    if (currentHash !== getStoredHash()) {
+    var storedHash = getStoredHash();
+    if (!storedHash || currentHash !== storedHash) {
       errEl.textContent = 'Current password is incorrect.';
       errEl.hidden = false;
       return;
@@ -1101,6 +1158,32 @@ function escHtml(str) {
 // ── Bootstrap ─────────────────────────────────────────────────────
 if (authToken) {
   showDashboard();
+} else if (!isSetupDone()) {
+  // First time ever — check server before showing setup
+  fetch('/api/auth', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: '' })
+  })
+  .then(function (res) { return res.json().then(function (d) { return { status: res.status, data: d }; }); })
+  .then(function (r) {
+    if (r.status === 503) {
+      // Server has no ADMIN_PASSWORD — show first-run setup
+      showSetup();
+    } else {
+      // Server has ADMIN_PASSWORD configured, mark setup done and show login
+      localStorage.setItem(KEYS.SETUP, '1');
+      showLogin();
+    }
+  })
+  .catch(function () {
+    // Network unavailable — show setup if no local password exists
+    if (!getStoredHash()) {
+      showSetup();
+    } else {
+      showLogin();
+    }
+  });
 } else {
   showLogin();
 }
