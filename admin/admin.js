@@ -98,6 +98,21 @@ function showLogin() {
   document.body.classList.add('login-page');
 }
 
+// ── Password visibility toggle ───────────────────────────────────
+(function () {
+  var toggle   = document.getElementById('pwd-toggle');
+  var pwdInput = document.getElementById('password');
+  var eyeShow  = document.getElementById('eye-show');
+  var eyeHide  = document.getElementById('eye-hide');
+  if (!toggle || !pwdInput) return;
+  toggle.addEventListener('click', function () {
+    var isText = pwdInput.type === 'text';
+    pwdInput.type = isText ? 'password' : 'text';
+    eyeShow.hidden = !isText;
+    eyeHide.hidden = isText;
+  });
+}());
+
 // ── Login form ───────────────────────────────────────────────────
 document.getElementById('login-form').addEventListener('submit', function (e) {
   e.preventDefault();
@@ -107,7 +122,10 @@ document.getElementById('login-form').addEventListener('submit', function (e) {
 
   errEl.hidden     = true;
   loginBtn.disabled = true;
-  loginBtn.textContent = 'Signing in…';
+  var btnText    = document.getElementById('login-btn-text');
+  var btnSpinner = document.getElementById('login-spinner');
+  if (btnText)    btnText.textContent = 'Signing in…';
+  if (btnSpinner) btnSpinner.hidden = false;
 
   // Try server-side auth first
   fetch('/api/auth', {
@@ -131,7 +149,10 @@ document.getElementById('login-form').addEventListener('submit', function (e) {
   })
   .finally(function () {
     loginBtn.disabled    = false;
-    loginBtn.textContent = 'Sign In';
+    var btnText    = document.getElementById('login-btn-text');
+    var btnSpinner = document.getElementById('login-spinner');
+    if (btnText)    btnText.textContent = 'Sign In';
+    if (btnSpinner) btnSpinner.hidden = true;
   });
 });
 
@@ -262,6 +283,8 @@ function renderOverview() {
         document.getElementById('today-visits').textContent = todayEntry ? todayEntry.count : 0;
         renderCountriesChartFromData(d.countries);
         drawVisitsChartFromDailyData(d.dailyVisits);
+        // Advanced stats from localStorage (server may not expose all fields)
+        renderAdvancedStats(getVisits());
       })
       .catch(function () {
         renderOverviewFromLocalStorage();
@@ -287,8 +310,258 @@ function renderOverviewFromLocalStorage() {
   }).length;
   document.getElementById('today-visits').textContent = todayCount;
 
+  renderAdvancedStats(visits);
   drawVisitsChart(visits);
   renderCountriesChart(visits);
+}
+
+// ── Advanced statistics ─────────────────────────────────────────
+function renderAdvancedStats(visits) {
+  var now = new Date();
+
+  // ── This week vs last week ──────────────────────────────────
+  var weekStart    = new Date(now); weekStart.setDate(now.getDate() - now.getDay());
+  weekStart.setHours(0, 0, 0, 0);
+  var lastWeekStart = new Date(weekStart); lastWeekStart.setDate(lastWeekStart.getDate() - 7);
+
+  var thisWeek = visits.filter(function (v) {
+    return v.timestamp && new Date(v.timestamp) >= weekStart;
+  }).length;
+  var lastWeek = visits.filter(function (v) {
+    var t = v.timestamp && new Date(v.timestamp);
+    return t && t >= lastWeekStart && t < weekStart;
+  }).length;
+
+  document.getElementById('week-visits').textContent = thisWeek.toLocaleString();
+
+  var trendWeekEl = document.getElementById('trend-week');
+  if (trendWeekEl) {
+    if (lastWeek > 0) {
+      var diff = thisWeek - lastWeek;
+      var pct  = Math.round(Math.abs(diff / lastWeek) * 100);
+      trendWeekEl.textContent = (diff >= 0 ? '↑ ' : '↓ ') + pct + '%';
+      trendWeekEl.className   = 'stat-trend ' + (diff >= 0 ? 'up' : 'down');
+      trendWeekEl.hidden      = false;
+    } else {
+      trendWeekEl.hidden = true;
+    }
+  }
+
+  // ── Total trend (this week vs last week shown on total card) ──
+  var trendTotalEl = document.getElementById('trend-total');
+  if (trendTotalEl) {
+    if (lastWeek > 0) {
+      var diff2 = thisWeek - lastWeek;
+      var pct2  = Math.round(Math.abs(diff2 / lastWeek) * 100);
+      trendTotalEl.textContent = (diff2 >= 0 ? '↑ ' : '↓ ') + pct2 + '% vs last wk';
+      trendTotalEl.className   = 'stat-trend ' + (diff2 >= 0 ? 'up' : 'down');
+      trendTotalEl.hidden      = false;
+    } else {
+      trendTotalEl.hidden = true;
+    }
+  }
+
+  // ── Average daily visits (last 30 days) ─────────────────────
+  var thirtyDaysAgo = new Date(now); thirtyDaysAgo.setDate(now.getDate() - 30);
+  var last30 = visits.filter(function (v) {
+    return v.timestamp && new Date(v.timestamp) >= thirtyDaysAgo;
+  }).length;
+  var avgDaily = last30 > 0 ? (last30 / 30).toFixed(1) : '0';
+  document.getElementById('avg-daily').textContent = avgDaily;
+
+  // ── Return rate (IPs that appear more than once) ─────────────
+  var ipCount = {};
+  visits.forEach(function (v) {
+    if (v.ip) ipCount[v.ip] = (ipCount[v.ip] || 0) + 1;
+  });
+  var totalIPs    = Object.keys(ipCount).length;
+  var returningIPs = Object.values(ipCount).filter(function (c) { return c > 1; }).length;
+  var returnRate  = totalIPs > 0 ? Math.round((returningIPs / totalIPs) * 100) : 0;
+  document.getElementById('returning-pct').textContent = returnRate + '%';
+
+  // ── Mobile percentage ─────────────────────────────────────────
+  var mobileCount = visits.filter(function (v) {
+    return /Mobile|Android|iPhone/i.test(v.userAgent || '');
+  }).length;
+  var mobilePct = visits.length > 0 ? Math.round((mobileCount / visits.length) * 100) : 0;
+  document.getElementById('mobile-pct').textContent = mobilePct + '%';
+
+  renderDeviceChart(visits);
+  renderReferrersChart(visits);
+  renderHourlyChart(visits);
+}
+
+// ── Device donut chart ───────────────────────────────────────────
+function renderDeviceChart(visits) {
+  var counts = { Mobile: 0, Tablet: 0, Desktop: 0 };
+  visits.forEach(function (v) {
+    var ua = v.userAgent || '';
+    if (/Mobile|Android|iPhone/i.test(ua))   counts.Mobile++;
+    else if (/Tablet|iPad/i.test(ua))         counts.Tablet++;
+    else                                       counts.Desktop++;
+  });
+  var total  = visits.length || 1;
+  var colors = { Mobile: '#6366f1', Tablet: '#06b6d4', Desktop: '#22c55e' };
+  var canvas = document.getElementById('device-chart');
+  var legend = document.getElementById('device-legend');
+  if (!canvas) return;
+
+  var size = 130;
+  var dpr  = window.devicePixelRatio || 1;
+  canvas.width  = size * dpr;
+  canvas.height = size * dpr;
+  canvas.style.width  = size + 'px';
+  canvas.style.height = size + 'px';
+
+  var ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, size, size);
+
+  var cx = size / 2, cy = size / 2, r = 50, inner = 28;
+  var startAngle = -Math.PI / 2;
+  var hasData = total > 0 && visits.length > 0;
+
+  if (!hasData) {
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(51,65,85,.5)';
+    ctx.lineWidth = (r - inner);
+    ctx.stroke();
+  } else {
+    Object.keys(counts).forEach(function (key) {
+      var slice = (counts[key] / total) * Math.PI * 2;
+      if (slice === 0) return;
+      var grad = ctx.createLinearGradient(cx - r, cy - r, cx + r, cy + r);
+      grad.addColorStop(0, colors[key]);
+      grad.addColorStop(1, colors[key] + 'bb');
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, r, startAngle, startAngle + slice);
+      ctx.closePath();
+      ctx.fillStyle = grad;
+      ctx.fill();
+      startAngle += slice;
+    });
+    // Cutout
+    ctx.beginPath();
+    ctx.arc(cx, cy, inner, 0, Math.PI * 2);
+    ctx.fillStyle = '#1e293b';
+    ctx.fill();
+    // Total label
+    ctx.fillStyle = '#f1f5f9';
+    ctx.font = 'bold 14px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(visits.length, cx, cy - 6);
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '8px Inter, sans-serif';
+    ctx.fillText('visits', cx, cy + 8);
+  }
+
+  if (legend) {
+    legend.innerHTML = Object.keys(counts).map(function (key) {
+      var pct = total > 0 ? Math.round((counts[key] / total) * 100) : 0;
+      return '<div class="device-legend-item">' +
+        '<span class="legend-dot" style="background:' + colors[key] + '"></span>' +
+        '<span class="legend-label">' + key + '</span>' +
+        '<span class="legend-pct">' + pct + '%</span>' +
+        '</div>';
+    }).join('');
+  }
+}
+
+// ── Referrers chart ──────────────────────────────────────────────
+function renderReferrersChart(visits) {
+  var countMap = {};
+  visits.forEach(function (v) {
+    var ref = (v.referrer || 'Direct').replace(/^https?:\/\/(www\.)?/, '').split('/')[0] || 'Direct';
+    countMap[ref] = (countMap[ref] || 0) + 1;
+  });
+  var sorted = Object.entries(countMap)
+    .sort(function (a, b) { return b[1] - a[1]; })
+    .slice(0, 7);
+  var container = document.getElementById('referrers-chart');
+  if (!container) return;
+  if (!sorted.length) {
+    container.innerHTML = '<p class="chart-empty">No referrer data yet.</p>';
+    return;
+  }
+  var maxCount = sorted[0][1];
+  container.innerHTML = sorted.map(function (entry) {
+    var pct = ((entry[1] / maxCount) * 100).toFixed(1);
+    return '<div class="referrer-row">' +
+      '<span class="referrer-name" title="' + escHtml(entry[0]) + '">' + escHtml(entry[0]) + '</span>' +
+      '<span class="referrer-count">' + entry[1] + '</span>' +
+      '<div class="referrer-bar-track"><div class="referrer-bar-fill" style="width:' + pct + '%"></div></div>' +
+      '</div>';
+  }).join('');
+}
+
+// ── Hourly activity chart (24-hour bar chart) ────────────────────
+function renderHourlyChart(visits) {
+  var canvas   = document.getElementById('hourly-chart');
+  var emptyMsg = document.getElementById('hourly-chart-empty');
+  if (!canvas) return;
+
+  var hours = new Array(24).fill(0);
+  visits.forEach(function (v) {
+    if (v.timestamp) {
+      var h = new Date(v.timestamp).getHours();
+      hours[h]++;
+    }
+  });
+
+  var maxVal  = Math.max.apply(null, hours.concat([1]));
+  var hasData = hours.some(function (v) { return v > 0; });
+
+  if (!hasData) {
+    canvas.hidden = true;
+    if (emptyMsg) emptyMsg.hidden = false;
+    return;
+  }
+  canvas.hidden = false;
+  if (emptyMsg) emptyMsg.hidden = true;
+
+  var dpr    = window.devicePixelRatio || 1;
+  var width  = canvas.parentElement.clientWidth || 300;
+  var height = 100;
+  canvas.width  = width * dpr;
+  canvas.height = height * dpr;
+  canvas.style.width  = width + 'px';
+  canvas.style.height = height + 'px';
+
+  var ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, width, height);
+
+  var pad = { top: 10, right: 8, bottom: 22, left: 8 };
+  var cw  = width  - pad.left - pad.right;
+  var ch  = height - pad.top  - pad.bottom;
+  var bw  = cw / 24;
+
+  hours.forEach(function (val, i) {
+    var barH = (val / maxVal) * ch;
+    var x    = pad.left + i * bw + bw * 0.1;
+    var y    = pad.top + ch - barH;
+    var w    = bw * 0.8;
+    // Ensure a minimum bar height so zero-value bars remain visible as thin lines
+    if (barH < 1) barH = 1;
+
+    var intensity = val / maxVal;
+    var r = Math.round(99  + (139 - 99)  * intensity);
+    var g = Math.round(102 + (92  - 102) * intensity);
+    var b = Math.round(241 + (246 - 241) * intensity);
+    ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + (0.35 + intensity * 0.65) + ')';
+    ctx.roundRect(x, y, w, barH, 2);
+    ctx.fill();
+
+    if (i % 6 === 0) {
+      ctx.fillStyle = '#475569';
+      ctx.font = '8px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(i + ':00', x + w / 2, height - 4);
+    }
+  });
 }
 
 // ── Visits bar chart ─────────────────────────────────────────────
