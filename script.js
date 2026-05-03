@@ -99,9 +99,12 @@ function downloadPDF() {
   if (typeof html2pdf !== 'undefined' && template) {
     template.innerHTML = buildPDFHTML();
 
+    const nameRaw  = document.getElementById('hero-name')?.textContent?.trim() || 'Oryema_Allan';
+    const filename = nameRaw.replace(/\s+/g, '_') + '_CV.pdf';
+
     const opt = {
       margin:      0,
-      filename:    'Oryema_Allan_CV.pdf',
+      filename,
       image:       { type: 'png' },
       html2canvas: { scale: 2, useCORS: true, logging: false, letterRendering: true },
       jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' },
@@ -118,7 +121,8 @@ function buildPDFHTML() {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 
   // ── Contact info ─────────────────────────────────────────────────────────
   const name     = document.getElementById('hero-name')?.textContent?.trim() || 'Oryema Allan';
