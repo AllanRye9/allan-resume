@@ -15,7 +15,7 @@ const store = {
 
   /** Editable resume content (overrides the defaults baked into index.html). */
   content: {
-    profilePic: '',
+    profilePic: 'https://avatars.githubusercontent.com/u/34004636?s=400&u=b058c22b6582fa1930dbb3dafb6975cd9262b3cc&v=4',
     name: '',
     title: '',
     tagline: '',
