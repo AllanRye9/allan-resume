@@ -99,6 +99,11 @@ function downloadPDF() {
   if (typeof html2pdf !== 'undefined' && template) {
     template.innerHTML = buildPDFHTML();
 
+    // Temporarily bring the template into the visible document flow so that
+    // html2canvas can render it (off-screen positioning causes blank pages).
+    const prevStyle = template.getAttribute('style') || '';
+    template.style.cssText = 'position:fixed;top:0;left:0;width:794px;z-index:-9999;opacity:0;pointer-events:none;';
+
     const nameRaw  = document.getElementById('hero-name')?.textContent?.trim() || 'Oryema_Allan';
     const filename = nameRaw.replace(/\s+/g, '_') + '_CV.pdf';
 
@@ -106,11 +111,13 @@ function downloadPDF() {
       margin:      0,
       filename,
       image:       { type: 'png' },
-      html2canvas: { scale: 2, useCORS: true, logging: false, letterRendering: true },
+      html2canvas: { scale: 2, useCORS: true, logging: false, letterRendering: true, scrollX: 0, scrollY: 0 },
       jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' },
       pagebreak:   { mode: ['css', 'legacy'] }
     };
-    html2pdf().set(opt).from(template).save();
+    html2pdf().set(opt).from(template).save().then(function () {
+      template.setAttribute('style', prevStyle);
+    });
   } else {
     window.print();
   }
