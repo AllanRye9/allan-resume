@@ -94,23 +94,173 @@ function updateActiveNavLink() {
 
 // ===== Download PDF =====
 function downloadPDF() {
-  const element = document.getElementById('cv-content');
+  const template = document.getElementById('cv-pdf-template');
 
-  // Use html2pdf.js if available, otherwise fall back to print dialog
-  if (typeof html2pdf !== 'undefined' && element) {
+  if (typeof html2pdf !== 'undefined' && template) {
+    template.innerHTML = buildPDFHTML();
+
+    const nameRaw  = document.getElementById('hero-name')?.textContent?.trim() || 'Oryema_Allan';
+    const filename = nameRaw.replace(/\s+/g, '_') + '_CV.pdf';
+
     const opt = {
-      margin:       [0, 0, 0, 0],
-      filename:     'Allan_Rye_CV.pdf',
-      image:        { type: 'jpeg', quality: 0.98 },
-      html2canvas:  { scale: 2, useCORS: true, logging: false },
-      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+      margin:      0,
+      filename,
+      image:       { type: 'png' },
+      html2canvas: { scale: 2, useCORS: true, logging: false, letterRendering: true },
+      jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak:   { mode: ['css', 'legacy'] }
     };
-    html2pdf().set(opt).from(element).save();
+    html2pdf().set(opt).from(template).save();
   } else {
-    // Graceful fallback — open print dialog (save as PDF)
     window.print();
   }
+}
+
+function buildPDFHTML() {
+  const esc = s => String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+  // ── Contact info ─────────────────────────────────────────────────────────
+  const name     = document.getElementById('hero-name')?.textContent?.trim() || 'Oryema Allan';
+  const titleEl  = document.getElementById('hero-title');
+  const subtitle = titleEl?.textContent?.trim() || 'AI & Software Engineer · Senior Software Engineer';
+  const email    = document.getElementById('contact-email-link')?.textContent?.trim() || '';
+  const phone    = document.getElementById('contact-phone-text')?.textContent?.trim() || '';
+  const github   = document.getElementById('contact-github-link')?.textContent?.trim() || '';
+  const linkedin = document.getElementById('contact-linkedin-link')?.textContent?.trim() || '';
+  const location = document.getElementById('contact-location-text')?.textContent?.trim() || '';
+  const contact  = [email, phone, github, linkedin, location].filter(Boolean).join('  |  ');
+
+  // ── About / summary ───────────────────────────────────────────────────────
+  const aboutParas = Array.from(document.querySelectorAll('.about-text p'))
+    .map(p => p.textContent.trim()).filter(Boolean);
+  const summary = aboutParas.join(' ');
+
+  // ── Work experience ───────────────────────────────────────────────────────
+  const jobs = Array.from(document.querySelectorAll('.timeline-item')).map(item => {
+    const tags = Array.from(item.querySelectorAll('.timeline-tag')).map(t => t.textContent.trim());
+    return {
+      role:    item.querySelector('.timeline-role')?.textContent?.trim() || '',
+      date:    item.querySelector('.timeline-date')?.textContent?.trim() || '',
+      company: item.querySelector('.timeline-company')?.textContent?.trim() || '',
+      desc:    item.querySelector('.timeline-desc')?.textContent?.trim() || '',
+      tags:    tags.join(' · ')
+    };
+  });
+
+  // ── Skills ────────────────────────────────────────────────────────────────
+  const skills = Array.from(document.querySelectorAll('.skill-category')).map(cat => {
+    const titleNode  = cat.querySelector('.skill-category-title');
+    const iconEl     = titleNode?.querySelector('.skill-category-icon');
+    let catName      = titleNode?.textContent?.trim() || '';
+    if (iconEl) catName = catName.replace(iconEl.textContent, '').trim();
+    const tags = Array.from(cat.querySelectorAll('.skill-tag')).map(t => t.textContent.trim());
+    return { category: catName, items: tags.join(', ') };
+  });
+
+  // ── Projects (only real article cards, not ai-transform banners) ──────────
+  const projects = Array.from(document.querySelectorAll('article.project-card')).map(card => {
+    const githubLink = card.querySelector('a.project-link:not(.project-link-live)');
+    const liveLink   = card.querySelector('a.project-link-live');
+    const techTags   = Array.from(card.querySelectorAll('.tech-tag')).map(t => t.textContent.trim());
+    const link       = liveLink?.href || githubLink?.href || '';
+    const linkText   = liveLink?.textContent?.trim() || githubLink?.textContent?.trim() || '';
+    return {
+      title: card.querySelector('.project-title')?.textContent?.trim() || '',
+      type:  card.querySelector('.project-type')?.textContent?.trim()  || '',
+      desc:  card.querySelector('.project-desc')?.textContent?.trim()  || '',
+      tech:  techTags.join(', '),
+      link,
+      linkText
+    };
+  });
+
+  // ── Education ─────────────────────────────────────────────────────────────
+  const education = Array.from(document.querySelectorAll('.edu-card')).map(card => ({
+    degree: card.querySelector('.edu-degree')?.textContent?.trim() || '',
+    school: card.querySelector('.edu-school')?.textContent?.trim() || '',
+    date:   card.querySelector('.edu-date')?.textContent?.trim()   || '',
+    note:   card.querySelector('.edu-note')?.textContent?.trim()   || ''
+  }));
+
+  // ── Build HTML ────────────────────────────────────────────────────────────
+
+  const expHTML = jobs.map(j => `
+    <div class="cv-pdf-job">
+      <div class="cv-pdf-job-header">
+        <span class="cv-pdf-job-company">${esc(j.company)}</span>
+        <span class="cv-pdf-job-date">${esc(j.date)}</span>
+      </div>
+      <div class="cv-pdf-job-role">${esc(j.role)}</div>
+      <p class="cv-pdf-text">${esc(j.desc)}</p>
+      ${j.tags ? `<div class="cv-pdf-tags">${esc(j.tags)}</div>` : ''}
+    </div>`).join('');
+
+  const skillsHTML = skills.map(s => `
+    <tr>
+      <td class="cv-pdf-skill-cat">${esc(s.category)}</td>
+      <td class="cv-pdf-skill-list">${esc(s.items)}</td>
+    </tr>`).join('');
+
+  const projHTML = projects.map(p => `
+    <tr>
+      <td class="cv-pdf-proj-name">${esc(p.title)}</td>
+      <td class="cv-pdf-proj-desc">${esc(p.desc)}</td>
+      <td class="cv-pdf-proj-stack">${esc(p.tech)}</td>
+      <td class="cv-pdf-proj-link">${p.link ? `<a href="${esc(p.link)}">${esc(p.linkText || p.link.replace(/^https?:\/\//, ''))}</a>` : ''}</td>
+    </tr>`).join('');
+
+  const eduHTML = education.map(e => `
+    <div class="cv-pdf-edu">
+      <div class="cv-pdf-edu-header">
+        <span class="cv-pdf-edu-degree">${esc(e.degree)}</span>
+        <span class="cv-pdf-edu-date">${esc(e.date)}</span>
+      </div>
+      <div class="cv-pdf-edu-detail">${esc(e.school)}${e.note ? ' · ' + esc(e.note) : ''}</div>
+    </div>`).join('');
+
+  return `
+    <div class="cv-pdf-page">
+
+      <div class="cv-pdf-header">
+        <div class="cv-pdf-name">${esc(name)}</div>
+        <div class="cv-pdf-subtitle">${esc(subtitle)}</div>
+        <div class="cv-pdf-contact">${esc(contact)}</div>
+      </div>
+
+      ${summary ? `
+      <div class="cv-pdf-section">
+        <div class="cv-pdf-section-heading">Professional Summary</div>
+        <p class="cv-pdf-text">${esc(summary)}</p>
+      </div>` : ''}
+
+      <div class="cv-pdf-section">
+        <div class="cv-pdf-section-heading">Work Experience</div>
+        ${expHTML}
+      </div>
+
+      <div class="cv-pdf-section">
+        <div class="cv-pdf-section-heading">Technical Skills</div>
+        <table class="cv-pdf-skills-table"><tbody>${skillsHTML}</tbody></table>
+      </div>
+
+      <div class="cv-pdf-page-break"></div>
+
+      <div class="cv-pdf-section">
+        <div class="cv-pdf-section-heading">Selected Projects</div>
+        <table class="cv-pdf-projects-table"><tbody>${projHTML}</tbody></table>
+      </div>
+
+      <div class="cv-pdf-section">
+        <div class="cv-pdf-section-heading">Education &amp; Certifications</div>
+        ${eduHTML}
+      </div>
+
+    </div>`;
 }
 
 // Attach to all download buttons

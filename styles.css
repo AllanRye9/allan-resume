@@ -992,3 +992,229 @@ footer a:hover { color: #fff; }
   margin-top: 20px;
   text-align: center;
 }
+
+/* ===== CV PDF Template ===== */
+/* Positioned off-screen so html2pdf can capture it while it stays invisible to users. */
+#cv-pdf-template {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  width: 794px; /* 210mm at 96 dpi */
+  background: #ffffff;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10pt;
+  color: #111111;
+  line-height: 1.45;
+}
+
+.cv-pdf-page {
+  padding: 38px 52px; /* ~10mm top/bottom, ~14mm left/right */
+}
+
+/* Header */
+.cv-pdf-header {
+  text-align: center;
+  border-bottom: 1.5px solid #111111;
+  padding-bottom: 9px;
+  margin-bottom: 13px;
+}
+
+.cv-pdf-name {
+  font-size: 22pt;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #111111;
+  margin: 0 0 3px 0;
+  line-height: 1.2;
+}
+
+.cv-pdf-subtitle {
+  font-size: 10pt;
+  font-weight: 600;
+  color: #333333;
+  margin: 0 0 5px 0;
+}
+
+.cv-pdf-contact {
+  font-size: 8.5pt;
+  color: #444444;
+  letter-spacing: 0.1px;
+  margin: 0;
+}
+
+/* Section */
+.cv-pdf-section {
+  margin-bottom: 11px;
+}
+
+.cv-pdf-section-heading {
+  font-size: 9pt;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  color: #111111;
+  border-bottom: 1px solid #666666;
+  padding-bottom: 2px;
+  margin-bottom: 7px;
+}
+
+.cv-pdf-text {
+  font-size: 9.5pt;
+  color: #222222;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Experience */
+.cv-pdf-job {
+  margin-bottom: 9px;
+}
+
+.cv-pdf-job:last-child {
+  margin-bottom: 0;
+}
+
+.cv-pdf-job-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.cv-pdf-job-company {
+  font-size: 10pt;
+  font-weight: 700;
+  color: #111111;
+}
+
+.cv-pdf-job-date {
+  font-size: 9pt;
+  color: #444444;
+  white-space: nowrap;
+}
+
+.cv-pdf-job-role {
+  font-size: 9.5pt;
+  font-style: italic;
+  color: #333333;
+  margin-bottom: 4px;
+}
+
+.cv-pdf-list {
+  margin: 0 0 4px 0;
+  padding-left: 16px;
+}
+
+.cv-pdf-list li {
+  font-size: 9.5pt;
+  color: #222222;
+  margin-bottom: 2px;
+  line-height: 1.4;
+}
+
+.cv-pdf-tags {
+  font-size: 8.5pt;
+  color: #555555;
+  font-style: italic;
+  margin-top: 2px;
+}
+
+/* Skills table */
+.cv-pdf-skills-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cv-pdf-skills-table td {
+  padding: 2.5px 4px;
+  font-size: 9pt;
+  vertical-align: top;
+  border-bottom: 0.5px solid #dddddd;
+}
+
+.cv-pdf-skill-cat {
+  font-weight: 700;
+  color: #111111;
+  white-space: nowrap;
+  width: 100px;
+}
+
+.cv-pdf-skill-list {
+  color: #333333;
+}
+
+/* Projects table */
+.cv-pdf-projects-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cv-pdf-projects-table td {
+  padding: 3px 5px;
+  font-size: 9pt;
+  vertical-align: top;
+  border-bottom: 0.5px solid #dddddd;
+}
+
+.cv-pdf-proj-name {
+  font-weight: 700;
+  color: #111111;
+  white-space: nowrap;
+  width: 110px;
+}
+
+.cv-pdf-proj-desc {
+  color: #333333;
+}
+
+.cv-pdf-proj-stack {
+  color: #555555;
+  font-style: italic;
+  white-space: nowrap;
+  width: 130px;
+}
+
+.cv-pdf-proj-link {
+  color: #1a56a0;
+  white-space: nowrap;
+  font-size: 8pt;
+  width: 140px;
+}
+
+/* Education */
+.cv-pdf-edu {
+  margin-bottom: 7px;
+}
+
+.cv-pdf-edu:last-child {
+  margin-bottom: 0;
+}
+
+.cv-pdf-edu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.cv-pdf-edu-degree {
+  font-size: 10pt;
+  font-weight: 700;
+  color: #111111;
+}
+
+.cv-pdf-edu-date {
+  font-size: 9pt;
+  color: #444444;
+  white-space: nowrap;
+}
+
+.cv-pdf-edu-detail {
+  font-size: 9pt;
+  color: #444444;
+  margin-top: 1px;
+}
+
+/* Page break hints */
+.cv-pdf-page-break {
+  page-break-before: always;
+  height: 0;
+}
