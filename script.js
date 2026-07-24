@@ -18,7 +18,6 @@ const backToTop = document.querySelector('.back-to-top');
     }
   }
 
-  // Load saved preference or default to light
   var saved = localStorage.getItem(THEME_KEY) || 'light';
   applyTheme(saved);
 
@@ -48,7 +47,6 @@ if (navbar && backToTop) {
     updateActiveNavLink();
   });
 
-  // ===== Back to top =====
   backToTop.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
@@ -65,7 +63,6 @@ if (hamburger && navLinks) {
     hamburger.setAttribute('aria-expanded', expanded);
   });
 
-  // Close nav on link click (mobile)
   navLinks.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', () => navLinks.classList.remove('open'));
   });
@@ -118,6 +115,39 @@ animateOnScroll.forEach(el => {
 const yearEl = document.getElementById('current-year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
+// ===== PROFILE PICTURE (added) =====
+document.addEventListener('DOMContentLoaded', function() {
+  const avatar = document.querySelector('.hero-avatar');
+  if (avatar) {
+    // Create image element
+    const img = document.createElement('img');
+    img.src = 'https://avatars.githubusercontent.com/u/34004636?v=4';  // <-- replace with your actual image URL
+    img.alt = 'Profile picture of Oryema Allan';
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.objectFit = 'cover';
+    img.style.borderRadius = '50%';
+    img.style.display = 'block';
+
+    // Fallback: if image fails, show initials again
+    img.onerror = function() {
+      avatar.innerHTML = 'AR';   // revert to original initials
+      avatar.style.display = 'flex';
+      avatar.style.alignItems = 'center';
+      avatar.style.justifyContent = 'center';
+      avatar.style.fontSize = '2.4rem';
+      avatar.style.fontWeight = '700';
+      avatar.style.color = '#fff';
+      avatar.style.background = '#1a73e8'; // keep background
+    };
+
+    // Clear avatar and append image
+    avatar.innerHTML = '';
+    avatar.style.padding = '0';   // remove any padding that might break layout
+    avatar.appendChild(img);
+  }
+});
+
 // ===== Analytics tracking =====
 (function trackVisit() {
   const startTime = Date.now();
@@ -130,7 +160,6 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
     };
     if (typeof duration === 'number') payload.duration = duration;
 
-    // Use sendBeacon when available (non-blocking, survives page unload)
     const body = JSON.stringify(payload);
     if (navigator.sendBeacon) {
       navigator.sendBeacon('/api/track', new Blob([body], { type: 'application/json' }));
@@ -144,10 +173,8 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
     }
   }
 
-  // Send initial visit
   sendTrack();
 
-  // On page unload, include time-on-page in seconds
   window.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden') {
       const duration = Math.round((Date.now() - startTime) / 1000);
@@ -155,4 +182,3 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
     }
   });
 }());
-
