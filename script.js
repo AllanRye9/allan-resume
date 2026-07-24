@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (avatar) {
     // Create image element
     const img = document.createElement('img');
-    img.src = 'https://avatars.githubusercontent.com/u/34004636?v=4';  // <-- replace with your actual image URL
+    img.src = 'https://avatars.githubusercontent.com/u/34004636?v=4'; 
     img.alt = 'Profile picture of Oryema Allan';
     img.style.width = '100%';
     img.style.height = '100%';
