@@ -1,62 +1,572 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Oryema Allan — based in Abu Dhabi, UAE. Professional online CV showcasing experience in full-stack development, system design, and software engineering." />
+  <title>Oryema Allan · AI & Software Engineer CV</title>
+
+  <!-- ===== SEO & META ===== -->
+  <meta name="description" content="Oryema Allan — AI & Software Engineer based in Abu Dhabi, UAE. Full-stack development, system design, and AI-powered products." />
   <meta name="author" content="Oryema Allan" />
-  <meta property="og:title" content="Oryema Allan | AI & Software Engineer CV" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#1a73e8" />
+  <meta name="keywords" content="Software Engineer, AI Engineer, Full Stack Developer, React, TypeScript, Python, FastAPI, Abu Dhabi" />
+  <link rel="canonical" href="https://your-domain.com" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Oryema Allan · AI & Software Engineer CV" />
   <meta property="og:description" content="Software Engineer based in Abu Dhabi, UAE — full-stack development, system design, and engineering across multiple industries." />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://your-domain.com" />
 
-  <title>Oryema Allan CV</title>
+  <!-- ===== FAVICON ===== -->
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231a73e8'/%3E%3Ctext y='.9em' font-size='65' x='50%25' text-anchor='middle' fill='white'%3E💻%3C/text%3E%3C/svg%3E" />
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="https://github.com/account' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231a73e8'/><text y='.9em' font-size='65' x='50%' text-anchor='middle' fill='white'>💻</text></svg>" />
-
-  <!-- Google Fonts -->
+  <!-- ===== PRELOAD FONTS ===== -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" as="style" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet" />
 
-  <!-- Stylesheet -->
-  <link rel="stylesheet" href="styles.css" />
-</head>
+  <!-- ===== STYLES (critical CSS inlined) ===== -->
+  <style>
+    /* ===== CSS VARIABLES ===== */
+    :root {
+      --primary: #1a73e8;
+      --secondary: #34a853;
+      --surface: #ffffff;
+      --background: #f8fafc;
+      --border: #e2e8f0;
+      --shadow: 0 4px 24px rgba(0,0,0,0.06);
+      --radius: 16px;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --mono: 'Fira Code', monospace;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --bg-card: #ffffff;
+    }
 
+    [data-theme="dark"] {
+      --background: #0f172a;
+      --surface: #1e293b;
+      --border: #334155;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --bg-card: #1e293b;
+      --shadow: 0 4px 24px rgba(0,0,0,0.3);
+    }
+
+    /* ===== RESET & BASE ===== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+      transition: background 0.3s, color 0.3s;
+      padding-top: 70px;
+    }
+    a { color: var(--primary); text-decoration: none; transition: color 0.2s; }
+    a:hover { color: #0d47a1; }
+    img, svg { display: block; max-width: 100%; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+    /* ===== NAV ===== */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s, border-color 0.3s;
+    }
+    [data-theme="dark"] .navbar { background: rgba(15,23,42,0.9); }
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+    .nav-logo { font-weight: 800; font-size: 1.25rem; letter-spacing: -0.5px; }
+    .nav-logo span { color: var(--primary); }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a { font-size: 0.9rem; font-weight: 500; color: var(--text); padding: 4px 0; border-bottom: 2px solid transparent; transition: 0.2s; }
+    .nav-links a:hover { color: var(--primary); border-bottom-color: var(--primary); }
+    .nav-links a.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .hamburger span {
+      width: 24px; height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: 0.3s;
+    }
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 40px;
+      padding: 6px 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text);
+      font-size: 0.85rem;
+      transition: 0.2s;
+    }
+    .theme-toggle:hover { background: var(--border); }
+
+    /* ===== HERO ===== */
+    .hero {
+      padding: 40px 0 20px;
+      background: var(--background);
+      transition: background 0.3s;
+    }
+    .hero-content {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      flex-wrap: wrap;
+    }
+    .hero-avatar {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.4rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      box-shadow: 0 8px 24px rgba(26,115,232,0.25);
+    }
+    .hero-text { flex: 1; }
+    .hero-text h1 { font-size: 2.6rem; font-weight: 800; letter-spacing: -0.02em; }
+    .hero-text .title { font-size: 1.1rem; color: var(--text-muted); margin: 4px 0 12px; }
+    .hero-text .title span { color: var(--primary); font-weight: 600; }
+    .tagline { font-size: 1.05rem; max-width: 640px; color: var(--text-muted); margin-bottom: 16px; }
+    .hero-badges { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 20px; }
+    .badge {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 4px 14px;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn {
+      padding: 10px 28px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border: 2px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      transition: 0.25s;
+      display: inline-block;
+    }
+    .btn-outline:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    /* ===== CONTACT BAR ===== */
+    .contact-bar {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 20px;
+      margin: 16px auto 0;
+      max-width: 1200px;
+      width: calc(100% - 48px);
+      box-shadow: var(--shadow);
+      transition: 0.3s;
+    }
+    .contact-bar-inner {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px 32px;
+      align-items: center;
+    }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+    .contact-item svg { flex-shrink: 0; }
+
+    /* ===== SECTIONS ===== */
+    .section { padding: 60px 0; }
+    .section-header { text-align: center; margin-bottom: 40px; }
+    .section-label {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 2px 14px;
+      border-radius: 40px;
+      text-transform: uppercase;
+    }
+    .section-title { font-size: 2.2rem; font-weight: 700; margin: 8px 0 4px; }
+    .section-subtitle { color: var(--text-muted); max-width: 600px; margin: 0 auto 12px; }
+    .section-line {
+      width: 60px; height: 3px;
+      background: var(--primary);
+      border-radius: 4px;
+      margin: 8px auto 0;
+    }
+
+    /* ===== ABOUT ===== */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+    .about-text p { margin-bottom: 12px; color: var(--text-muted); }
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 16px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      transition: 0.2s;
+    }
+    .stat-number { font-size: 2rem; font-weight: 700; color: var(--primary); }
+    .stat-label { font-size: 0.8rem; color: var(--text-muted); }
+
+    /* ===== SKILLS ===== */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+    }
+    .skill-category {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 18px;
+      box-shadow: var(--shadow);
+      transition: 0.2s;
+    }
+    .skill-category-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .skill-category-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .skill-tag {
+      background: var(--background);
+      padding: 2px 12px;
+      border-radius: 30px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .skill-tag--highlight { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    /* ===== EXPERIENCE ===== */
+    .timeline { display: flex; flex-direction: column; gap: 24px; }
+    .timeline-item { position: relative; padding-left: 28px; }
+    .timeline-dot {
+      position: absolute; left: 0; top: 8px;
+      width: 14px; height: 14px;
+      background: var(--primary);
+      border-radius: 50%;
+      border: 3px solid var(--background);
+      box-shadow: 0 0 0 3px var(--primary);
+    }
+    .timeline-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      box-shadow: var(--shadow);
+    }
+    .timeline-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; }
+    .timeline-role { font-weight: 700; font-size: 1.1rem; }
+    .timeline-date { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+    .timeline-company { font-weight: 500; color: var(--primary); margin: 2px 0 8px; }
+    .timeline-desc { color: var(--text-muted); margin-bottom: 10px; }
+    .timeline-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .timeline-tag {
+      background: var(--background);
+      padding: 1px 12px;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      border: 1px solid var(--border);
+    }
+
+    /* ===== PROJECTS ===== */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px;
+    }
+    .project-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s, box-shadow 0.3s;
+      display: flex;
+      flex-direction: column;
+    }
+    .project-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.1);
+      border-color: var(--primary);
+    }
+    .project-banner { height: 6px; }
+    .project-body { padding: 20px 20px 24px; flex: 1; display: flex; flex-direction: column; }
+    .project-type { font-size: 0.7rem; font-weight: 600; color: var(--primary); text-transform: uppercase; letter-spacing: 0.3px; }
+    .project-title { font-size: 1.2rem; font-weight: 700; margin: 4px 0 8px; }
+    .project-desc { color: var(--text-muted); font-size: 0.9rem; flex: 1; margin-bottom: 12px; }
+    .project-highlights { list-style: none; padding: 0; margin: 0 0 12px; }
+    .project-highlights li { font-size: 0.85rem; color: var(--text-muted); padding-left: 16px; position: relative; }
+    .project-highlights li::before { content: "▹"; position: absolute; left: 0; color: var(--primary); }
+    .project-tech { display: flex; flex-wrap: wrap; gap: 4px; margin: 8px 0 12px; }
+    .tech-tag {
+      background: var(--background);
+      padding: 0 10px;
+      border-radius: 30px;
+      font-size: 0.65rem;
+      font-weight: 500;
+      border: 1px solid var(--border);
+    }
+    .project-links { display: flex; gap: 16px; margin-top: auto; }
+    .project-link {
+      font-size: 0.85rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-muted);
+      transition: 0.2s;
+    }
+    .project-link:hover { color: var(--primary); }
+    .project-link-live { color: var(--primary); }
+
+    .ai-transform-banner {
+      grid-column: 1 / -1;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: var(--shadow);
+    }
+    .ai-transform-icon { font-size: 2rem; }
+    .ai-transform-title { font-weight: 700; }
+    .ai-transform-desc { color: var(--text-muted); font-size: 0.9rem; }
+
+    /* ===== EDUCATION ===== */
+    .education-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+    }
+    .edu-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 20px 24px;
+      box-shadow: var(--shadow);
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .edu-icon { font-size: 1.8rem; }
+    .edu-degree { font-weight: 700; }
+    .edu-school { color: var(--text-muted); font-size: 0.9rem; }
+    .edu-date { font-size: 0.8rem; font-weight: 500; color: var(--primary); }
+    .edu-note { font-size: 0.8rem; color: var(--text-muted); }
+
+    /* ===== FOOTER ===== */
+    footer {
+      text-align: center;
+      padding: 32px 24px;
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      background: var(--bg-card);
+    }
+    footer a { color: var(--text-muted); }
+    footer a:hover { color: var(--primary); }
+
+    /* ===== BACK TO TOP ===== */
+    .back-to-top {
+      position: fixed;
+      bottom: 28px; right: 28px;
+      z-index: 999;
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(26,115,232,0.3);
+      transition: 0.2s;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(20px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .back-to-top.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    .back-to-top:hover { background: #0d47a1; transform: scale(1.05); }
+
+    /* ===== SCROLL PROGRESS ===== */
+    .scroll-progress {
+      position: fixed;
+      top: 64px; left: 0;
+      height: 3px;
+      background: var(--primary);
+      z-index: 999;
+      width: 0%;
+      transition: width 0.08s;
+      border-radius: 0 2px 2px 0;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        background: var(--bg-card);
+        position: absolute;
+        top: 64px; left: 0; right: 0;
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--border);
+        gap: 16px;
+      }
+      .nav-links.open { display: flex; }
+      .hamburger { display: flex; }
+      .hero-content { flex-direction: column; text-align: center; }
+      .hero-text h1 { font-size: 2rem; }
+      .about-grid { grid-template-columns: 1fr; }
+      .about-stats { grid-template-columns: 1fr 1fr; }
+      .contact-bar-inner { gap: 8px 16px; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .section-title { font-size: 1.8rem; }
+    }
+    @media (max-width: 480px) {
+      .hero-avatar { width: 80px; height: 80px; font-size: 1.8rem; }
+      .stat-number { font-size: 1.4rem; }
+      .container { padding: 0 16px; }
+    }
+
+    /* ===== PRINT ===== */
+    @media print {
+      .navbar, .theme-toggle, .hamburger, .back-to-top, .scroll-progress,
+      .contact-bar, .hero-cta, .project-links, .ai-transform-banner {
+        display: none !important;
+      }
+      body { padding-top: 0; background: #fff; color: #000; }
+      .section { padding: 20px 0; }
+      .project-card { break-inside: avoid; border: 1px solid #ddd; box-shadow: none; }
+      .hero { padding: 10px 0; }
+      .hero-avatar { background: #1a73e8 !important; color: #fff !important; }
+      .badge { border: 1px solid #ccc; }
+      .skill-tag { border: 1px solid #ccc; }
+      .timeline-card { border: 1px solid #ccc; box-shadow: none; }
+      .edu-card { border: 1px solid #ccc; }
+      footer { border-top: 1px solid #ccc; }
+      .contact-bar-inner { color: #000; }
+      a { color: #000 !important; }
+      .project-link { color: #000 !important; }
+    }
+  </style>
+</head>
 <body>
-  <!-- ===== Navigation ===== -->
+
+  <!-- ===== SCROLL PROGRESS ===== -->
+  <div class="scroll-progress" id="scrollProgress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+
+  <!-- ===== NAVIGATION ===== -->
   <nav class="navbar" role="navigation" aria-label="Main navigation">
     <div class="nav-container">
       <a href="#hero" class="nav-logo">Allan<span>.</span>dev</a>
-      <ul class="nav-links" role="list">
-        <li><a href="#about">About</a></li>
-        <li><a href="#skills">Skills</a></li>
-        <li><a href="#experience">Experience</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#education">Education</a></li>
+      <ul class="nav-links" id="navLinks" role="list">
+        <li><a href="#about" class="nav-link">About</a></li>
+        <li><a href="#skills" class="nav-link">Skills</a></li>
+        <li><a href="#experience" class="nav-link">Experience</a></li>
+        <li><a href="#projects" class="nav-link">Projects</a></li>
+        <li><a href="#education" class="nav-link">Education</a></li>
       </ul>
-      <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+      <button class="hamburger" id="hamburger" aria-label="Toggle navigation" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
-      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark/light theme" title="Toggle theme">
-        <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-        <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark/light theme" title="Toggle theme">
+        <span id="themeIcon">🌙</span>
       </button>
     </div>
   </nav>
 
-  <!-- ===== CV Content (used for PDF export) ===== -->
-  <div id="cv-content">
+  <!-- ===== MAIN CONTENT ===== -->
+  <main id="main-content">
 
-    <!-- ===== Hero / Profile ===== -->
+    <!-- ===== HERO ===== -->
     <section id="hero" class="hero" aria-label="Profile">
       <div class="hero-content">
-        <div id="hero-avatar" class="hero-avatar" aria-hidden="true">AR</div>
+        <div class="hero-avatar" role="img" aria-label="Profile initials AR">AR</div>
         <div class="hero-text">
-          <h1 id="hero-name">Oryema Allan</h1>
-          <p id="hero-title" class="title"><span>AI &amp; Software Engineer</span> · Software Engineer</p>
+          <h1>Oryema Allan</h1>
+          <p class="title"><span>AI &amp; Software Engineer</span> · Software Engineer</p>
           <p class="tagline">
-            Software Engineer with 3+ years building scalable full-stack applications and AI-powered products. Currently at 42 Abu Dhabi driving AI transformation. Based in Abu Dhabi, UAE.
+            Software Engineer specializing in AI-powered systems, scalable full-stack applications, cloud architecture, and modern software engineering practices. Passionate about building intelligent solutions that solve real-world problems.
           </p>
           <div class="hero-badges" aria-label="Key skills">
             <span class="badge">AI Transformation</span>
@@ -69,40 +579,37 @@
             <a href="#projects" class="btn btn-outline">View Projects</a>
             <a href="#about" class="btn btn-outline">About Me</a>
           </div>
-          <!-- Containers for optional admin-managed media -->
-          <div id="hero-video-container"></div>
-          <div id="hero-showcase-image"></div>
         </div>
       </div>
     </section>
 
-    <!-- ===== Contact Bar ===== -->
+    <!-- ===== CONTACT BAR ===== -->
     <div class="contact-bar" aria-label="Contact information">
       <div class="contact-bar-inner">
         <span class="contact-item">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          <a href="mailto:allanrye17@gmail.com" id="contact-email-link">allanrye17@gmail.com</a>
+          <a href="mailto:allanrye17@gmail.com" aria-label="Send email">allanrye17@gmail.com</a>
         </span>
         <span class="contact-item">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.07 1.18 2 2 0 012.04 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z"/></svg>
-          <span id="contact-phone-text">+971 545659136</span>
+          <a href="tel:+971545659136">+971 545659136</a>
         </span>
         <span class="contact-item">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
-          <a href="https://github.com/AllanRye9" id="contact-github-link" target="_blank" rel="noopener noreferrer">github.com/AllanRye9</a>
+          <a href="https://github.com/AllanRye9" target="_blank" rel="noopener noreferrer">github.com/AllanRye9</a>
         </span>
         <span class="contact-item">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-          <a href="https://linkedin.com/in/allanrye" id="contact-linkedin-link" target="_blank" rel="noopener noreferrer">linkedin.com/in/allanrye</a>
+          <a href="https://linkedin.com/in/allanrye" target="_blank" rel="noopener noreferrer">linkedin.com/in/allanrye</a>
         </span>
         <span class="contact-item">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <span id="contact-location-text">Abu Dhabi, UAE</span>
+          <span>Abu Dhabi, UAE</span>
         </span>
       </div>
     </div>
 
-    <!-- ===== About ===== -->
+    <!-- ===== ABOUT ===== -->
     <section id="about" class="section" aria-labelledby="about-title">
       <div class="container">
         <div class="section-header">
@@ -112,45 +619,21 @@
         </div>
         <div class="about-grid">
           <div class="about-text">
-            <p>
-              I'm a passionate software engineer with over <strong>3 years of professional experience</strong>
-              building reliable, scalable, and user-centred applications. I thrive at the intersection of
-              clean code and practical problem-solving — turning complex requirements into elegant solutions.
-            </p>
-            <p>
-              My work spans <strong>full-stack web development</strong>, <strong>cloud architecture</strong>,
-              and <strong>API design</strong> across diverse sectors including Real Estate,
-              fintech payment platforms, and real-time chatting & gaming systems. I care deeply about software quality,
-              performance, and maintainability.
-            </p>
-            <p>
-              Outside of work I contribute to open-source projects and stay
-              current with emerging technologies through continuous learning and community engagement.
-            </p>
+            <p>I'm a passionate software engineer with over <strong>3 years of professional experience</strong> building reliable, scalable, and user-centred applications. I thrive at the intersection of clean code and practical problem-solving — turning complex requirements into elegant solutions.</p>
+            <p>My work spans <strong>full-stack web development</strong>, <strong>cloud architecture</strong>, and <strong>API design</strong> across diverse sectors including Real Estate, fintech payment platforms, and real-time chatting &amp; gaming systems. I care deeply about software quality, performance, and maintainability.</p>
+            <p>Outside of work I contribute to open-source projects and stay current with emerging technologies through continuous learning and community engagement.</p>
           </div>
           <div class="about-stats" aria-label="Career statistics">
-            <div class="stat-card">
-              <div class="stat-number">3+</div>
-              <div class="stat-label">Years Experience</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-number">14+</div>
-              <div class="stat-label">Projects Delivered</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-number">3</div>
-              <div class="stat-label">Industries Served</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-number">90%</div>
-              <div class="stat-label">Client Satisfaction</div>
-            </div>
+            <div class="stat-card"><div class="stat-number" data-count="3">0</div><div class="stat-label">Years Experience</div></div>
+            <div class="stat-card"><div class="stat-number" data-count="14">0</div><div class="stat-label">Projects Delivered</div></div>
+            <div class="stat-card"><div class="stat-number" data-count="3">0</div><div class="stat-label">Industries Served</div></div>
+            <div class="stat-card"><div class="stat-number" data-count="90">0</div><div class="stat-label">Client Satisfaction %</div></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ===== Skills ===== -->
+    <!-- ===== SKILLS ===== -->
     <section id="skills" class="section" aria-labelledby="skills-title">
       <div class="container">
         <div class="section-header">
@@ -160,116 +643,18 @@
           <div class="section-line" aria-hidden="true"></div>
         </div>
         <div class="skills-grid">
-
-          <div class="skill-category">
-            <div class="skill-category-title">
-              <div class="skill-category-icon" style="background: rgba(26,115,232,.12);" aria-hidden="true">🖥️</div>
-              Frontend Development
-            </div>
-            <div class="skill-tags">
-              <span class="skill-tag">HTML5</span>
-              <span class="skill-tag">CSS3 / SASS</span>
-              <span class="skill-tag">JavaScript (ES2022+)</span>
-              <span class="skill-tag">TypeScript</span>
-              <span class="skill-tag">React.js</span>
-              <span class="skill-tag">Next.js</span>
-              <span class="skill-tag">Vue.js</span>
-              <span class="skill-tag">Tailwind CSS</span>
-            </div>
-          </div>
-
-          <div class="skill-category">
-            <div class="skill-category-title">
-              <div class="skill-category-icon" style="background: rgba(52,168,83,.12);" aria-hidden="true">⚙️</div>
-              Backend Development
-            </div>
-            <div class="skill-tags">
-              <span class="skill-tag">Node.js</span>
-              <span class="skill-tag">Python</span>
-              <span class="skill-tag">Django</span>
-              <span class="skill-tag">FastAPI</span>
-              <span class="skill-tag">Express.js</span>
-              <span class="skill-tag">RESTful APIs</span>
-            </div>
-          </div>
-
-          <div class="skill-category">
-            <div class="skill-category-title">
-              <div class="skill-category-icon" style="background: rgba(251,188,4,.12);" aria-hidden="true">🗄️</div>
-              Databases &amp; Storage
-            </div>
-            <div class="skill-tags">
-              <span class="skill-tag">PostgreSQL</span>
-              <span class="skill-tag">MySQL</span>
-              <span class="skill-tag">FastAPI</span>
-              <span class="skill-tag">Redis</span>
-              <span class="skill-tag">Docker</span>
-              <span class="skill-tag">React</span>
-              <span class="skill-tag">Node Js</span>
-            </div>
-          </div>
-
-          <div class="skill-category">
-            <div class="skill-category-title">
-              <div class="skill-category-icon" style="background: rgba(234,67,53,.12);" aria-hidden="true">☁️</div>
-              Cloud &amp; DevOps
-            </div>
-            <div class="skill-tags">
-              <span class="skill-tag">AWS (EC2, S3, Lambda)</span>
-              <span class="skill-tag">Google Cloud</span>
-              <span class="skill-tag">GitHub Actions</span>
-              <span class="skill-tag">CI/CD Pipelines</span>
-            </div>
-          </div>
-
-          <div class="skill-category">
-            <div class="skill-category-title">
-              <div class="skill-category-icon" style="background: rgba(26,115,232,.12);" aria-hidden="true">🧪</div>
-              Testing &amp; Quality
-            </div>
-            <div class="skill-tags">
-              <span class="skill-tag">Pytest</span>
-              <span class="skill-tag">Unit Testing</span>
-              <span class="skill-tag">Code Review</span>
-            </div>
-          </div>
-
-          <div class="skill-category">
-            <div class="skill-category-title">
-              <div class="skill-category-icon" style="background: rgba(52,168,83,.12);" aria-hidden="true">🛠️</div>
-              Tools &amp; Practices
-            </div>
-            <div class="skill-tags">
-              <span class="skill-tag">Git / GitHub</span>
-              <span class="skill-tag">Agile / Scrum</span>
-              <span class="skill-tag">Canva</span>
-              <span class="skill-tag">Linux / Bash</span>
-              <span class="skill-tag">Microservices</span>
-              <span class="skill-tag">System Design</span>
-            </div>
-          </div>
-
-          <div class="skill-category">
-            <div class="skill-category-title">
-              <div class="skill-category-icon" style="background: rgba(251,188,4,.12);" aria-hidden="true">🏆</div>
-              AI &amp; Leadership
-            </div>
-            <div class="skill-tags">
-              <span class="skill-tag">AI Transformation</span>
-              <span class="skill-tag">LLM Integration</span>
-              <span class="skill-tag">Prompt Engineering</span>
-              <span class="skill-tag">Project Management</span>
-              <span class="skill-tag">Team Leadership</span>
-              <span class="skill-tag">Stakeholder Management</span>
-              <span class="skill-tag skill-tag--highlight" title="Ministry of Interior Hackathon">MoI Hackathon 🥇</span>
-            </div>
-          </div>
-
+          <div class="skill-category"><div class="skill-category-title"><span class="skill-category-icon" style="background:rgba(26,115,232,.12);">⚛</span>Frontend Development</div><div class="skill-tags"><span class="skill-tag">React</span><span class="skill-tag">Next.js</span><span class="skill-tag">TypeScript</span><span class="skill-tag">Tailwind CSS</span><span class="skill-tag">Vue.js</span></div></div>
+          <div class="skill-category"><div class="skill-category-title"><span class="skill-category-icon" style="background:rgba(52,168,83,.12);">🐍</span>Backend Development</div><div class="skill-tags"><span class="skill-tag">Node.js</span><span class="skill-tag">Python</span><span class="skill-tag">FastAPI</span><span class="skill-tag">Django</span><span class="skill-tag">Express.js</span></div></div>
+          <div class="skill-category"><div class="skill-category-title"><span class="skill-category-icon" style="background:rgba(251,188,4,.12);">🗄️</span>Databases &amp; Storage</div><div class="skill-tags"><span class="skill-tag">PostgreSQL</span><span class="skill-tag">MySQL</span><span class="skill-tag">Redis</span><span class="skill-tag">Docker</span></div></div>
+          <div class="skill-category"><div class="skill-category-title"><span class="skill-category-icon" style="background:rgba(234,67,53,.12);">☁️</span>Cloud &amp; DevOps</div><div class="skill-tags"><span class="skill-tag">AWS (EC2, S3, Lambda)</span><span class="skill-tag">Google Cloud</span><span class="skill-tag">CI/CD</span></div></div>
+          <div class="skill-category"><div class="skill-category-title"><span class="skill-category-icon" style="background:rgba(26,115,232,.12);">🧪</span>Testing &amp; Quality</div><div class="skill-tags"><span class="skill-tag">Pytest</span><span class="skill-tag">Unit Testing</span><span class="skill-tag">Code Review</span></div></div>
+          <div class="skill-category"><div class="skill-category-title"><span class="skill-category-icon" style="background:rgba(52,168,83,.12);">🛠️</span>Tools &amp; Practices</div><div class="skill-tags"><span class="skill-tag">Git / GitHub</span><span class="skill-tag">Agile / Scrum</span><span class="skill-tag">Linux / Bash</span><span class="skill-tag">Microservices</span></div></div>
+          <div class="skill-category"><div class="skill-category-title"><span class="skill-category-icon" style="background:rgba(251,188,4,.12);">🏆</span>AI &amp; Leadership</div><div class="skill-tags"><span class="skill-tag">AI Transformation</span><span class="skill-tag">LLM Integration</span><span class="skill-tag">Prompt Engineering</span><span class="skill-tag">Team Leadership</span><span class="skill-tag skill-tag--highlight">MoI Hackathon 🥇</span></div></div>
         </div>
       </div>
     </section>
 
-    <!-- ===== Experience ===== -->
+    <!-- ===== EXPERIENCE ===== -->
     <section id="experience" class="section" aria-labelledby="exp-title">
       <div class="container">
         <div class="section-header">
@@ -279,13 +664,12 @@
           <div class="section-line" aria-hidden="true"></div>
         </div>
         <div class="timeline" role="list">
-
           <div class="timeline-item" role="listitem">
             <div class="timeline-dot" aria-hidden="true"></div>
             <div class="timeline-card">
               <div class="timeline-header">
                 <span class="timeline-role">Full Stack Developer</span>
-                <span class="timeline-date">2026 — Current</span>
+                <span class="timeline-date">Jan 2026 – Present</span>
               </div>
               <div class="timeline-company">3relite · Remote / UAE</div>
               <p class="timeline-desc">
@@ -293,7 +677,7 @@
                 solution connecting buyers and sellers globally. Architected the core platform from
                 the ground up, implementing listing management, secure payment flows, order tracking,
                 and a buyer/seller review system. Built and shipped production-ready web applications
-                at <a href="https://3relite.com" target="_blank" rel="noopener noreferrer" style="color:var(--primary)">3relite.com</a>,
+                at <a href="https://3relite.com" target="_blank" rel="noopener noreferrer">3relite.com</a>,
                 driving technical strategy and engineering best practices across the full product lifecycle.
               </p>
               <div class="timeline-tags">
@@ -302,17 +686,16 @@
                 <span class="timeline-tag">Node.js</span>
                 <span class="timeline-tag">PostgreSQL</span>
                 <span class="timeline-tag">Redis</span>
-                <span class="timeline-tag">Next js Router</span>
+                <span class="timeline-tag">Next.js</span>
                 <span class="timeline-tag">Docker</span>
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </section>
 
-    <!-- ===== Projects ===== -->
+    <!-- ===== PROJECTS ===== -->
     <section id="projects" class="section" aria-labelledby="projects-title">
       <div class="container">
         <div class="section-header">
@@ -322,469 +705,202 @@
           <div class="section-line" aria-hidden="true"></div>
         </div>
         <div class="projects-grid">
-          <!-- Project 1: 3R-Elite -->
+
+          <!-- 3R-Elite -->
           <article class="project-card">
-            <div class="project-banner" style="background: linear-gradient(90deg, #1a73e8, #34a853);" aria-hidden="true"></div>
+            <div class="project-banner" style="background:linear-gradient(90deg,#1a73e8,#34a853);" aria-hidden="true"></div>
             <div class="project-body">
               <div class="project-type">Marketplace · E-Commerce · TypeScript</div>
               <h3 class="project-title">3R-Elite</h3>
-              <p class="project-desc">
-                Marketplace web application for buying and selling goods and services. Connects local and
-                global communities enabling users to post listings, negotiate prices, track orders, and leave reviews.
-              </p>
-              <ul class="project-highlights">
-                <li>Full listing management with price negotiation flow</li>
-                <li>Order tracking and buyer/seller review system</li>
-                <li>Trust and transparency focused platform design</li>
-              </ul>
-              <div class="project-tech">
-                <span class="tech-tag">TypeScript</span>
-                <span class="tech-tag">React</span>
-                <span class="tech-tag">Node.js</span>
-                <span class="tech-tag">PostgreSQL</span>
-              </div>
-              <div class="project-links">
-                <a href="https://github.com/AllanRye9/3R-Elite" class="project-link" target="_blank" rel="noopener noreferrer">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-                  GitHub
-                </a>
-                <a href="https://3relite.com" class="project-link project-link-live" target="_blank" rel="noopener noreferrer">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
-                  3relite.com
-                </a>
-              </div>
+              <p class="project-desc"><strong>Problem:</strong> Fragmented local and global marketplaces with low trust.<br><strong>Solution:</strong> Built a unified platform with listing management, price negotiation, order tracking, and a review system.<br><strong>Impact:</strong> Increased buyer-seller engagement and trust.</p>
+              <ul class="project-highlights"><li>Full listing management with price negotiation</li><li>Order tracking and review system</li><li>Trust-focused design</li></ul>
+              <div class="project-tech"><span class="tech-tag">TypeScript</span><span class="tech-tag">React</span><span class="tech-tag">Node.js</span><span class="tech-tag">PostgreSQL</span></div>
+              <div class="project-links"><a href="https://github.com/AllanRye9/3R-Elite" class="project-link" target="_blank" rel="noopener noreferrer">GitHub</a><a href="https://3relite.com" class="project-link project-link-live" target="_blank" rel="noopener noreferrer">3relite.com</a></div>
             </div>
           </article>
 
-          <!-- Project 2: yotweek -->
+          <!-- Piitrade -->
           <article class="project-card">
-            <div class="project-banner" style="background: linear-gradient(90deg, #00bcd4, #1a73e8);" aria-hidden="true"></div>
+            <div class="project-banner" style="background:linear-gradient(90deg,#00bcd4,#1a73e8);" aria-hidden="true"></div>
             <div class="project-body">
-              <div class="project-type">Forex · Machine Learning · Technical Indicators</div>
+              <div class="project-type">Forex · ML · Technical Indicators</div>
               <h3 class="project-title">Piitrade</h3>
-              <p class="project-desc">
-                Institutional-grade forex analysis, AI & machine Learning backed Financial market analysis, fundamental news and signal platform.
-              </p>
-              <ul class="project-highlights">
-                <li>Free AI forex signals for 35+ currency pairs</li>
-                <li>LightGBM machine learning model with 10+ years of training data</li>
-                <li>Multi-timeframe pattern recognition</li>
-              </ul>
-              <div class="project-tech">
-                <span class="tech-tag">LightGBM</span>
-                <span class="tech-tag">Python</span>
-                <span class="tech-tag">React</span>
-                <span class="tech-tag">FastAPI</span>
-              </div>
-              <div class="project-links">
-                <a href="https://github.com/AllanRye9/Piitrade" class="project-link" target="_blank" rel="noopener noreferrer">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-                  GitHub
-                </a>
-                <a href="https://piitrade.vercel.app" class="project-link project-link-live" target="_blank" rel="noopener noreferrer">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
-                  piitrade.vercel.app
-                </a>
-              </div>
+              <p class="project-desc"><strong>Problem:</strong> Retail traders lack access to institutional-grade forex analysis.<br><strong>Solution:</strong> Built a LightGBM-based AI signal platform with 10+ years of training data.<br><strong>Impact:</strong> Delivered free, accurate signals for 35+ currency pairs.</p>
+              <ul class="project-highlights"><li>Free AI forex signals for 35+ pairs</li><li>LightGBM with 10+ years data</li><li>Multi-timeframe pattern recognition</li></ul>
+              <div class="project-tech"><span class="tech-tag">LightGBM</span><span class="tech-tag">Python</span><span class="tech-tag">React</span><span class="tech-tag">FastAPI</span></div>
+              <div class="project-links"><a href="https://github.com/AllanRye9/Piitrade" class="project-link" target="_blank" rel="noopener noreferrer">GitHub</a><a href="https://piitrade.vercel.app" class="project-link project-link-live" target="_blank" rel="noopener noreferrer">piitrade.vercel.app</a></div>
             </div>
           </article>
 
-           <article class="project-card">
-            <div class="project-banner" style="background: linear-gradient(90deg, #00bcd4, #1a73e8);" aria-hidden="true"></div>
+          <!-- Yotweek -->
+          <article class="project-card">
+            <div class="project-banner" style="background:linear-gradient(90deg,#00bcd4,#1a73e8);" aria-hidden="true"></div>
             <div class="project-body">
               <div class="project-type">Travel · AI · TypeScript</div>
               <h3 class="project-title">Yotweek</h3>
-              <p class="project-desc">
-                AI powered platform that allow event planners and content creators to planned and manage events, 
-                share memorable tourist attraction sites. Business to bring their services and products closer to tourists.
-              </p>
-              <ul class="project-highlights">
-                <li>Plan and manage events autonomously</li>
-                <li>Access events in the neighbourhood effortless</li>
-                <li>Experience local and international events</li>
-              </ul>
-              <div class="project-tech">
-                <span class="tech-tag">Typescript</span>
-                <span class="tech-tag">AI</span>
-                <span class="tech-tag">React</span>
-                <span class="tech-tag">Real-Time</span>
-              </div>
-              <div class="project-links">
-                <a href="https://github.com/AllanRye9/yotweek" class="project-link" target="_blank" rel="noopener noreferrer">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-                  GitHub
-                </a>
-                <a href="https://yotweek.com" class="project-link project-link-live" target="_blank" rel="noopener noreferrer">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
-                  yotweek.com
-                </a>
-              </div>
+              <p class="project-desc"><strong>Problem:</strong> Event planners and tourists lack an integrated discovery & management platform.<br><strong>Solution:</strong> AI-powered event planning and tourist attraction sharing platform.<br><strong>Impact:</strong> Simplified event discovery and management for users.</p>
+              <ul class="project-highlights"><li>AI-powered autonomous event planning</li><li>Neighbourhood event discovery</li><li>Local & international event access</li></ul>
+              <div class="project-tech"><span class="tech-tag">TypeScript</span><span class="tech-tag">AI</span><span class="tech-tag">React</span><span class="tech-tag">Real-Time</span></div>
+              <div class="project-links"><a href="https://github.com/AllanRye9/yotweek" class="project-link" target="_blank" rel="noopener noreferrer">GitHub</a><a href="https://yotweek.com" class="project-link project-link-live" target="_blank" rel="noopener noreferrer">yotweek.com</a></div>
             </div>
           </article>
 
-          <!-- AI Transformation Manager interlude -->
-          <div class="ai-transform-banner" role="note" aria-label="AI Transformation highlight">
-            <div class="ai-transform-inner">
-              <span class="ai-transform-icon">⚡</span>
-              <div>
-                <div class="ai-transform-title">AI Transformation Manager</div>
-                <div class="ai-transform-desc">
-                  From fintech to travel — applied AI/ML models and real-time data intelligence to give users
-                  a decisive edge, transforming raw market data and travel logistics into smart, actionable experiences.
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Project 5: uae_educate -->
+          <!-- UAE Educate -->
           <article class="project-card">
-            <div class="project-banner" style="background: linear-gradient(90deg, #9c27b0, #3f51b5);" aria-hidden="true"></div>
+            <div class="project-banner" style="background:linear-gradient(90deg,#9c27b0,#3f51b5);" aria-hidden="true"></div>
             <div class="project-body">
               <div class="project-type">EdTech · Gamification · JavaScript</div>
               <h3 class="project-title">UAE Educate</h3>
-              <p class="project-desc">
-                Gamified learning path interface for Grade 4 and Grade 8 Science and Math topics,
-                incorporating UAE National Identity visual elements and AI-generated educational content.
-              </p>
-              <ul class="project-highlights">
-                <li>Gamified curriculum for Grade 4 and Grade 8</li>
-                <li>UAE National Identity visual design elements</li>
-                <li>AI-generated interactive educational content</li>
-              </ul>
-              <div class="project-tech">
-                <span class="tech-tag">JavaScript</span>
-                <span class="tech-tag">AI</span>
-                <span class="tech-tag">Gamification</span>
-                <span class="tech-tag">EdTech</span>
-              </div>
-              <div class="project-links">
-                <a href="https://github.com/AllanRye9/uae_educate" class="project-link" target="_blank" rel="noopener noreferrer">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-                  GitHub
-                </a>
-              </div>
+              <p class="project-desc"><strong>Problem:</strong> Traditional learning materials lack engagement for Grade 4 & 8 students.<br><strong>Solution:</strong> Gamified curriculum with UAE visual identity and AI-generated content.<br><strong>Impact:</strong> Increased student engagement and knowledge retention.</p>
+              <ul class="project-highlights"><li>Gamified Grade 4 & 8 curriculum</li><li>UAE National Identity visuals</li><li>AI-generated interactive content</li></ul>
+              <div class="project-tech"><span class="tech-tag">JavaScript</span><span class="tech-tag">AI</span><span class="tech-tag">Gamification</span><span class="tech-tag">EdTech</span></div>
+              <div class="project-links"><a href="https://github.com/AllanRye9/uae_educate" class="project-link" target="_blank" rel="noopener noreferrer">GitHub</a></div>
             </div>
           </article>
 
-        
-          <!-- Project 7: yot-developer -->
+          <!-- Yot Developer -->
           <article class="project-card">
-            <div class="project-banner" style="background: linear-gradient(90deg, #ea4335, #ff9800);" aria-hidden="true"></div>
+            <div class="project-banner" style="background:linear-gradient(90deg,#ea4335,#ff9800);" aria-hidden="true"></div>
             <div class="project-body">
               <div class="project-type">Developer Tools · TypeScript</div>
               <h3 class="project-title">Yot Developer</h3>
-              <p class="project-desc">
-                A software solution that allows developers to learn, experiment, and explore Browser
-                DevTools functions, objects, and properties interactively.
-              </p>
-              <ul class="project-highlights">
-                <li>Interactive DevTools function explorer</li>
-                <li>Live experimentation with browser APIs</li>
-                <li>Educational reference for JavaScript and TypeScript</li>
-              </ul>
-              <div class="project-tech">
-                <span class="tech-tag">TypeScript</span>
-                <span class="tech-tag">JavaScript</span>
-                <span class="tech-tag">Browser APIs</span>
-                <span class="tech-tag">DevTools</span>
-              </div>
-              <div class="project-links">
-                <a href="https://github.com/AllanRye9/yot-developer" class="project-link" target="_blank" rel="noopener noreferrer">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-                  GitHub
-                </a>
-              </div>
+              <p class="project-desc"><strong>Problem:</strong> Developers lack an interactive environment to explore Browser DevTools.<br><strong>Solution:</strong> Built an interactive explorer for DevTools functions and APIs.<br><strong>Impact:</strong> Accelerated learning for JavaScript/TypeScript developers.</p>
+              <ul class="project-highlights"><li>Interactive DevTools explorer</li><li>Live browser API experimentation</li><li>Educational reference</li></ul>
+              <div class="project-tech"><span class="tech-tag">TypeScript</span><span class="tech-tag">JavaScript</span><span class="tech-tag">Browser APIs</span><span class="tech-tag">DevTools</span></div>
+              <div class="project-links"><a href="https://github.com/AllanRye9/yot-developer" class="project-link" target="_blank" rel="noopener noreferrer">GitHub</a></div>
             </div>
           </article>
 
-          <!-- Project 8: Yot-Presentation -->
+          <!-- Yot Presentation -->
           <article class="project-card">
-            <div class="project-banner" style="background: linear-gradient(90deg, #9c27b0, #1a73e8);" aria-hidden="true"></div>
+            <div class="project-banner" style="background:linear-gradient(90deg,#9c27b0,#1a73e8);" aria-hidden="true"></div>
             <div class="project-body">
               <div class="project-type">AI · Voice Control · Python</div>
               <h3 class="project-title">Yot Presentation</h3>
-              <p class="project-desc">
-                Intelligent voice control system for navigating presentations using natural language
-                commands — supporting 8 different languages for a hands-free presentation experience.
-              </p>
-              <ul class="project-highlights">
-                <li>Natural language presentation control in 8 languages</li>
-                <li>Two deployment flavors: local and cloud-based</li>
-                <li>Hands-free presenter workflow integration</li>
-              </ul>
-              <div class="project-tech">
-                <span class="tech-tag">Python</span>
-                <span class="tech-tag">Speech Recognition</span>
-                <span class="tech-tag">NLP</span>
-                <span class="tech-tag">Multilingual</span>
-              </div>
-              <div class="project-links">
-                <a href="https://github.com/AllanRye9/Yot-Presentation" class="project-link" target="_blank" rel="noopener noreferrer">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-                  GitHub
-                </a>
-              </div>
+              <p class="project-desc"><strong>Problem:</strong> Presenters need hands-free control across multiple languages.<br><strong>Solution:</strong> Voice-controlled presentation system supporting 8 languages.<br><strong>Impact:</strong> Enhanced presenter workflow and accessibility.</p>
+              <ul class="project-highlights"><li>Natural language control in 8 languages</li><li>Local & cloud deployment</li><li>Hands-free workflow</li></ul>
+              <div class="project-tech"><span class="tech-tag">Python</span><span class="tech-tag">Speech Recognition</span><span class="tech-tag">NLP</span><span class="tech-tag">Multilingual</span></div>
+              <div class="project-links"><a href="https://github.com/AllanRye9/Yot-Presentation" class="project-link" target="_blank" rel="noopener noreferrer">GitHub</a></div>
             </div>
           </article>
 
-          <!-- AI Transformation Manager interlude -->
+          <!-- AI Transformation Banner -->
           <div class="ai-transform-banner" role="note" aria-label="AI Transformation highlight">
-            <div class="ai-transform-inner">
+            <div class="ai-transform-inner" style="display:flex;gap:16px;align-items:center;">
               <span class="ai-transform-icon">🧠</span>
-              <div>
-                <div class="ai-transform-title">AI Transformation Manager</div>
-                <div class="ai-transform-desc">
-                  Building voice-driven, NLP-powered, and multilingual AI tools that break barriers —
-                  making technology accessible to everyone regardless of language or technical background.
-                </div>
-              </div>
+              <div><div class="ai-transform-title">AI Transformation Manager</div><div class="ai-transform-desc">Building voice-driven, NLP-powered, and multilingual AI tools that break barriers — making technology accessible to everyone regardless of language or technical background.</div></div>
             </div>
           </div>
 
-          <!-- Project 9: CreditPulse -->
+          <!-- CreditPulse -->
           <article class="project-card">
-            <div class="project-banner" style="background: linear-gradient(90deg, #fbbc04, #ea4335);" aria-hidden="true"></div>
+            <div class="project-banner" style="background:linear-gradient(90deg,#fbbc04,#ea4335);" aria-hidden="true"></div>
             <div class="project-body">
               <div class="project-type">Fintech · AI · Python</div>
               <h3 class="project-title">CreditPulse</h3>
-              <p class="project-desc">
-                AI-powered financial assistant that automatically analyzes credit card statements and
-                payment reminders, transforming email/SMS financial data into actionable insights.
-              </p>
-              <ul class="project-highlights">
-                <li>Automated parsing of email/SMS financial statements</li>
-                <li>AI-driven spending analysis and anomaly detection</li>
-                <li>Actionable financial insights and recommendations</li>
-              </ul>
-              <div class="project-tech">
-                <span class="tech-tag">Python</span>
-                <span class="tech-tag">AI/ML</span>
-                <span class="tech-tag">NLP</span>
-                <span class="tech-tag">FastAPI</span>
-              </div>
-              <div class="project-links">
-                <a href="https://github.com/AllanRye9/CreditPulse" class="project-link" target="_blank" rel="noopener noreferrer">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-                  GitHub
-                </a>
-              </div>
+              <p class="project-desc"><strong>Problem:</strong> Users struggle to track and understand credit card spending.<br><strong>Solution:</strong> AI-powered financial assistant parsing statements and payment reminders.<br><strong>Impact:</strong> Automated spending analysis and actionable insights.</p>
+              <ul class="project-highlights"><li>Automated parsing of financial statements</li><li>AI-driven spending analysis</li><li>Anomaly detection & recommendations</li></ul>
+              <div class="project-tech"><span class="tech-tag">Python</span><span class="tech-tag">AI/ML</span><span class="tech-tag">NLP</span><span class="tech-tag">FastAPI</span></div>
+              <div class="project-links"><a href="https://github.com/AllanRye9/CreditPulse" class="project-link" target="_blank" rel="noopener noreferrer">GitHub</a></div>
             </div>
           </article>
 
-          <!-- Project 10: ComputorV1 -->
+          <!-- ComputorV1 -->
           <article class="project-card">
-            <div class="project-banner" style="background: linear-gradient(90deg, #34a853, #1a73e8);" aria-hidden="true"></div>
+            <div class="project-banner" style="background:linear-gradient(90deg,#34a853,#1a73e8);" aria-hidden="true"></div>
             <div class="project-body">
               <div class="project-type">Mathematics · Algorithms · JavaScript</div>
               <h3 class="project-title">ComputorV1</h3>
-              <p class="project-desc">
-                Polynomial equation solver based on mathematical principles — simplifies equations,
-                validates divisibility, and computes roots through a structured three-step algorithm.
-              </p>
-              <ul class="project-highlights">
-                <li>Step-by-step polynomial equation simplification</li>
-                <li>Handles equations with up to degree 2 roots</li>
-                <li>Validates and resolves mathematical expressions</li>
-              </ul>
-              <div class="project-tech">
-                <span class="tech-tag">JavaScript</span>
-                <span class="tech-tag">Mathematics</span>
-                <span class="tech-tag">Algorithms</span>
-              </div>
-              <div class="project-links">
-                <a href="https://github.com/AllanRye9/ComputorV1" class="project-link" target="_blank" rel="noopener noreferrer">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-                  GitHub
-                </a>
-              </div>
+              <p class="project-desc"><strong>Problem:</strong> Students need a step-by-step polynomial solver.<br><strong>Solution:</strong> Algorithmic equation simplifier and root calculator.<br><strong>Impact:</strong> Simplified learning of polynomial algebra.</p>
+              <ul class="project-highlights"><li>Step-by-step simplification</li><li>Handles degree ≤ 2 roots</li><li>Validates expressions</li></ul>
+              <div class="project-tech"><span class="tech-tag">JavaScript</span><span class="tech-tag">Mathematics</span><span class="tech-tag">Algorithms</span></div>
+              <div class="project-links"><a href="https://github.com/AllanRye9/ComputorV1" class="project-link" target="_blank" rel="noopener noreferrer">GitHub</a></div>
             </div>
           </article>
 
-          <!-- Project 11: Inception -->
+          <!-- Inception -->
           <article class="project-card">
-            <div class="project-banner" style="background: linear-gradient(90deg, #00bcd4, #34a853);" aria-hidden="true"></div>
+            <div class="project-banner" style="background:linear-gradient(90deg,#00bcd4,#34a853);" aria-hidden="true"></div>
             <div class="project-body">
               <div class="project-type">DevOps · Containerization · Docker</div>
               <h3 class="project-title">Inception</h3>
-              <p class="project-desc">
-                A containerized deployment of Nginx, WordPress, and MariaDB using Docker Compose,
-                demonstrating modern container orchestration and infrastructure-as-code techniques.
-              </p>
-              <ul class="project-highlights">
-                <li>Full-stack containerized deployment with Docker Compose</li>
-                <li>Nginx reverse proxy with SSL termination</li>
-                <li>WordPress + MariaDB production-ready setup</li>
-              </ul>
-              <div class="project-tech">
-                <span class="tech-tag">Docker</span>
-                <span class="tech-tag">Docker Compose</span>
-                <span class="tech-tag">Nginx</span>
-                <span class="tech-tag">WordPress</span>
-                <span class="tech-tag">MariaDB</span>
-              </div>
-              <div class="project-links">
-                <a href="https://github.com/AllanRye9/Inception" class="project-link" target="_blank" rel="noopener noreferrer">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-                  GitHub
-                </a>
-              </div>
+              <p class="project-desc"><strong>Problem:</strong> Manual deployment is error-prone and hard to scale.<br><strong>Solution:</strong> Containerized Nginx, WordPress, MariaDB with Docker Compose.<br><strong>Impact:</strong> Reliable, reproducible production infrastructure.</p>
+              <ul class="project-highlights"><li>Full-stack containerized deployment</li><li>Nginx reverse proxy with SSL</li><li>WordPress + MariaDB setup</li></ul>
+              <div class="project-tech"><span class="tech-tag">Docker</span><span class="tech-tag">Docker Compose</span><span class="tech-tag">Nginx</span><span class="tech-tag">WordPress</span><span class="tech-tag">MariaDB</span></div>
+              <div class="project-links"><a href="https://github.com/AllanRye9/Inception" class="project-link" target="_blank" rel="noopener noreferrer">GitHub</a></div>
             </div>
           </article>
 
-          <!-- Project 12: miniRT -->
+          <!-- miniRT -->
           <article class="project-card">
-            <div class="project-banner" style="background: linear-gradient(90deg, #3f51b5, #9c27b0);" aria-hidden="true"></div>
+            <div class="project-banner" style="background:linear-gradient(90deg,#3f51b5,#9c27b0);" aria-hidden="true"></div>
             <div class="project-body">
               <div class="project-type">Graphics · Ray Tracing · C</div>
               <h3 class="project-title">miniRT</h3>
-              <p class="project-desc">
-                A foundational ray tracing engine built in C as the final Common Core challenge at 42 School,
-                introducing core computer graphics concepts from scratch.
-              </p>
-              <ul class="project-highlights">
-                <li>Ray tracing engine implemented from scratch in C</li>
-                <li>Supports lights, shadows, reflections, and basic shapes</li>
-                <li>42 School Common Core final C programming project</li>
-              </ul>
-              <div class="project-tech">
-                <span class="tech-tag">C</span>
-                <span class="tech-tag">Ray Tracing</span>
-                <span class="tech-tag">Computer Graphics</span>
-                <span class="tech-tag">MiniLibX</span>
-              </div>
-              <div class="project-links">
-                <a href="https://github.com/AllanRye9/miniRT" class="project-link" target="_blank" rel="noopener noreferrer">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-                  GitHub
-                </a>
-              </div>
+              <p class="project-desc"><strong>Problem:</strong> Building a ray tracer from scratch is a fundamental graphics challenge.<br><strong>Solution:</strong> Implemented a ray tracing engine in C with lights, shadows, and reflections.<br><strong>Impact:</strong> Mastered core computer graphics concepts.</p>
+              <ul class="project-highlights"><li>Ray tracing from scratch in C</li><li>Lights, shadows, reflections</li><li>42 School Common Core</li></ul>
+              <div class="project-tech"><span class="tech-tag">C</span><span class="tech-tag">Ray Tracing</span><span class="tech-tag">Computer Graphics</span><span class="tech-tag">MiniLibX</span></div>
+              <div class="project-links"><a href="https://github.com/AllanRye9/miniRT" class="project-link" target="_blank" rel="noopener noreferrer">GitHub</a></div>
             </div>
           </article>
 
-          <!-- Project 13: minishell_42 -->
+          <!-- Minishell -->
           <article class="project-card">
-            <div class="project-banner" style="background: linear-gradient(90deg, #2e7d32, #00bcd4);" aria-hidden="true"></div>
+            <div class="project-banner" style="background:linear-gradient(90deg,#2e7d32,#00bcd4);" aria-hidden="true"></div>
             <div class="project-body">
               <div class="project-type">Systems · Shell · C</div>
               <h3 class="project-title">Minishell</h3>
-              <p class="project-desc">
-                A mini implementation of the Bash shell written in C at 42 School, replicating core
-                Bash functionalities including built-in commands, environment variable handling, and piping.
-              </p>
-              <ul class="project-highlights">
-                <li>Built-in commands: ls, cd, echo, pwd, export, unset, env, exit</li>
-                <li>Environment variable management and expansion</li>
-                <li>Pipes, redirections, and signal handling</li>
-              </ul>
-              <div class="project-tech">
-                <span class="tech-tag">C</span>
-                <span class="tech-tag">Systems Programming</span>
-                <span class="tech-tag">UNIX</span>
-                <span class="tech-tag">Shell</span>
-              </div>
-              <div class="project-links">
-                <a href="https://github.com/AllanRye9/minishell_42" class="project-link" target="_blank" rel="noopener noreferrer">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-                  GitHub
-                </a>
-              </div>
+              <p class="project-desc"><strong>Problem:</strong> Understanding shell internals is complex.<br><strong>Solution:</strong> Built a Bash-like shell with builtins, pipes, and env handling.<br><strong>Impact:</strong> Deepened systems and UNIX programming expertise.</p>
+              <ul class="project-highlights"><li>Builtins: ls, cd, echo, pwd, export, unset, env, exit</li><li>Environment variable management</li><li>Pipes, redirections, signals</li></ul>
+              <div class="project-tech"><span class="tech-tag">C</span><span class="tech-tag">Systems Programming</span><span class="tech-tag">UNIX</span><span class="tech-tag">Shell</span></div>
+              <div class="project-links"><a href="https://github.com/AllanRye9/minishell_42" class="project-link" target="_blank" rel="noopener noreferrer">GitHub</a></div>
             </div>
           </article>
 
-          <!-- Project 14: FDF -->
+          <!-- FDF -->
           <article class="project-card">
-            <div class="project-banner" style="background: linear-gradient(90deg, #ff9800, #fbbc04);" aria-hidden="true"></div>
+            <div class="project-banner" style="background:linear-gradient(90deg,#ff9800,#fbbc04);" aria-hidden="true"></div>
             <div class="project-body">
               <div class="project-type">Graphics · 3D · C</div>
               <h3 class="project-title">FDF (Fil de Fer)</h3>
-              <p class="project-desc">
-                3D graphical representation of maps using wireframe rendering. Reads coordinate map files
-                and projects them into a navigable 3D wireframe visualization using MiniLibX.
-              </p>
-              <ul class="project-highlights">
-                <li>3D wireframe rendering from 2D coordinate map files</li>
-                <li>Isometric and parallel projection modes</li>
-                <li>Built using MiniLibX and Libft from scratch</li>
-              </ul>
-              <div class="project-tech">
-                <span class="tech-tag">C</span>
-                <span class="tech-tag">MiniLibX</span>
-                <span class="tech-tag">3D Graphics</span>
-                <span class="tech-tag">Libft</span>
-              </div>
-              <div class="project-links">
-                <a href="https://github.com/AllanRye9/FDF" class="project-link" target="_blank" rel="noopener noreferrer">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-                  GitHub
-                </a>
-              </div>
+              <p class="project-desc"><strong>Problem:</strong> Visualizing 3D map data requires efficient wireframe rendering.<br><strong>Solution:</strong> Built a 3D wireframe renderer with isometric and parallel projections.<br><strong>Impact:</strong> Created an interactive map visualization tool.</p>
+              <ul class="project-highlights"><li>3D wireframe from 2D maps</li><li>Isometric & parallel projections</li><li>MiniLibX + Libft</li></ul>
+              <div class="project-tech"><span class="tech-tag">C</span><span class="tech-tag">MiniLibX</span><span class="tech-tag">3D Graphics</span><span class="tech-tag">Libft</span></div>
+              <div class="project-links"><a href="https://github.com/AllanRye9/FDF" class="project-link" target="_blank" rel="noopener noreferrer">GitHub</a></div>
             </div>
           </article>
 
-          <!-- Project 15: philosophers -->
+          <!-- Philosophers -->
           <article class="project-card">
-            <div class="project-banner" style="background: linear-gradient(90deg, #9c27b0, #3f51b5);" aria-hidden="true"></div>
+            <div class="project-banner" style="background:linear-gradient(90deg,#9c27b0,#3f51b5);" aria-hidden="true"></div>
             <div class="project-body">
               <div class="project-type">Concurrency · Systems · C</div>
               <h3 class="project-title">Philosophers</h3>
-              <p class="project-desc">
-                42 School concurrency project solving the classic Dining Philosophers problem — managing
-                thread synchronization and resource sharing to prevent deadlock and starvation.
-              </p>
-              <ul class="project-highlights">
-                <li>Thread synchronization with mutex locks</li>
-                <li>Deadlock prevention and starvation avoidance</li>
-                <li>Resource allocation with equal fork distribution</li>
-              </ul>
-              <div class="project-tech">
-                <span class="tech-tag">C</span>
-                <span class="tech-tag">Threads</span>
-                <span class="tech-tag">Mutex</span>
-                <span class="tech-tag">Concurrency</span>
-              </div>
-              <div class="project-links">
-                <a href="https://github.com/AllanRye9/philosopers" class="project-link" target="_blank" rel="noopener noreferrer">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-                  GitHub
-                </a>
-              </div>
+              <p class="project-desc"><strong>Problem:</strong> Classic concurrency deadlock and starvation challenges.<br><strong>Solution:</strong> Thread synchronization with mutexes to prevent deadlock.<br><strong>Impact:</strong> Mastered resource sharing and thread safety.</p>
+              <ul class="project-highlights"><li>Thread synchronization with mutexes</li><li>Deadlock prevention</li><li>Fair resource allocation</li></ul>
+              <div class="project-tech"><span class="tech-tag">C</span><span class="tech-tag">Threads</span><span class="tech-tag">Mutex</span><span class="tech-tag">Concurrency</span></div>
+              <div class="project-links"><a href="https://github.com/AllanRye9/philosopers" class="project-link" target="_blank" rel="noopener noreferrer">GitHub</a></div>
             </div>
           </article>
 
-          <!-- Project 16: Minitalk -->
+          <!-- Minitalk -->
           <article class="project-card">
-            <div class="project-banner" style="background: linear-gradient(90deg, #1a73e8, #34a853);" aria-hidden="true"></div>
+            <div class="project-banner" style="background:linear-gradient(90deg,#1a73e8,#34a853);" aria-hidden="true"></div>
             <div class="project-body">
               <div class="project-type">Systems · IPC · C</div>
               <h3 class="project-title">Minitalk</h3>
-              <p class="project-desc">
-                A data exchange program using UNIX signals for inter-process communication, implementing
-                a client-server architecture for message passing via SIGUSR1 and SIGUSR2.
-              </p>
-              <ul class="project-highlights">
-                <li>Client-server IPC via UNIX signals</li>
-                <li>Bit-level data transmission using SIGUSR1/SIGUSR2</li>
-                <li>Robust signal handling and synchronization</li>
-              </ul>
-              <div class="project-tech">
-                <span class="tech-tag">C</span>
-                <span class="tech-tag">UNIX Signals</span>
-                <span class="tech-tag">IPC</span>
-                <span class="tech-tag">Systems</span>
-              </div>
-              <div class="project-links">
-                <a href="https://github.com/AllanRye9/Minitalk" class="project-link" target="_blank" rel="noopener noreferrer">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-                  GitHub
-                </a>
-              </div>
+              <p class="project-desc"><strong>Problem:</strong> Need a lightweight IPC mechanism using UNIX signals.<br><strong>Solution:</strong> Client-server data exchange via SIGUSR1/SIGUSR2.<br><strong>Impact:</strong> Demonstrated bit-level signal communication.</p>
+              <ul class="project-highlights"><li>Client-server IPC via signals</li><li>Bit-level data transmission</li><li>Robust signal handling</li></ul>
+              <div class="project-tech"><span class="tech-tag">C</span><span class="tech-tag">UNIX Signals</span><span class="tech-tag">IPC</span><span class="tech-tag">Systems</span></div>
+              <div class="project-links"><a href="https://github.com/AllanRye9/Minitalk" class="project-link" target="_blank" rel="noopener noreferrer">GitHub</a></div>
             </div>
           </article>
+
         </div>
       </div>
     </section>
 
-    <!-- ===== Education ===== -->
+    <!-- ===== EDUCATION ===== -->
     <section id="education" class="section" aria-labelledby="edu-title">
       <div class="container">
         <div class="section-header">
@@ -794,61 +910,139 @@
           <div class="section-line" aria-hidden="true"></div>
         </div>
         <div class="education-grid">
-
-          <div class="edu-card">
-            <div class="edu-icon" aria-hidden="true">🎓</div>
-            <div class="edu-body">
-              <div class="edu-degree">Bachelors of AI Engineering</div>
-              <div class="edu-school">42 Abu Dhabi</div>
-              <div class="edu-date">2026 – current</div>
-              <div class="edu-note">United Arab Emirates</div>
-            </div>
-          </div>
-
-          <div class="edu-card">
-            <div class="edu-icon" aria-hidden="true">📜</div>
-            <div class="edu-body">
-              <div class="edu-degree">Diploma Software Engineering</div>
-              <div class="edu-school">42 Abu Dhabi</div>
-              <div class="edu-date">2023 – 2025</div>
-              <div class="edu-note">United Arab Emirates</div>
-            </div>
-          </div>
-
-          <div class="edu-card">
-            <div class="edu-icon" aria-hidden="true">🏫</div>
-            <div class="edu-body">
-              <div class="edu-degree">High School Diploma</div>
-              <div class="edu-school">Star Advance</div>
-            </div>
-          </div>
-
+          <div class="edu-card"><div class="edu-icon">🎓</div><div><div class="edu-degree">Bachelors of AI Engineering</div><div class="edu-school">42 Abu Dhabi</div><div class="edu-date">2026 – current</div><div class="edu-note">United Arab Emirates</div></div></div>
+          <div class="edu-card"><div class="edu-icon">📜</div><div><div class="edu-degree">Diploma Software Engineering</div><div class="edu-school">42 Abu Dhabi</div><div class="edu-date">2023 – 2025</div><div class="edu-note">United Arab Emirates</div></div></div>
+          <div class="edu-card"><div class="edu-icon">🏫</div><div><div class="edu-degree">High School Diploma</div><div class="edu-school">Star Advance</div></div></div>
         </div>
       </div>
     </section>
 
-  </div><!-- #cv-content -->
+  </main>
 
-  <!-- ===== Footer ===== -->
+  <!-- ===== FOOTER ===== -->
   <footer>
     <p>
       &copy; <span id="current-year"></span> Oryema Allan ·
       Built with HTML, CSS &amp; JavaScript ·
-      <a href="https://github.com/AllanRye9" id="footer-github-link" target="_blank" rel="noopener noreferrer">GitHub</a> ·
-      <a href="mailto:allan.rye@email.com" id="footer-contact-link">Contact</a>
+      <a href="https://github.com/AllanRye9" target="_blank" rel="noopener noreferrer">GitHub</a> ·
+      <a href="mailto:allan.rye@email.com">Contact</a>
     </p>
   </footer>
 
-  <!-- ===== Back to Top Button ===== -->
-  <button class="back-to-top" aria-label="Back to top">
+  <!-- ===== BACK TO TOP ===== -->
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
   </button>
 
+  <!-- ===== SCRIPTS ===== -->
+  <script>
+    (function() {
+      // ---- THEME ----
+      const stored = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme = stored || (prefersDark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+      const themeIcon = document.getElementById('themeIcon');
+      themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
 
-  <script src="script.js"></script>
-  <!-- Admin content overrides (applied from localStorage if set via /admin) -->
-  <script src="overrides.js"></script>
-  <!-- Analytics tracking (stores visit data in localStorage for /admin dashboard) -->
-  <script src="analytics.js"></script>
+      document.getElementById('themeToggle').addEventListener('click', function() {
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        themeIcon.textContent = next === 'dark' ? '☀️' : '🌙';
+      });
+
+      // ---- NAV ----
+      const hamburger = document.getElementById('hamburger');
+      const navLinks = document.getElementById('navLinks');
+      hamburger.addEventListener('click', function() {
+        const open = navLinks.classList.toggle('open');
+        this.setAttribute('aria-expanded', open);
+      });
+      // Close on link click (mobile)
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+          navLinks.classList.remove('open');
+          hamburger.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+      // ---- SCROLL PROGRESS ----
+      const progress = document.getElementById('scrollProgress');
+      window.addEventListener('scroll', function() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        progress.style.width = pct + '%';
+        progress.setAttribute('aria-valuenow', Math.round(pct));
+
+        // Back to top visibility
+        const btn = document.getElementById('backToTop');
+        if (scrollTop > 400) btn.classList.add('visible');
+        else btn.classList.remove('visible');
+
+        // Active nav link
+        const sections = ['hero','about','skills','experience','projects','education'];
+        let currentId = 'hero';
+        sections.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) {
+            const rect = el.getBoundingClientRect();
+            if (rect.top <= 120) currentId = id;
+          }
+        });
+        document.querySelectorAll('.nav-link').forEach(a => {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + currentId);
+        });
+      });
+
+      // ---- BACK TO TOP ----
+      document.getElementById('backToTop').addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // ---- STAT COUNTER ANIMATION ----
+      const stats = document.querySelectorAll('.stat-number');
+      let animated = false;
+      function animateStats() {
+        if (animated) return;
+        const section = document.getElementById('about');
+        const rect = section.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 100) {
+          animated = true;
+          stats.forEach(el => {
+            const target = parseInt(el.getAttribute('data-count'), 10);
+            let current = 0;
+            const step = Math.max(1, Math.floor(target / 30));
+            const interval = setInterval(() => {
+              current += step;
+              if (current >= target) { current = target; clearInterval(interval); }
+              el.textContent = target >= 90 ? current + '%' : current + '+';
+            }, 30);
+          });
+        }
+      }
+      window.addEventListener('scroll', animateStats);
+      window.addEventListener('load', animateStats);
+
+      // ---- FOOTER YEAR ----
+      document.getElementById('current-year').textContent = new Date().getFullYear();
+
+      // ---- JSON-LD STRUCTURED DATA ----
+      const script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.textContent = JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Oryema Allan",
+        "jobTitle": "Software Engineer",
+        "address": "Abu Dhabi, UAE",
+        "url": "https://your-domain.com"
+      });
+      document.head.appendChild(script);
+
+    })();
+  </script>
 </body>
 </html>
